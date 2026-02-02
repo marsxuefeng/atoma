@@ -66,8 +66,8 @@ import static com.mongodb.client.model.Updates.*;
  *     "generation": 1,
  *     "count": 2,
  *     "participants": [
- *       { "participant": "lease-abc___thread-1", "lease": "lease-abc" },
- *       { "participant": "lease-xyz___thread-8", "lease": "lease-xyz" }
+ *       { "participant": "lease-abc_thread-1", "lease": "lease-abc" },
+ *       { "participant": "lease-xyz_thread-8", "lease": "lease-xyz" }
  *     ]
  *   },
  *   "leave_waiters": { ... }

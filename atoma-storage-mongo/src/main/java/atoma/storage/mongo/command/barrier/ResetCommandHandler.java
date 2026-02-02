@@ -5,7 +5,7 @@ import atoma.api.Result;
 import atoma.api.coordination.command.CommandHandler;
 import atoma.api.coordination.command.CyclicBarrierCommand;
 import atoma.api.coordination.command.HandlesCommand;
-import atoma.storage.mongo.command.AtomaCollectionNamespace;
+import atoma.storage.mongo.command.CommandFailureException;
 import atoma.storage.mongo.command.MongoCommandHandler;
 import atoma.storage.mongo.command.MongoCommandHandlerContext;
 import com.google.auto.service.AutoService;
@@ -16,12 +16,11 @@ import org.bson.Document;
 
 import java.util.function.Function;
 
-import static com.mongodb.client.model.Filters.and;
+import static atoma.storage.mongo.command.AtomaCollectionNamespace.BARRIER_NAMESPACE;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.combine;
 import static com.mongodb.client.model.Updates.inc;
 import static com.mongodb.client.model.Updates.set;
-import static com.mongodb.client.model.Updates.unset;
 
 /**
  * Handles the reset operation for a distributed {@code CyclicBarrier}.
@@ -30,6 +29,20 @@ import static com.mongodb.client.model.Updates.unset;
  * incrementing the generation ID and setting an {@code is_broken} flag. It uses an optimistic lock
  * on the {@code version} field to ensure the reset is applied to the expected state, preventing
  * race conditions.
+ *
+ * <h3>MongoDB Document Schema</h3>
+ *
+ * <pre>{@code
+ * {
+ *   "_id": "barrier-resource-id",
+ *   "parties": 5,
+ *   "generation": NumberLong(1),
+ *   "is_broken": false,
+ *   "number_waiting": 12,
+ *   "_passed": false,
+ *   "_inconsistent_parties": false,
+ * }
+ * }</pre>
  */
 @SuppressWarnings("rawtypes")
 @HandlesCommand(CyclicBarrierCommand.Reset.class)
@@ -47,26 +60,35 @@ public class ResetCommandHandler extends MongoCommandHandler<CyclicBarrierComman
   @Override
   public Void execute(CyclicBarrierCommand.Reset command, MongoCommandHandlerContext context) {
     MongoClient client = context.getClient();
-    MongoCollection<Document> collection =
-        getCollection(context, AtomaCollectionNamespace.BARRIER_NAMESPACE);
+    MongoCollection<Document> collection = getCollection(context, BARRIER_NAMESPACE);
 
     Function<ClientSession, Void> cmdBlock =
         session -> {
-          collection.updateOne(
-              and(
+          Document barrierDoc =
+              collection.findOneAndUpdate(
                   eq("_id", context.getResourceId()),
-                  eq("version", command.expectedVersion()) // Optimistic lock
-                  ),
-              combine(
-                  inc("generation", 1L), // Break current waiters
-                  inc("version", 1L),
-                  set("is_broken", true), // Mark as broken
-                  unset("waiters") // Clear all waiters
-                  ));
+                  combine(
+                      inc("generation", 1L), // Break current waiters
+                      set("is_broken", true), // Mark as broken
+                      set("number_waiting", 0) // Clear all waiters
+                      ));
+
+          if (barrierDoc == null) {
+            throw new AtomaStateException(
+                "Failed to find or reset barrier. Because barrier does not existed in MongoDB Database.");
+          }
+
+          if (!barrierDoc.getBoolean("is_broken")) throw new CommandFailureException();
+
           return null;
         };
 
-    Result<Void> result = this.newCommandExecutor(client).withoutTxn().execute(cmdBlock);
+    Result<Void> result =
+        this.newCommandExecutor(client)
+            .withoutTxn()
+            .withoutCausallyConsistent()
+            .retryOnException(CommandFailureException.class)
+            .execute(cmdBlock);
     try {
       result.getOrThrow();
       return null;

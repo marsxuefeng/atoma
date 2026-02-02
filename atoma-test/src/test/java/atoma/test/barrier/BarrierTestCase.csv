@@ -1,0 +1,56 @@
+Function Scope,Test CASE ID,Description,Status
+Initialization,BARRIER-TC-001,单节点初始化CyclicBarrier，设置合法参与者数量,Pending
+Initialization,BARRIER-TC-002,多节点同时初始化相同屏障ID,Pending
+Initialization,BARRIER-TC-003,使用负数的参与者数量初始化屏障,Pending
+Initialization,BARRIER-TC-004,使用零作为参与者数量初始化屏障,Pending
+Initialization,BARRIER-TC-005,使用超过系统限制的参与者数量初始化屏障,Pending
+Initialization,BARRIER-TC-006,在不同节点使用不同参与者数量初始化相同屏障ID,Pending
+Initialization,BARRIER-TC-007,重复初始化相同屏障ID（幂等性测试）,Pending
+Node Registration,BARRIER-TC-008,节点成功注册到屏障,Pending
+Node Registration,BARRIER-TC-009,节点重复注册到同一屏障,Pending
+Node Registration,BARRIER-TC-010,超过参与者数量的节点尝试注册,Pending
+Node Registration,BARRIER-TC-011,注册后节点心跳检测,Pending
+Node Registration,BARRIER-TC-012,注册时网络分区场景,Pending
+Await Basic,BARRIER-TC-013,所有节点同时调用await()成功通过屏障,Pending
+Await Basic,BARRIER-TC-014,单个节点调用await()并等待其他节点,Pending
+Await Basic,BARRIER-TC-015,所有节点到达后屏障重置,Pending
+Await Basic,BARRIER-TC-016,混合网络延迟下的await()调用,Pending
+Await Timeout,BARRIER-TC-017,节点await()超时，其他节点正常,Pending
+Await Timeout,BARRIER-TC-018,所有节点await()都超时,Pending
+Await Timeout,BARRIER-TC-019,设置不同超时时间的节点混合测试,Pending
+Await Timeout,BARRIER-TC-020,超时后屏障状态验证,Pending
+Barrier Reset,BARRIER-TC-021,所有节点通过后自动重置屏障,Pending
+Barrier Reset,BARRIER-TC-022,重置期间新节点尝试注册,Pending
+Barrier Reset,BARRIER-TC-023,重置期间await()调用行为验证,Pending
+Barrier Reset,BARRIER-TC-024,多次循环后屏障状态一致性验证,Pending
+Node Failure,BARRIER-TC-025,单个节点在await()前失败,Pending
+Node Failure,BARRIER-TC-026,单个节点在await()过程中失败,Pending
+Node Failure,BARRIER-TC-027,多个节点同时失败,Pending
+Node Failure,BARRIER-TC-028,节点失败后的屏障恢复机制,Pending
+Node Failure,BARRIER-TC-029,失败节点恢复后重新加入,Pending
+Network Partition,BARRIER-TC-030,网络分区形成多个多数派,Pending
+Network Partition,BARRIER-TC-031,网络分区恢复后屏障状态同步,Pending
+Network Partition,BARRIER-TC-032,分区期间屏障超时处理,Pending
+Concurrency,BARRIER-TC-033,高并发节点同时注册和await(),Pending
+Concurrency,BARRIER-TC-034,混合读写操作（注册、await、重置）,Pending
+Concurrency,BARRIER-TC-035,屏障多次循环使用测试,Pending
+Barrier Action,BARRIER-TC-036,屏障触发时执行预设动作,Pending
+Barrier Action,BARRIER-TC-037,屏障动作执行失败处理,Pending
+Barrier Action,BARRIER-TC-038,屏障动作执行超时处理,Pending
+Recovery,BARRIER-TC-039,协调者节点故障转移,Pending
+Recovery,BARRIER-TC-040,整个集群重启后屏障状态恢复,Pending
+Recovery,BARRIER-TC-041,部分节点重启后重新加入屏障,Pending
+Recovery,BARRIER-TC-042,屏障元数据损坏恢复测试,Pending
+Performance,BARRIER-TC-043,大量节点（100+）同时await()性能测试,Pending
+Performance,BARRIER-TC-044,长时间运行的屏障稳定性测试,Pending
+Performance,BARRIER-TC-045,混合负载下的屏障响应时间测试,Pending
+Edge Cases,BARRIER-TC-046,单个参与者的屏障行为验证,Pending
+Edge Cases,BARRIER-TC-047,使用特殊字符的屏障ID,Pending
+Edge Cases,BARRIER-TC-048,屏障参与者在不同时区,Pending
+Edge Cases,BARRIER-TC-049,节点时钟不同步的影响测试,Pending
+Edge Cases,BARRIER-TC-050,屏障ID冲突处理机制,Pending
+Integration,BARRIER-TC-051,与其他分布式组件（如锁、队列）集成测试,Pending
+Integration,BARRIER-TC-052,与不同序列化协议的兼容性测试,Pending
+Security,BARRIER-TC-053,未授权节点尝试加入屏障,Pending
+Security,BARRIER-TC-054,屏障ID的访问控制测试,Pending
+Monitoring,BARRIER-TC-055,屏障状态监控和指标收集测试,Pending

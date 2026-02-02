@@ -112,9 +112,7 @@ public class DefaultCountDownLatch extends CountDownLatch {
   @CheckReturnValue
   @Override
   public boolean await(long timeout, TimeUnit unit) throws InterruptedException {
-    if (Thread.interrupted()) {
-      throw new InterruptedException();
-    }
+    if (Thread.interrupted()) throw new InterruptedException();
 
     // Optimistic check to avoid waiting if the latch is already open.
     if (getCount() <= 0) return true;
@@ -129,7 +127,7 @@ public class DefaultCountDownLatch extends CountDownLatch {
     try {
       // Re-check state after acquiring lock to prevent race conditions.
       while (getCount() > 0) {
-
+        if (Thread.interrupted()) throw new InterruptedException();
         if (timed) {
           if (remainingNanos <= 0L) return false;
           if (!latchZero.await(remainingNanos, TimeUnit.NANOSECONDS)) return false;

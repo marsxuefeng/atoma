@@ -5,7 +5,6 @@ import atoma.api.coordination.ResourceChangeEvent;
 import atoma.api.coordination.Subscription;
 import atoma.api.coordination.command.DoubleCyclicBarrierCommand;
 import atoma.api.synchronizer.DoubleCyclicBarrier;
-import atoma.core.internal.ThreadUtils;
 import com.google.common.annotations.Beta;
 import com.google.errorprone.annotations.MustBeClosed;
 import com.google.errorprone.annotations.ThreadSafe;
@@ -18,7 +17,6 @@ import java.util.concurrent.locks.ReentrantLock;
 public class DefaultDoubleCyclicBarrier extends DoubleCyclicBarrier {
 
   private final String resourceId;
-  private final String leaseId;
   private final int parties;
   private final CoordinationStore coordination;
   private final Subscription subscription;
@@ -29,9 +27,9 @@ public class DefaultDoubleCyclicBarrier extends DoubleCyclicBarrier {
 
   @MustBeClosed
   public DefaultDoubleCyclicBarrier(
-      String resourceId, String leaseId, int parties, CoordinationStore coordination) {
+      String resourceId, int parties, CoordinationStore coordination) {
     this.resourceId = resourceId;
-    this.leaseId = leaseId;
+
     this.parties = parties;
     this.coordination = coordination;
 
@@ -83,8 +81,7 @@ public class DefaultDoubleCyclicBarrier extends DoubleCyclicBarrier {
 
   @Override
   public void enter() throws InterruptedException {
-    String participantId = ThreadUtils.getCurrentHolderId(leaseId);
-    var command = new DoubleCyclicBarrierCommand.Enter(parties, participantId, leaseId);
+    var command = new DoubleCyclicBarrierCommand.Enter(parties);
 
     // Loop to handle optimistic locking failures
     for (; ; ) {
@@ -105,9 +102,7 @@ public class DefaultDoubleCyclicBarrier extends DoubleCyclicBarrier {
 
   @Override
   public void leave() throws InterruptedException {
-    String participantId = ThreadUtils.getCurrentHolderId(leaseId);
-    var command = new DoubleCyclicBarrierCommand.Leave(parties, participantId, leaseId);
-
+    var command = new DoubleCyclicBarrierCommand.Leave(parties);
     // Loop to handle optimistic locking failures
     for (; ; ) {
       if (coordination.execute(resourceId, command).passed()) {

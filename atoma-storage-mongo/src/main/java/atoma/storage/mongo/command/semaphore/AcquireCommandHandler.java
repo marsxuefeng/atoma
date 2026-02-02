@@ -1,6 +1,7 @@
 package atoma.storage.mongo.command.semaphore;
 
 import atoma.api.AtomaStateException;
+import atoma.api.OperationTimeoutException;
 import atoma.api.Result;
 import atoma.api.coordination.command.CommandHandler;
 import atoma.api.coordination.command.HandlesCommand;
@@ -13,6 +14,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.ReturnDocument;
+import dev.failsafe.TimeoutExceededException;
 import org.bson.BsonNull;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -93,118 +95,112 @@ public class AcquireCommandHandler
     return List.of(
         replaceRoot(
             new Document(
-                "newRoot",
-                new Document(
-                    "$cond",
-                    List.of(
-                        new Document(
-                            "$or",
-                            List.of(
-                                new Document(
-                                    "$and",
-                                    List.of(
-                                        new Document(
-                                            "$eq",
-                                            List.of(
-                                                new Document("$type", "$available_permits"),
-                                                "missing")),
-                                        new Document(
-                                            "$eq",
-                                            List.of(
-                                                new Document("$type", "$initial_permits"),
-                                                "missing")))),
-
-                                // available_permits >= command.permits()
-                                new Document(
-                                    "$gte", List.of("$available_permits", command.permits())))),
-
-                        // ===== then：acquire =====
-                        new Document()
-                            // initial_permits
-                            .append(
-                                "initial_permits",
-                                new Document(
-                                    "$ifNull",
-                                    List.of("$initial_permits", command.initialPermits())))
-
-                            // available_permits
-                            .append(
-                                "available_permits",
-                                new Document(
-                                    "$cond",
-                                    List.of(
-                                        new Document(
-                                            "$or",
-                                            List.of(
-                                                new Document(
-                                                    "$eq",
-                                                    List.of(
-                                                        new Document("$type", "$available_permits"),
-                                                        "missing")),
-                                                new Document(
-                                                    "$eq",
-                                                    List.of(
-                                                        "$available_permits", BsonNull.VALUE)))),
-
-                                        // command.initialPermits - command.permits()
-                                        new Document(
-                                            "$subtract",
-                                            List.of(command.initialPermits(), command.permits())),
-
-                                        // acquire：available_permits - command.permits()
-                                        new Document(
-                                            "$subtract",
-                                            List.of("$available_permits", command.permits())))))
-
-                            // leases
-                            .append(
-                                "leases",
-                                new Document(
-                                    "$let",
+                "$cond",
+                List.of(
+                    new Document(
+                        "$or",
+                        List.of(
+                            new Document(
+                                "$and",
+                                List.of(
                                     new Document(
-                                            "vars",
-                                            new Document(
-                                                "old",
-                                                new Document(
-                                                    "$ifNull", List.of("$leases", new Document()))))
-                                        .append(
-                                            "in",
-                                            new Document(
-                                                "$setField",
-                                                new Document("field", command.leaseId())
-                                                    .append("input", "$$old")
-                                                    .append(
-                                                        "value",
-                                                        new Document(
-                                                            "$add",
-                                                            List.of(
-                                                                new Document(
-                                                                    "$ifNull",
-                                                                    List.of(
-                                                                        new Document(
-                                                                            "$getField",
-                                                                            new Document(
-                                                                                    "field",
-                                                                                    command
-                                                                                        .leaseId())
-                                                                                .append(
-                                                                                    "input",
-                                                                                    "$$old")),
-                                                                        0)),
-                                                                command.permits())))))))
+                                        "$eq",
+                                        List.of(
+                                            new Document("$type", "$available_permits"),
+                                            "missing")),
+                                    new Document(
+                                        "$eq",
+                                        List.of(
+                                            new Document("$type", "$initial_permits"),
+                                            "missing")))),
 
-                            // version
-                            .append(
-                                "version",
+                            // available_permits >= command.permits()
+                            new Document(
+                                "$gte", List.of("$available_permits", command.permits())))),
+
+                    // ===== then：acquire =====
+                    new Document()
+                        // initial_permits
+                        .append(
+                            "initial_permits",
+                            new Document(
+                                "$ifNull", List.of("$initial_permits", command.initialPermits())))
+
+                        // available_permits
+                        .append(
+                            "available_permits",
+                            new Document(
+                                "$cond",
+                                List.of(
+                                    new Document(
+                                        "$or",
+                                        List.of(
+                                            new Document(
+                                                "$eq",
+                                                List.of(
+                                                    new Document("$type", "$available_permits"),
+                                                    "missing")),
+                                            new Document(
+                                                "$eq",
+                                                List.of("$available_permits", BsonNull.VALUE)))),
+
+                                    // command.initialPermits - command.permits()
+                                    new Document(
+                                        "$subtract",
+                                        List.of(command.initialPermits(), command.permits())),
+
+                                    // acquire：available_permits - command.permits()
+                                    new Document(
+                                        "$subtract",
+                                        List.of("$available_permits", command.permits())))))
+
+                        // leases
+                        .append(
+                            "leases",
+                            new Document(
+                                "$let",
                                 new Document(
-                                    "$add",
-                                    List.of(new Document("$ifNull", List.of("$version", 0L)), 1L)))
-                            .append("_update_flag", true),
+                                        "vars",
+                                        new Document(
+                                            "old",
+                                            new Document(
+                                                "$ifNull", List.of("$leases", new Document()))))
+                                    .append(
+                                        "in",
+                                        new Document(
+                                            "$setField",
+                                            new Document("field", command.leaseId())
+                                                .append("input", "$$old")
+                                                .append(
+                                                    "value",
+                                                    new Document(
+                                                        "$add",
+                                                        List.of(
+                                                            new Document(
+                                                                "$ifNull",
+                                                                List.of(
+                                                                    new Document(
+                                                                        "$getField",
+                                                                        new Document(
+                                                                                "field",
+                                                                                command.leaseId())
+                                                                            .append(
+                                                                                "input", "$$old")),
+                                                                    0)),
+                                                            command.permits())))))))
 
-                        // ===== else =====
-                        new Document(
-                            "$mergeObjects",
-                            List.of("$$ROOT", new Document("_update_flag", false))))))));
+                        // version
+                        .append(
+                            "version",
+                            new Document(
+                                "$add",
+                                List.of(new Document("$ifNull", List.of("$version", 0L)), 1L)))
+                        .append("_update_flag", true),
+
+                    // ===== else =====
+                    new Document(
+                        "$mergeObjects",
+                        List.of("$$ROOT", new Document("_update_flag", false)))))));
   }
 
   /**
@@ -263,6 +259,10 @@ public class AcquireCommandHandler
     try {
       return result.getOrThrow();
     } catch (Throwable e) {
+      // Translate Exception
+      if (e instanceof TimeoutExceededException timeoutEx) {
+        throw new OperationTimeoutException(timeoutEx);
+      }
       throw new AtomaStateException(e);
     }
   }

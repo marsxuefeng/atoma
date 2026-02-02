@@ -40,5 +40,6 @@ tasks.test {
         includeTestsMatching("atoma.test.rwlock.*")
         includeTestsMatching("atoma.test.semaphore.*")
         includeTestsMatching("atoma.test.cdl.*")
+        includeTestsMatching("atoma.test.barrier.*")
     }
 }

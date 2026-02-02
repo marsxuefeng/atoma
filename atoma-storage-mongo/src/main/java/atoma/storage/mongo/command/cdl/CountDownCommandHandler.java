@@ -54,7 +54,7 @@ public class CountDownCommandHandler
         replaceRoot(
             new Document(
                 "$cond",
-                new Document("if", new Document("$gte", Arrays.asList("$count", 0)))
+                new Document("if", new Document("$gt", Arrays.asList("$count", 0)))
                     .append(
                         "then",
                         new Document()

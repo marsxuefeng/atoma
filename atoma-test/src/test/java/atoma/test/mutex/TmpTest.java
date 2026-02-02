@@ -1,10 +1,12 @@
 package atoma.test.mutex;
 
 import atoma.api.coordination.command.SemaphoreCommand;
+import com.mongodb.client.model.Aggregates;
 import org.bson.BsonNull;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -26,128 +28,91 @@ public class TmpTest {
     SemaphoreCommand.Acquire command =
         new SemaphoreCommand.Acquire(1, "abc", -1, TimeUnit.SECONDS, 1);
 
+    var owner = new Document().append("holder", "1").append("lease", "1");
+
     var pipeline =
         List.of(
-            new Document(
-                "$replaceRoot",
+            Aggregates.replaceRoot(
                 new Document(
-                    "newRoot",
-                    new Document(
-                        "$cond",
-                        List.of(
-                            new Document(
-                                "$or",
-                                List.of(
-                                    new Document(
-                                        "$and",
-                                        List.of(
-                                            new Document(
-                                                "$eq",
-                                                List.of(
-                                                    new Document("$type", "$available_permits"),
-                                                    "missing")),
-                                            new Document(
-                                                "$eq",
-                                                List.of(
-                                                    new Document("$type", "$initial_permits"),
-                                                    "missing")))),
+                    "$cond",
+                    Arrays.asList(
 
-                                    // available_permits >= command.permits()
-                                    new Document(
-                                        "$gte", List.of("$available_permits", command.permits())))),
+                        // ================= if =================
+                        new Document(
+                            "$and",
+                            Arrays.asList(
 
-                            // ===== then：acquire =====
-                            new Document()
-                                // initial_permits
-                                .append(
-                                    "initial_permits",
-                                    new Document(
-                                        "$ifNull",
-                                        List.of("$initial_permits", command.initialPermits())))
-
-                                // available_permits
-                                .append(
-                                    "available_permits",
-                                    new Document(
-                                        "$cond",
-                                        List.of(
-                                            new Document(
-                                                "$or",
-                                                List.of(
-                                                    new Document(
-                                                        "$eq",
-                                                        List.of(
-                                                            new Document(
-                                                                "$type", "$available_permits"),
-                                                            "missing")),
-                                                    new Document(
-                                                        "$eq",
-                                                        List.of(
-                                                            "$available_permits",
-                                                            BsonNull.VALUE)))),
-
-                                            // command.initialPermits - command.permits()
-                                            new Document(
-                                                "$subtract",
-                                                List.of(
-                                                    command.initialPermits(), command.permits())),
-
-                                            // acquire：available_permits - command.permits()
-                                            new Document(
-                                                "$subtract",
-                                                List.of("$available_permits", command.permits())))))
-
-                                // leases
-                                .append(
-                                    "leases",
-                                    new Document(
-                                        "$let",
+                                // ---- read_locks missing OR size == 0 ----
+                                new Document(
+                                    "$or",
+                                    Arrays.asList(
                                         new Document(
-                                                "vars",
+                                            "$eq",
+                                            Arrays.asList(
+                                                new Document("$type", "$read_locks"), "missing")),
+                                        new Document(
+                                            "$cond",
+                                            Arrays.asList(
                                                 new Document(
-                                                    "old",
-                                                    new Document(
-                                                        "$ifNull",
-                                                        List.of("$leases", new Document()))))
-                                            .append(
-                                                "in",
+                                                    "$eq",
+                                                    Arrays.asList(
+                                                        new Document("$size", "$read_locks"), 0)),
+                                                true,
+                                                false)))),
+
+                                // ---- write_lock.holder & lease missing or null ----
+                                new Document(
+                                    "$and",
+                                    Arrays.asList(
+                                        new Document(
+                                            "$or",
+                                            Arrays.asList(
                                                 new Document(
-                                                    "$setField",
-                                                    new Document("field", command.leaseId())
-                                                        .append("input", "$$old")
-                                                        .append(
-                                                            "value",
-                                                            new Document(
-                                                                "$add",
-                                                                List.of(
-                                                                    new Document(
-                                                                        "$ifNull",
-                                                                        List.of(
-                                                                            new Document(
-                                                                                "$getField",
-                                                                                new Document(
-                                                                                        "field",
-                                                                                        command
-                                                                                            .leaseId())
-                                                                                    .append(
-                                                                                        "input",
-                                                                                        "$$old")),
-                                                                            0)),
-                                                                    command.permits())))))))
+                                                    "$eq",
+                                                    Arrays.asList(
+                                                        new Document("$type", "$write_lock.holder"),
+                                                        "missing")),
+                                                new Document(
+                                                    "$eq",
+                                                    Arrays.asList(
+                                                        "$write_lock.holder", BsonNull.VALUE)))),
+                                        new Document(
+                                            "$or",
+                                            Arrays.asList(
+                                                new Document(
+                                                    "$eq",
+                                                    Arrays.asList(
+                                                        new Document("$type", "$write_lock.lease"),
+                                                        "missing")),
+                                                new Document(
+                                                    "$eq",
+                                                    Arrays.asList(
+                                                        "$write_lock.lease", BsonNull.VALUE)))))))),
 
-                                // version
-                                .append(
-                                    "version",
-                                    new Document(
-                                        "$add",
-                                        List.of(
-                                            new Document("$ifNull", List.of("$version", 0L)), 1L)))
-                                .append("_update_flag", true),
+                        // ================= then =================
+                        new Document()
+                            .append("write_lock", owner)
+                            .append(
+                                "version",
+                                new Document(
+                                    "$cond",
+                                    Arrays.asList(
+                                        new Document(
+                                            "$or",
+                                            Arrays.asList(
+                                                new Document(
+                                                    "$eq",
+                                                    Arrays.asList(
+                                                        new Document("$type", "$version"),
+                                                        "missing")),
+                                                new Document(
+                                                    "$eq",
+                                                    Arrays.asList("$version", BsonNull.VALUE)))),
+                                        1L,
+                                        new Document("$add", Arrays.asList("$version", 1L))))),
 
-                            // ===== else =====
-                            new Document(
-                                "$mergeObjects",
-                                List.of("$$ROOT", new Document("_update_flag", false))))))));
+                        // ================= else =================
+                        "$$ROOT"))));
 
     printScript(pipeline);
   }

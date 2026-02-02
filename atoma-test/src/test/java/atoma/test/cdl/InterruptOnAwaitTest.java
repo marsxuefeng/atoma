@@ -27,9 +27,16 @@ public class InterruptOnAwaitTest extends BaseTest {
                 latch.await();
                 Assertions.fail("Should have thrown InterruptedException");
               } catch (InterruptedException e) {
-                e.printStackTrace();
-                // This is expected
-                Assertions.assertTrue(Thread.currentThread().isInterrupted());
+
+                // 当以下情况发生时，JVM会自动清除线程的中断状态：
+                // 1. 抛出InterruptedException时：
+                //  - 当线程在阻塞方法（如sleep()、wait()、join()、await()等）中被中断
+                //  - JVM会抛出InterruptedException并自动清除中断状态
+                // 2. 调用Thread.interrupted()时：
+                //  - 这个方法会检查并清除当前线程的中断状态
+                //  - 返回线程之前的中断状态，然后将其设置为false
+                // 目的是让线程知道它已经响应了中断请求
+                Assertions.assertFalse(Thread.currentThread().isInterrupted());
               }
             });
 

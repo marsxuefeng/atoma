@@ -196,13 +196,9 @@ public class DefaultSemaphore extends Semaphore {
    * @throws RuntimeException if the wait timed out, wrapping a {@link TimeoutException}
    */
   @Override
-  public void acquire(int permits, Long waitTime, TimeUnit timeUnit) throws InterruptedException {
-    try {
-      doAcquire(permits, waitTime, timeUnit);
-    } catch (TimeoutException e) {
-      // For API consistency, we let InterruptedException propagate but wrap TimeoutException.
-      throw new RuntimeException("Acquisition timed out", e);
-    }
+  public void acquire(int permits, Long waitTime, TimeUnit timeUnit)
+      throws InterruptedException, TimeoutException {
+    doAcquire(permits, waitTime, timeUnit);
   }
 
   /**

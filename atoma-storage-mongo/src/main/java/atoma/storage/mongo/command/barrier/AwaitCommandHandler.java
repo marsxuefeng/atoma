@@ -1,11 +1,11 @@
 package atoma.storage.mongo.command.barrier;
 
 import atoma.api.AtomaStateException;
+import atoma.api.OperationTimeoutException;
 import atoma.api.Result;
 import atoma.api.coordination.command.CommandHandler;
 import atoma.api.coordination.command.CyclicBarrierCommand;
 import atoma.api.coordination.command.HandlesCommand;
-import atoma.storage.mongo.command.AtomaCollectionNamespace;
 import atoma.storage.mongo.command.MongoCommandHandler;
 import atoma.storage.mongo.command.MongoCommandHandlerContext;
 import com.google.auto.service.AutoService;
@@ -14,20 +14,18 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.ReturnDocument;
+import dev.failsafe.TimeoutExceededException;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.function.Function;
 
+import static atoma.storage.mongo.command.AtomaCollectionNamespace.BARRIER_NAMESPACE;
 import static atoma.storage.mongo.command.MongoErrorCode.WRITE_CONFLICT;
-import static com.mongodb.client.model.Filters.and;
+import static com.mongodb.client.model.Aggregates.replaceRoot;
 import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Updates.combine;
-import static com.mongodb.client.model.Updates.inc;
-import static com.mongodb.client.model.Updates.push;
-import static com.mongodb.client.model.Updates.set;
-import static com.mongodb.client.model.Updates.setOnInsert;
-import static com.mongodb.client.model.Updates.unset;
 
 /**
  * Handles the {@code await} operation for a distributed {@code CyclicBarrier}.
@@ -67,21 +65,17 @@ import static com.mongodb.client.model.Updates.unset;
  *
  * <h3>MongoDB Document Schema</h3>
  *
+ * <h3>MongoDB Document Schema</h3>
+ *
  * <pre>{@code
  * {
  *   "_id": "barrier-resource-id",
  *   "parties": 5,
- *   "generation": 1,
+ *   "generation": NumberLong(1),
  *   "is_broken": false,
- *   "version": 12,
- *   "waiters": {
- *     "generation": 1,
- *     "count": 2,
- *     "participants": [
- *       { "participant": "lease-abc___thread-1", "lease": "lease-abc" },
- *       { "participant": "lease-xyz___thread-8", "lease": "lease-xyz" }
- *     ]
- *   }
+ *   "number_waiting": 12,
+ *   "_passed": false,
+ *   "_inconsistent_parties": false,
  * }
  * }</pre>
  */
@@ -91,117 +85,147 @@ import static com.mongodb.client.model.Updates.unset;
 public class AwaitCommandHandler
     extends MongoCommandHandler<CyclicBarrierCommand.Await, CyclicBarrierCommand.AwaitResult> {
 
+  private List<Bson> buildAggregationPipeline(CyclicBarrierCommand.Await command) {
+    return List.of(
+        replaceRoot(
+            new Document(
+                "$cond",
+                List.of(
+
+                    // if: {$ne: [{$type: "$parties"}, "missing"]}
+                    new Document("$ne", List.of(new Document("$type", "$parties"), "missing")),
+
+                    // then:
+                    new Document(
+                        "$cond",
+                        List.of(
+
+                            // if: {$eq: ["$broken", true]}
+                            new Document("$eq", List.of("$broken", true)),
+
+                            // then:
+                            new Document(
+                                "$mergeObjects",
+                                List.of(
+                                    "$$ROOT",
+                                    new Document("_passed", true)
+                                        .append("is_broken", true)
+                                        .append("_inconsistent_parties", false))),
+
+                            // else:
+                            new Document(
+                                "$cond",
+                                List.of(
+
+                                    // if: {$ne: ["$parties", 2]}
+                                    new Document("$ne", List.of("$parties", command.parties())),
+
+                                    // then:
+                                    new Document(
+                                        "$mergeObjects",
+                                        List.of(
+                                            "$$ROOT",
+                                            new Document("_passed", false)
+                                                .append("_inconsistent_parties", true))),
+
+                                    // else:
+                                    new Document(
+                                        "$cond",
+                                        List.of(
+
+                                            // if: {$eq: [{$add: ["$number_waiting", 1]},
+                                            // "$parties"]}
+                                            new Document(
+                                                "$eq",
+                                                List.of(
+                                                    new Document(
+                                                        "$add", List.of("$number_waiting", 1)),
+                                                    "$parties")),
+
+                                            // then:
+                                            new Document(
+                                                "$mergeObjects",
+                                                List.of(
+                                                    "$$ROOT",
+                                                    new Document(
+                                                            "generation",
+                                                            new Document(
+                                                                "$add", List.of("$generation", 1L)))
+                                                        .append("number_waiting", 0)
+                                                        .append("_passed", true)
+                                                        .append("_inconsistent_parties", false))),
+
+                                            // else:
+                                            new Document(
+                                                "$mergeObjects",
+                                                List.of(
+                                                    "$$ROOT",
+                                                    new Document("_passed", false)
+                                                        .append("_inconsistent_parties", false)
+                                                        .append(
+                                                            "number_waiting",
+                                                            new Document(
+                                                                "$add",
+                                                                List.of(
+                                                                    "$number_waiting", 1))))))))))),
+
+                    // else (parties missing):
+                    new Document("parties", command.parties())
+                        .append("generation", 1L)
+                        .append("is_broken", false)
+                        .append("number_waiting", 1)
+                        .append("_passed", command.parties() == 1)))));
+  }
+
   @Override
   public CyclicBarrierCommand.AwaitResult execute(
       CyclicBarrierCommand.Await command, MongoCommandHandlerContext context) {
     MongoClient client = context.getClient();
-    MongoCollection<Document> collection =
-        getCollection(context, AtomaCollectionNamespace.BARRIER_NAMESPACE);
+    MongoCollection<Document> collection = getCollection(context, BARRIER_NAMESPACE);
+
+    List<Bson> pipeline = buildAggregationPipeline(command);
 
     Function<ClientSession, CyclicBarrierCommand.AwaitResult> cmdBlock =
         session -> {
-          // 1. Get-or-Create the barrier state, retrieving its current version.
-          Document barrier =
+          Document barrierDoc =
               collection.findOneAndUpdate(
                   eq("_id", context.getResourceId()),
-                  combine(
-                      setOnInsert("parties", command.parties()),
-                      setOnInsert("generation", 0L),
-                      setOnInsert("is_broken", false),
-                      setOnInsert("version", 1L)),
+                  pipeline,
                   new FindOneAndUpdateOptions().upsert(true).returnDocument(ReturnDocument.AFTER));
 
-          if (barrier == null) {
+          System.err.println("Await command: " + barrierDoc);
+
+          if (barrierDoc == null) {
             throw new AtomaStateException("Failed to find or create barrier document.");
           }
-          if (barrier.getBoolean("is_broken", false)) {
-            return new CyclicBarrierCommand.AwaitResult(false, true);
+
+          if (barrierDoc.getBoolean("_inconsistent_parties", false)) {
+            throw new AtomaStateException(
+                String.format(
+                    "Failed to waiting on document. Parties was %d. expected %d",
+                    barrierDoc.getInteger("parties"), command.parties()));
           }
 
-          long readVersion = barrier.getLong("version");
-          long currentGeneration = barrier.getLong("generation");
-          Document waiters = barrier.get("waiters", Document.class);
-          int parties = barrier.getInteger("parties");
-
-          // 2. Decide which action to take based on the current state.
-          boolean isFirstPartyOfGeneration =
-              (waiters == null || waiters.getLong("generation") != currentGeneration);
-
-          if (isFirstPartyOfGeneration) {
-            // Action: Initialize the waiters for the new generation.
-            long updatedCount =
-                collection
-                    .updateOne(
-                        and(eq("_id", context.getResourceId()), eq("version", readVersion)),
-                        combine(
-                            set(
-                                "waiters",
-                                new Document("generation", currentGeneration)
-                                    .append("count", 1)
-                                    .append(
-                                        "participants",
-                                        List.of(
-                                            new Document("participant", command.participantId())
-                                                .append("lease", command.leaseId())))),
-                            inc("version", 1L)))
-                    .getModifiedCount();
-            return new CyclicBarrierCommand.AwaitResult(updatedCount > 0, false);
-          } else {
-            // Idempotency Check: If participant already exists, return success immediately.
-            List<Document> participants =
-                waiters.getList("participants", Document.class, List.of());
-            boolean alreadyExists =
-                participants.stream()
-                    .anyMatch(p -> command.participantId().equals(p.getString("participant")));
-
-            if (alreadyExists) {
-              return new CyclicBarrierCommand.AwaitResult(true, false);
-            }
-
-            int currentWaiters = waiters.getInteger("count", 0);
-            if (currentWaiters == parties - 1) {
-              // Action: Trip the barrier and reset the broken state.
-              long trippedCount =
-                  collection
-                      .updateOne(
-                          and(
-                              eq("_id", context.getResourceId()),
-                              eq("generation", currentGeneration),
-                              eq("version", readVersion)),
-                          combine(
-                              inc("generation", 1L),
-                              inc("version", 1L),
-                              set("is_broken", false),
-                              unset("waiters")))
-                      .getModifiedCount();
-              return new CyclicBarrierCommand.AwaitResult(trippedCount > 0, false);
-            } else {
-              // Action: Join the waiting group.
-              long joinedCount =
-                  collection
-                      .updateOne(
-                          and(
-                              eq("_id", context.getResourceId()),
-                              eq("generation", currentGeneration),
-                              eq("version", readVersion)),
-                          combine(
-                              inc("waiters.count", 1),
-                              inc("version", 1L),
-                              push(
-                                  "waiters.participants",
-                                  new Document("participant", command.participantId())
-                                      .append("lease", command.leaseId()))))
-                      .getModifiedCount();
-              return new CyclicBarrierCommand.AwaitResult(joinedCount > 0, false);
-            }
-          }
+          return new CyclicBarrierCommand.AwaitResult(
+              barrierDoc.getBoolean("_passed", false),
+              barrierDoc.getBoolean("is_broken", false),
+              barrierDoc.getLong("generation"));
         };
 
     Result<CyclicBarrierCommand.AwaitResult> result =
-        this.newCommandExecutor(client).withoutTxn().retryOnCode(WRITE_CONFLICT).execute(cmdBlock);
+        this.newCommandExecutor(client)
+            .withoutTxn()
+            .withoutCausallyConsistent()
+            .retryOnCode(WRITE_CONFLICT)
+            .withTimeout(Duration.of(command.timeout(), command.timeUnit().toChronoUnit()))
+            .execute(cmdBlock);
     try {
       return result.getOrThrow();
     } catch (Throwable e) {
+      // Translate Exception
+      if (e instanceof TimeoutExceededException timeoutEx) {
+        throw new OperationTimeoutException(timeoutEx);
+      }
       throw new AtomaStateException(e);
     }
   }

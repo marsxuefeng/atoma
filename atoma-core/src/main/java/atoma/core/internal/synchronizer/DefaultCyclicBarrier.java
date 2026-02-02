@@ -1,21 +1,21 @@
 package atoma.core.internal.synchronizer;
 
 import atoma.api.AtomaException;
+import atoma.api.BrokenBarrierException;
+import atoma.api.OperationTimeoutException;
 import atoma.api.coordination.CoordinationStore;
 import atoma.api.coordination.ResourceChangeEvent;
 import atoma.api.coordination.Subscription;
 import atoma.api.coordination.command.CyclicBarrierCommand;
-import atoma.api.BrokenBarrierException;
 import atoma.api.synchronizer.CyclicBarrier;
-import atoma.core.internal.ThreadUtils;
 import com.google.common.annotations.Beta;
 import com.google.errorprone.annotations.MustBeClosed;
 import com.google.errorprone.annotations.ThreadSafe;
+import com.google.errorprone.annotations.concurrent.GuardedBy;
 
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -67,14 +67,15 @@ import java.util.concurrent.locks.ReentrantLock;
 public class DefaultCyclicBarrier extends CyclicBarrier {
 
   private final String resourceId;
-  private final String leaseId;
   private final int parties;
   private final CoordinationStore coordination;
   private final Subscription subscription;
 
   private final ReentrantLock localLock = new ReentrantLock();
   private final Condition generationChanged = localLock.newCondition();
-  private final AtomicLong remoteGeneration = new AtomicLong(-1);
+
+  @GuardedBy("localLock")
+  private volatile long remoteGeneration = -1L;
 
   /**
    * Constructs a new DefaultCyclicBarrier.
@@ -89,7 +90,6 @@ public class DefaultCyclicBarrier extends CyclicBarrier {
    * all local threads waiting in the {@link #await()} method.
    *
    * @param resourceId The unique identifier for the distributed barrier resource.
-   * @param leaseId The lease ID of the client, used for participant tracking.
    * @param parties The number of parties that must invoke {@link #await()} before the barrier is
    *     tripped.
    * @param coordination The coordination store used for state management and eventing.
@@ -97,27 +97,16 @@ public class DefaultCyclicBarrier extends CyclicBarrier {
    *     but was initialized with a different number of parties.
    */
   @MustBeClosed
-  public DefaultCyclicBarrier(
-      String resourceId, String leaseId, int parties, CoordinationStore coordination) {
+  public DefaultCyclicBarrier(String resourceId, int parties, CoordinationStore coordination) {
     if (parties <= 0) {
       throw new IllegalArgumentException("Parties must be a positive number.");
     }
     this.resourceId = resourceId;
-    this.leaseId = leaseId;
     this.parties = parties;
     this.coordination = coordination;
 
-    // Get or create the initial state and validate parties.
-    var initializeCommand =
-        new CyclicBarrierCommand.Await(parties, ThreadUtils.getCurrentHolderId(leaseId), leaseId);
-    CyclicBarrierCommand.AwaitResult initResult =
-        coordination.execute(resourceId, initializeCommand);
-    if (initResult.broken()) {
-      throw new IllegalStateException("Barrier was created in a broken state.");
-    }
-
     CyclicBarrierCommand.GetStateResult initialState =
-        coordination.execute(resourceId, new CyclicBarrierCommand.GetState());
+        coordination.execute(resourceId, new CyclicBarrierCommand.GetState(parties));
     if (initialState.parties() > 0 && initialState.parties() != parties) {
       throw new IllegalArgumentException(
           "A barrier with the same ID already exists but with a different number of parties. "
@@ -126,23 +115,24 @@ public class DefaultCyclicBarrier extends CyclicBarrier {
               + ", Found: "
               + initialState.parties());
     }
-    this.remoteGeneration.set(initialState.generation());
-
+    this.remoteGeneration = initialState.generation();
     this.subscription =
         coordination.subscribe(
             CyclicBarrier.class,
             resourceId,
             event -> {
+
+              // TODO Handle delete event?
               if (event.getType() == ResourceChangeEvent.EventType.UPDATED) {
                 event
                     .getNewNode()
                     .ifPresent(
                         newNode -> {
                           Long newGen = newNode.get("generation");
-                          if (newGen != null && newGen > remoteGeneration.get()) {
-                            remoteGeneration.set(newGen);
+                          if (newGen != null && newGen > remoteGeneration) {
                             localLock.lock();
                             try {
+                              remoteGeneration = newGen;
                               generationChanged.signalAll();
                             } finally {
                               localLock.unlock();
@@ -203,52 +193,72 @@ public class DefaultCyclicBarrier extends CyclicBarrier {
     doAwait(timeout, unit);
   }
 
-  private void doAwait(Long waitTime, TimeUnit timeUnit)
+  private void doAwait(Long timeout, TimeUnit unit)
       throws InterruptedException, BrokenBarrierException, TimeoutException {
-    String participantId = ThreadUtils.getCurrentHolderId(leaseId);
-    var awaitCommand = new CyclicBarrierCommand.Await(parties, participantId, leaseId);
+
+    final boolean timed = (unit != null && timeout > 0L);
+    long start = System.nanoTime(), clockTimeout = timed ? unit.toNanos(timeout) : -1L;
 
     // Loop to handle optimistic locking failures. The command is retried if it fails due to a
     // concurrent modification, indicated by a non-passing, non-broken result.
+    CyclicBarrierCommand.AwaitResult result;
+    long remainingNanos = timed ? (clockTimeout - (System.nanoTime() - start)) : -1L;
+
     for (; ; ) {
       try {
-        CyclicBarrierCommand.AwaitResult result = coordination.execute(resourceId, awaitCommand);
+        var awaitCommand =
+            new CyclicBarrierCommand.Await(parties, remainingNanos, TimeUnit.NANOSECONDS);
+        result = coordination.execute(resourceId, awaitCommand);
         if (result.broken()) {
           throw new BrokenBarrierException("The barrier is in a broken state.");
         }
         if (result.passed()) {
           // Our command was successfully processed (we either joined or tripped the barrier).
           // Now, we must wait for the generation to change.
-          break;
+          return;
         }
-        // If not passed and not broken, it means a concurrent modification occurred (optimistic
-        // lock failure).
-        // The loop will immediately retry the command.
+
       } catch (AtomaException e) {
+        // Check if the exception or its cause is a server-side operation timeout.
+        Throwable cause = e;
+        while (cause != null) {
+          if (cause instanceof OperationTimeoutException) {
+            // Translate the low-level exception to the one declared in our public API contract.
+            throw new TimeoutException("Waiting command timed out during server-side execution.");
+          }
+          cause = cause.getCause();
+        }
+
         // For other errors, wrap and rethrow.
         throw new RuntimeException(
             "Failed to execute await command due to a coordination error", e);
       }
-    }
 
-    long localGen = remoteGeneration.get();
-    localLock.lock();
-    try {
-      while (localGen == remoteGeneration.get()) {
-        if (isBroken()) { // Check if barrier was broken by a reset while we were about to wait
-          throw new BrokenBarrierException("The barrier was broken while waiting.");
-        }
-        if (waitTime != null && timeUnit != null) {
-          if (!generationChanged.await(waitTime, timeUnit)) {
-            reset(); // Break the barrier for others if this thread times out.
-            throw new TimeoutException("Wait for barrier to trip timed out.");
-          }
-        } else {
-          generationChanged.await();
-        }
+      if (timed && remainingNanos <= 0L) {
+        throw new TimeoutException("Unable to passed within the specified time.");
       }
-    } finally {
-      localLock.unlock();
+
+      long latestRemoteGeneration = result.generation();
+      localLock.lock();
+      try {
+        while (latestRemoteGeneration == remoteGeneration) {
+          if (isBroken()) { // Check if barrier was broken by a reset while we were about to wait
+            throw new BrokenBarrierException("The barrier was broken while waiting.");
+          }
+          if (timed) {
+            if (remainingNanos <= 0L) throw new TimeoutException("Wait time elapsed.");
+            if (!generationChanged.await(timeout, unit)) {
+              reset(); // Break the barrier for others if this thread times out.
+              throw new TimeoutException("Wait for barrier to trip timed out.");
+            }
+            remainingNanos -= (System.nanoTime() - start);
+          } else {
+            generationChanged.await();
+          }
+        }
+      } finally {
+        localLock.unlock();
+      }
     }
   }
 
@@ -261,14 +271,13 @@ public class DefaultCyclicBarrier extends CyclicBarrier {
    */
   @Override
   public void reset() {
-    CyclicBarrierCommand.GetStateResult currentState =
-        coordination.execute(resourceId, new CyclicBarrierCommand.GetState());
-    coordination.execute(resourceId, new CyclicBarrierCommand.Reset(currentState.version()));
+    System.err.println("reset");
+    coordination.execute(resourceId, new CyclicBarrierCommand.Reset());
   }
 
   @Override
   public boolean isBroken() {
-    return coordination.execute(resourceId, new CyclicBarrierCommand.GetState()).isBroken();
+    return coordination.execute(resourceId, new CyclicBarrierCommand.GetState(parties)).isBroken();
   }
 
   @Override
@@ -278,7 +287,9 @@ public class DefaultCyclicBarrier extends CyclicBarrier {
 
   @Override
   public int getNumberWaiting() {
-    return coordination.execute(resourceId, new CyclicBarrierCommand.GetState()).numberWaiting();
+    return coordination
+        .execute(resourceId, new CyclicBarrierCommand.GetState(parties))
+        .numberWaiting();
   }
 
   @Override

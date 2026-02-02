@@ -1,6 +1,7 @@
 package atoma.storage.mongo.command.mutex;
 
 import atoma.api.AtomaStateException;
+import atoma.api.OperationTimeoutException;
 import atoma.api.Result;
 import atoma.api.coordination.command.CommandHandler;
 import atoma.api.coordination.command.HandlesCommand;
@@ -15,6 +16,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.ReturnDocument;
+import dev.failsafe.TimeoutExceededException;
 import org.bson.BsonNull;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -81,56 +83,51 @@ public final class AcquireCommandHandler
     return List.of(
         replaceRoot(
             new Document(
-                "newRoot",
-                new Document(
-                    "$cond",
-                    Arrays.asList(
-                        // ========= if =========
-                        new Document(
-                            "$or",
-                            Arrays.asList(
-                                new Document(
-                                    "$and",
-                                    Arrays.asList(
-                                        new Document(
-                                            "$eq",
-                                            Arrays.asList(
-                                                new Document("$type", "$holder"), "missing")),
-                                        new Document(
-                                            "$eq",
-                                            Arrays.asList(
-                                                new Document("$type", "$lease"), "missing")))),
-                                new Document(
-                                    "$and",
-                                    Arrays.asList(
-                                        new Document("$eq", Arrays.asList("$holder", holder)),
-                                        new Document("$eq", Arrays.asList("$lease", lease)))))),
+                "$cond",
+                Arrays.asList(
+                    // ========= if =========
+                    new Document(
+                        "$or",
+                        Arrays.asList(
+                            new Document(
+                                "$and",
+                                Arrays.asList(
+                                    new Document(
+                                        "$eq",
+                                        Arrays.asList(new Document("$type", "$holder"), "missing")),
+                                    new Document(
+                                        "$eq",
+                                        Arrays.asList(
+                                            new Document("$type", "$lease"), "missing")))),
+                            new Document(
+                                "$and",
+                                Arrays.asList(
+                                    new Document("$eq", Arrays.asList("$holder", holder)),
+                                    new Document("$eq", Arrays.asList("$lease", lease)))))),
 
-                        // ========= then =========
-                        new Document()
-                            .append("lease", lease)
-                            .append("holder", holder)
-                            .append(
-                                "version",
-                                new Document(
-                                    "$cond",
-                                    Arrays.asList(
-                                        new Document(
-                                            "$or",
-                                            Arrays.asList(
-                                                new Document(
-                                                    "$eq",
-                                                    Arrays.asList(
-                                                        new Document("$type", "$version"),
-                                                        "missing")),
-                                                new Document(
-                                                    "$eq",
-                                                    Arrays.asList("$version", BsonNull.VALUE)))),
-                                        1L,
-                                        new Document("$add", Arrays.asList("$version", 1L))))),
+                    // ========= then =========
+                    new Document()
+                        .append("lease", lease)
+                        .append("holder", holder)
+                        .append(
+                            "version",
+                            new Document(
+                                "$cond",
+                                Arrays.asList(
+                                    new Document(
+                                        "$or",
+                                        Arrays.asList(
+                                            new Document(
+                                                "$eq",
+                                                Arrays.asList(
+                                                    new Document("$type", "$version"), "missing")),
+                                            new Document(
+                                                "$eq", Arrays.asList("$version", BsonNull.VALUE)))),
+                                    1L,
+                                    new Document("$add", Arrays.asList("$version", 1L))))),
 
-                        // ========= else =========
-                        "$$ROOT")))));
+                    // ========= else =========
+                    "$$ROOT"))));
   }
 
   @Override
@@ -183,6 +180,10 @@ public final class AcquireCommandHandler
     try {
       return result.getOrThrow();
     } catch (Throwable e) {
+      // Translate Exception
+      if (e instanceof TimeoutExceededException timeoutEx) {
+        throw new OperationTimeoutException(timeoutEx);
+      }
       throw new AtomaStateException(e);
     }
   }

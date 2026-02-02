@@ -41,7 +41,8 @@ public interface CoordinationStore extends AutoCloseable {
    * @return A {@link Subscription} object that can be used to cancel this subscription in the
    *     future, preventing further listener invocations.
    */
-  Subscription subscribe(Class<? extends Resourceful> resourceType, String resourceId, ResourceListener listener);
+  Subscription subscribe(
+      Class<? extends Resourceful> resourceType, String resourceId, ResourceListener listener);
 
   /**
    * Executes a specific {@link Command} against a particular distributed resource.

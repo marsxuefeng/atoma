@@ -63,6 +63,10 @@ public class AtomaClient implements AutoCloseable {
         TimeUnit.SECONDS);
   }
 
+  public Lease grantLease() {
+    return grantLease(Duration.ofSeconds(32));
+  }
+
   public Lease grantLease(Duration ttl) {
     Lease lease =
         new DefaultLease(
@@ -94,25 +98,38 @@ public class AtomaClient implements AutoCloseable {
     return countDownLatch;
   }
 
-  public CyclicBarrier getCyclicBarrier(String resourceId, Lease lease, int parties) {
+  public CyclicBarrier getCyclicBarrier(String resourceId, int parties) {
     CyclicBarrier barrier = (CyclicBarrier) atomaResources.get(CyclicBarrier.class, resourceId);
     if (barrier == null) {
-      barrier =
-          new DefaultCyclicBarrier(
-              resourceId, lease.getResourceId(), parties, this.coordinationStore);
+      barrier = new DefaultCyclicBarrier(resourceId, parties, this.coordinationStore);
       atomaResources.put(CyclicBarrier.class, resourceId, barrier);
     }
+    if (barrier.getParties() != parties) {
+      throw new IllegalArgumentException(
+          "A barrier with the same ID already exists but with a different number of parties. "
+              + "Expected: "
+              + barrier.getParties()
+              + ", Found: "
+              + parties);
+    }
+
     return barrier;
   }
 
-  public DoubleCyclicBarrier getDoubleCyclicBarrier(String resourceId, Lease lease, int parties) {
+  public DoubleCyclicBarrier getDoubleCyclicBarrier(String resourceId, int parties) {
     DoubleCyclicBarrier doubleBarrier =
         (DoubleCyclicBarrier) atomaResources.get(DoubleCyclicBarrier.class, resourceId);
     if (doubleBarrier == null) {
-      doubleBarrier =
-          new DefaultDoubleCyclicBarrier(
-              resourceId, lease.getResourceId(), parties, this.coordinationStore);
+      doubleBarrier = new DefaultDoubleCyclicBarrier(resourceId, parties, this.coordinationStore);
       atomaResources.put(DoubleCyclicBarrier.class, resourceId, doubleBarrier);
+    }
+    if (doubleBarrier.getParticipants() != parties) {
+      throw new IllegalArgumentException(
+          "A double-barrier with the same ID already exists but with a different number of parties. "
+              + "Expected: "
+              + doubleBarrier.getParticipants()
+              + ", Found: "
+              + parties);
     }
     return doubleBarrier;
   }

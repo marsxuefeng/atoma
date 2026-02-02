@@ -4,6 +4,7 @@ import atoma.api.Leasable;
 import atoma.api.OperationTimeoutException;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * A distributed counting semaphore.
@@ -40,7 +41,7 @@ public abstract class Semaphore extends Leasable {
    * @throws IllegalArgumentException if {@code permits} is not a positive number
    */
   public abstract void acquire(int permits, Long waitTime, TimeUnit timeUnit)
-      throws InterruptedException;
+      throws InterruptedException, TimeoutException;
 
   /**
    * Releases the given number of permits, returning them to the semaphore.

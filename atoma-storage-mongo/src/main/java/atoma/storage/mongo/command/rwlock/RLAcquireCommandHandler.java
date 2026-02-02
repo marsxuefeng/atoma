@@ -97,71 +97,65 @@ public class RLAcquireCommandHandler
     return List.of(
         replaceRoot(
             new Document(
-                "newRoot",
-                new Document(
-                    "$cond",
-                    Arrays.asList(
-                        // ===== if =====
-                        new Document(
-                            "$and",
-                            Arrays.asList(
-                                new Document(
-                                    "$or",
-                                    Arrays.asList(
-                                        new Document(
-                                            "$eq",
-                                            Arrays.asList(
-                                                new Document("$type", "$write_lock.holder"),
-                                                "missing")),
-                                        new Document(
-                                            "$eq",
-                                            Arrays.asList("$write_lock.holder", BsonNull.VALUE)))),
-                                new Document(
-                                    "$or",
-                                    Arrays.asList(
-                                        new Document(
-                                            "$eq",
-                                            Arrays.asList(
-                                                new Document("$type", "$write_lock.lease"),
-                                                "missing")),
-                                        new Document(
-                                            "$eq",
-                                            Arrays.asList("$write_lock.lease", BsonNull.VALUE)))))),
+                "$cond",
+                Arrays.asList(
+                    // ===== if =====
+                    new Document(
+                        "$and",
+                        Arrays.asList(
+                            new Document(
+                                "$or",
+                                Arrays.asList(
+                                    new Document(
+                                        "$eq",
+                                        Arrays.asList(
+                                            new Document("$type", "$write_lock.holder"),
+                                            "missing")),
+                                    new Document(
+                                        "$eq",
+                                        Arrays.asList("$write_lock.holder", BsonNull.VALUE)))),
+                            new Document(
+                                "$or",
+                                Arrays.asList(
+                                    new Document(
+                                        "$eq",
+                                        Arrays.asList(
+                                            new Document("$type", "$write_lock.lease"), "missing")),
+                                    new Document(
+                                        "$eq",
+                                        Arrays.asList("$write_lock.lease", BsonNull.VALUE)))))),
 
-                        // ===== then =====
-                        new Document()
-                            .append(
-                                "read_locks",
-                                new Document(
-                                    "$cond",
-                                    Arrays.asList(
-                                        new Document("$isArray", "$read_locks"),
-                                        new Document(
-                                            "$setUnion",
-                                            Arrays.asList("$read_locks", ownerDocArray)),
-                                        ownerDocArray)))
-                            .append(
-                                "version",
-                                new Document(
-                                    "$cond",
-                                    Arrays.asList(
-                                        new Document(
-                                            "$or",
-                                            Arrays.asList(
-                                                new Document(
-                                                    "$eq",
-                                                    Arrays.asList(
-                                                        new Document("$type", "$version"),
-                                                        "missing")),
-                                                new Document(
-                                                    "$eq",
-                                                    Arrays.asList("$version", BsonNull.VALUE)))),
-                                        1L,
-                                        new Document("$add", Arrays.asList("$version", 1L))))),
+                    // ===== then =====
+                    new Document()
+                        .append(
+                            "read_locks",
+                            new Document(
+                                "$cond",
+                                Arrays.asList(
+                                    new Document("$isArray", "$read_locks"),
+                                    new Document(
+                                        "$setUnion", Arrays.asList("$read_locks", ownerDocArray)),
+                                    ownerDocArray)))
+                        .append(
+                            "version",
+                            new Document(
+                                "$cond",
+                                Arrays.asList(
+                                    new Document(
+                                        "$or",
+                                        Arrays.asList(
+                                            new Document(
+                                                "$eq",
+                                                Arrays.asList(
+                                                    new Document("$type", "$version"), "missing")),
+                                            new Document(
+                                                "$eq", Arrays.asList("$version", BsonNull.VALUE)))),
+                                    1L,
+                                    new Document("$add", Arrays.asList("$version", 1L))))),
 
-                        // ===== else =====
-                        // Fail-Soft
-                        "$$ROOT")))));
+                    // ===== else =====
+                    // Fail-Soft
+                    "$$ROOT"))));
   }
 
   /**
