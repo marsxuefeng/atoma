@@ -10,4 +10,7 @@ public interface Resource {
   Map<String, Object> getData();
 
   <T> T get(String key);
+  <T> T get(String key, T defaultValue);
+
+
 }

@@ -64,7 +64,7 @@ public class BarrierTc017Test extends BaseTest {
                   // This party will time out first, as the 3rd party never arrives.
                   barrier.await(1, TimeUnit.SECONDS);
                 } catch (Exception e) {
-                  e.printStackTrace();
+                  System.err.println("Part2 退出 " + e.getMessage());
                   party2Exception.set(e);
                 } finally {
                   exceptionsCaught.countDown();

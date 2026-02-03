@@ -36,6 +36,7 @@ import static com.mongodb.client.model.Updates.setOnInsert;
  *   "number_waiting": 12,
  *   "_passed": false,
  *   "_inconsistent_parties": false,
+ *   "_waited": false,
  * }
  * }</pre>
  */

@@ -41,6 +41,7 @@ import static com.mongodb.client.model.Updates.set;
  *   "number_waiting": 12,
  *   "_passed": false,
  *   "_inconsistent_parties": false,
+ *   "_waited": false,
  * }
  * }</pre>
  */
@@ -69,7 +70,7 @@ public class ResetCommandHandler extends MongoCommandHandler<CyclicBarrierComman
                   eq("_id", context.getResourceId()),
                   combine(
                       inc("generation", 1L), // Break current waiters
-                      set("is_broken", true), // Mark as broken
+                      set("is_broken", false), // Mark as broken
                       set("number_waiting", 0) // Clear all waiters
                       ));
 

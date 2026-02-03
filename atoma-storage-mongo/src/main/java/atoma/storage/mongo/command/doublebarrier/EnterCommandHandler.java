@@ -11,15 +11,9 @@ import com.google.auto.service.AutoService;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.FindOneAndUpdateOptions;
-import com.mongodb.client.model.ReturnDocument;
 import org.bson.Document;
 
-import java.util.List;
 import java.util.function.Function;
-
-import static com.mongodb.client.model.Filters.*;
-import static com.mongodb.client.model.Updates.*;
 
 /**
  * Handles the server-side logic for the {@code enter} phase of a distributed {@link
@@ -99,80 +93,81 @@ public class EnterCommandHandler
 
     Function<ClientSession, DoubleCyclicBarrierCommand.EnterResult> cmdBlock =
         session -> {
-          Document barrier =
-              collection.findOneAndUpdate(
-                  eq("_id", context.getResourceId()),
-                  combine(
-                      setOnInsert("parties", command.parties()),
-                      setOnInsert("generation", 0L),
-                      setOnInsert("version", 1L)),
-                  new FindOneAndUpdateOptions().upsert(true).returnDocument(ReturnDocument.AFTER));
-
-          if (barrier == null) throw new AtomaStateException("Failed to find or create barrier.");
-
-          long readVersion = barrier.getLong("version");
-          long currentGeneration = barrier.getLong("generation");
-          Document waiters = barrier.get("enter_waiters", Document.class);
-
-          boolean isFirst = (waiters == null || waiters.getLong("generation") != currentGeneration);
-
-          if (isFirst) {
-            long count =
-                collection
-                    .updateOne(
-                        and(eq("_id", context.getResourceId()), eq("version", readVersion)),
-                        combine(
-                            set(
-                                "enter_waiters",
-                                new Document("generation", currentGeneration)
-                                    .append("count", 1)
-                                    .append(
-                                        "participants",
-                                        List.of(
-                                            new Document("participant", command.participantId())
-                                                .append("lease", command.leaseId())))),
-                            inc("version", 1L)))
-                    .getModifiedCount();
-            return new DoubleCyclicBarrierCommand.EnterResult(count > 0);
-          } else {
-            // Idempotency Check: If participant already exists, return success immediately.
-            List<Document> participants =
-                waiters.getList("participants", Document.class, List.of());
-            boolean alreadyExists =
-                participants.stream()
-                    .anyMatch(p -> command.participantId().equals(p.getString("participant")));
-
-            if (alreadyExists) {
-              return new DoubleCyclicBarrierCommand.EnterResult(true);
-            }
-
-            int currentWaiters = waiters.getInteger("count", 0);
-            if (currentWaiters == command.parties() - 1) {
-              long count =
-                  collection
-                      .updateOne(
-                          and(eq("_id", context.getResourceId()), eq("version", readVersion)),
-                          combine(unset("enter_waiters"), inc("version", 1L)))
-                      .getModifiedCount();
-              return new DoubleCyclicBarrierCommand.EnterResult(count > 0);
-            } else {
-              long count =
-                  collection
-                      .updateOne(
-                          // The idempotency check is now handled above, so we only need to check
-                          // version.
-                          and(eq("_id", context.getResourceId()), eq("version", readVersion)),
-                          combine(
-                              inc("enter_waiters.count", 1),
-                              inc("version", 1L),
-                              push(
-                                  "enter_waiters.participants",
-                                  new Document("participant", command.participantId())
-                                      .append("lease", command.leaseId()))))
-                      .getModifiedCount();
-              return new DoubleCyclicBarrierCommand.EnterResult(count > 0);
-            }
-          }
+//          Document barrier =
+//              collection.findOneAndUpdate(
+//                  eq("_id", context.getResourceId()),
+//                  combine(
+//                      setOnInsert("parties", command.parties()),
+//                      setOnInsert("generation", 0L),
+//                      setOnInsert("version", 1L)),
+//                  new FindOneAndUpdateOptions().upsert(true).returnDocument(ReturnDocument.AFTER));
+//
+//          if (barrier == null) throw new AtomaStateException("Failed to find or create barrier.");
+//
+//          long readVersion = barrier.getLong("version");
+//          long currentGeneration = barrier.getLong("generation");
+//          Document waiters = barrier.get("enter_waiters", Document.class);
+//
+//          boolean isFirst = (waiters == null || waiters.getLong("generation") != currentGeneration);
+//
+//          if (isFirst) {
+//            long count =
+//                collection
+//                    .updateOne(
+//                        and(eq("_id", context.getResourceId()), eq("version", readVersion)),
+//                        combine(
+//                            set(
+//                                "enter_waiters",
+//                                new Document("generation", currentGeneration)
+//                                    .append("count", 1)
+//                                    .append(
+//                                        "participants",
+//                                        List.of(
+//                                            new Document("participant", command.participantId())
+//                                                .append("lease", command.leaseId())))),
+//                            inc("version", 1L)))
+//                    .getModifiedCount();
+//            return new DoubleCyclicBarrierCommand.EnterResult(count > 0);
+//          } else {
+//            // Idempotency Check: If participant already exists, return success immediately.
+//            List<Document> participants =
+//                waiters.getList("participants", Document.class, List.of());
+//            boolean alreadyExists =
+//                participants.stream()
+//                    .anyMatch(p -> command.participantId().equals(p.getString("participant")));
+//
+//            if (alreadyExists) {
+//              return new DoubleCyclicBarrierCommand.EnterResult(true);
+//            }
+//
+//            int currentWaiters = waiters.getInteger("count", 0);
+//            if (currentWaiters == command.parties() - 1) {
+//              long count =
+//                  collection
+//                      .updateOne(
+//                          and(eq("_id", context.getResourceId()), eq("version", readVersion)),
+//                          combine(unset("enter_waiters"), inc("version", 1L)))
+//                      .getModifiedCount();
+//              return new DoubleCyclicBarrierCommand.EnterResult(count > 0);
+//            } else {
+//              long count =
+//                  collection
+//                      .updateOne(
+//                          // The idempotency check is now handled above, so we only need to check
+//                          // version.
+//                          and(eq("_id", context.getResourceId()), eq("version", readVersion)),
+//                          combine(
+//                              inc("enter_waiters.count", 1),
+//                              inc("version", 1L)/*,
+//                              push(
+//                                  "enter_waiters.participants",
+//                                  new Document("participant", command.participantId())
+//                                      .append("lease", command.leaseId()))*/))
+//                      .getModifiedCount();
+//              return new DoubleCyclicBarrierCommand.EnterResult(count > 0);
+//            }
+//          }
+            return null;
         };
 
     try {

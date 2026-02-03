@@ -72,10 +72,10 @@ public class DefaultCyclicBarrier extends CyclicBarrier {
   private final Subscription subscription;
 
   private final ReentrantLock localLock = new ReentrantLock();
-  private final Condition generationChanged = localLock.newCondition();
+  private final Condition generationUpgraded = localLock.newCondition();
 
   @GuardedBy("localLock")
-  private volatile long remoteGeneration = -1L;
+  private volatile long remoteGeneration;
 
   /**
    * Constructs a new DefaultCyclicBarrier.
@@ -128,12 +128,15 @@ public class DefaultCyclicBarrier extends CyclicBarrier {
                     .getNewNode()
                     .ifPresent(
                         newNode -> {
-                          Long newGen = newNode.get("generation");
-                          if (newGen != null && newGen > remoteGeneration) {
+                          long newGen = newNode.get("generation");
+                          boolean shouldSignal =
+                              newGen > remoteGeneration || newNode.get("is_broken", false);
+
+                          if (shouldSignal) {
                             localLock.lock();
                             try {
                               remoteGeneration = newGen;
-                              generationChanged.signalAll();
+                              generationUpgraded.signalAll();
                             } finally {
                               localLock.unlock();
                             }
@@ -201,21 +204,27 @@ public class DefaultCyclicBarrier extends CyclicBarrier {
 
     // Loop to handle optimistic locking failures. The command is retried if it fails due to a
     // concurrent modification, indicated by a non-passing, non-broken result.
-    CyclicBarrierCommand.AwaitResult result;
+    CyclicBarrierCommand.AwaitResult result = null;
     long remainingNanos = timed ? (clockTimeout - (System.nanoTime() - start)) : -1L;
 
+    boolean waited = false;
+    Exit:
     for (; ; ) {
       try {
-        var awaitCommand =
-            new CyclicBarrierCommand.Await(parties, remainingNanos, TimeUnit.NANOSECONDS);
-        result = coordination.execute(resourceId, awaitCommand);
-        if (result.broken()) {
-          throw new BrokenBarrierException("The barrier is in a broken state.");
-        }
-        if (result.passed()) {
-          // Our command was successfully processed (we either joined or tripped the barrier).
-          // Now, we must wait for the generation to change.
-          return;
+        if (!waited) {
+          var awaitCommand =
+              new CyclicBarrierCommand.Await(
+                  parties, remoteGeneration, remainingNanos, TimeUnit.NANOSECONDS);
+          result = coordination.execute(resourceId, awaitCommand);
+          if (result.broken()) {
+            throw new BrokenBarrierException("The barrier is in a broken state.");
+          }
+          if (result.passed()) {
+            // Our command was successfully processed (we either joined or tripped the barrier).
+            // Now, we must wait for the generation to change.
+            return;
+          }
+          if (result.waited()) waited = true;
         }
 
       } catch (AtomaException e) {
@@ -223,37 +232,51 @@ public class DefaultCyclicBarrier extends CyclicBarrier {
         Throwable cause = e;
         while (cause != null) {
           if (cause instanceof OperationTimeoutException) {
+            // Break the barrier for others if this thread times out.
+            breakBarrier(result == null ? remoteGeneration : result.generation());
+
             // Translate the low-level exception to the one declared in our public API contract.
             throw new TimeoutException("Waiting command timed out during server-side execution.");
           }
           cause = cause.getCause();
         }
-
+        // Break the barrier for others if this thread times out.
+        breakBarrier(result == null ? remoteGeneration : result.generation());
         // For other errors, wrap and rethrow.
         throw new RuntimeException(
             "Failed to execute await command due to a coordination error", e);
       }
 
       if (timed && remainingNanos <= 0L) {
+        // Break the barrier for others if this thread times out.
+        breakBarrier(result.generation());
         throw new TimeoutException("Unable to passed within the specified time.");
       }
 
-      long latestRemoteGeneration = result.generation();
+      final long generation = remoteGeneration;
       localLock.lock();
       try {
-        while (latestRemoteGeneration == remoteGeneration) {
-          if (isBroken()) { // Check if barrier was broken by a reset while we were about to wait
-            throw new BrokenBarrierException("The barrier was broken while waiting.");
-          }
+        while (generation == remoteGeneration) {
+          // Check if barrier was broken by a reset while we were about to wait
+          if (isBroken()) throw new BrokenBarrierException("The barrier was broken while waiting.");
+
           if (timed) {
             if (remainingNanos <= 0L) throw new TimeoutException("Wait time elapsed.");
-            if (!generationChanged.await(timeout, unit)) {
-              reset(); // Break the barrier for others if this thread times out.
+            if (!generationUpgraded.await(remainingNanos, TimeUnit.NANOSECONDS)) {
+              // Break the barrier for others if this thread times out.
+              breakBarrier(result.generation());
               throw new TimeoutException("Wait for barrier to trip timed out.");
             }
             remainingNanos -= (System.nanoTime() - start);
           } else {
-            generationChanged.await();
+            generationUpgraded.await();
+          }
+
+          // Check if barrier was broken by a reset while we were about to wait
+          if (isBroken()) throw new BrokenBarrierException("The barrier was broken while waiting.");
+          if (waited) {
+            System.err.println("break Exit;");
+            break Exit;
           }
         }
       } finally {
@@ -271,8 +294,11 @@ public class DefaultCyclicBarrier extends CyclicBarrier {
    */
   @Override
   public void reset() {
-    System.err.println("reset");
     coordination.execute(resourceId, new CyclicBarrierCommand.Reset());
+  }
+
+  private void breakBarrier(long remoteGeneration) {
+    coordination.execute(resourceId, new CyclicBarrierCommand.Break(remoteGeneration));
   }
 
   @Override

@@ -15,11 +15,15 @@ import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.ReturnDocument;
 import org.bson.Document;
 
-import java.util.List;
 import java.util.function.Function;
 
-import static com.mongodb.client.model.Filters.*;
-import static com.mongodb.client.model.Updates.*;
+import static com.mongodb.client.model.Filters.and;
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.combine;
+import static com.mongodb.client.model.Updates.inc;
+import static com.mongodb.client.model.Updates.set;
+import static com.mongodb.client.model.Updates.setOnInsert;
+import static com.mongodb.client.model.Updates.unset;
 
 @SuppressWarnings("rawtypes")
 @AutoService({CommandHandler.class})
@@ -63,12 +67,12 @@ public class LeaveCommandHandler
                             set(
                                 "leave_waiters",
                                 new Document("generation", currentGeneration)
-                                    .append("count", 1)
+                                    .append("count", 1)/*
                                     .append(
                                         "participants",
                                         List.of(
                                             new Document("participant", command.participantId())
-                                                .append("lease", command.leaseId())))),
+                                                .append("lease", command.leaseId())))*/),
                             inc("version", 1L)))
                     .getModifiedCount();
             return new DoubleCyclicBarrierCommand.LeaveResult(count > 0);
@@ -89,17 +93,17 @@ public class LeaveCommandHandler
                       .updateOne(
                           and(
                               eq("_id", context.getResourceId()),
-                              eq("version", readVersion),
+                              eq("version", readVersion)/*,
                               ne(
                                   "leave_waiters.participants.participant",
-                                  command.participantId())),
+                                  command.participantId())*/),
                           combine(
                               inc("leave_waiters.count", 1),
-                              inc("version", 1L),
+                              inc("version", 1L)/*,
                               push(
                                   "leave_waiters.participants",
                                   new Document("participant", command.participantId())
-                                      .append("lease", command.leaseId()))))
+                                      .append("lease", command.leaseId()))*/))
                       .getModifiedCount();
               return new DoubleCyclicBarrierCommand.LeaveResult(count > 0);
             }

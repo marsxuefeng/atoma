@@ -20,10 +20,12 @@ public final class CyclicBarrierCommand {
    *     barrier, {@code false} otherwise.
    * @param broken {@code true} if the barrier was broken either before or as a result of this
    *     await.
+   * @param waited {@code true} if the barrier was waited successfully either before or as a result
+   *     of this await.
    * @param generation The current generation of the barrier. A generation changes when the barrier
    *     is tripped or reset.
    */
-  public record AwaitResult(boolean passed, boolean broken, long generation) {}
+  public record AwaitResult(boolean passed, boolean broken, boolean waited, long generation) {}
 
   /**
    * Represents the state of the barrier, returned by a {@link GetState} command.
@@ -43,9 +45,19 @@ public final class CyclicBarrierCommand {
    *
    * @param parties The number of parties required to trip the barrier. This is used to initialize
    *     the barrier on the first await.
+   * @param generation The current generation of the barrier. A generation changes when the barrier
+   *     is tripped or reset.
    */
-  public record Await(int parties, long timeout, TimeUnit timeUnit)
+  public record Await(int parties, long generation, long timeout, TimeUnit timeUnit)
       implements Command<AwaitResult> {}
+
+  /**
+   * Command to break the barrier to its broken state.
+   *
+   * @param generation The current generation of the barrier. A generation changes when the barrier
+   *     * is tripped or reset.
+   */
+  public record Break(long generation) implements Command<Void> {}
 
   /**
    * Command to reset the barrier to its initial state. This is useful for re-using a barrier after

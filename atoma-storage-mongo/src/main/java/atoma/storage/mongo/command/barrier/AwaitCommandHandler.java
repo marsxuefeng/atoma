@@ -12,6 +12,7 @@ import com.google.auto.service.AutoService;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.ReturnDocument;
 import dev.failsafe.TimeoutExceededException;
@@ -19,12 +20,12 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
 import static atoma.storage.mongo.command.AtomaCollectionNamespace.BARRIER_NAMESPACE;
 import static atoma.storage.mongo.command.MongoErrorCode.WRITE_CONFLICT;
-import static com.mongodb.client.model.Aggregates.replaceRoot;
 import static com.mongodb.client.model.Filters.eq;
 
 /**
@@ -76,6 +77,7 @@ import static com.mongodb.client.model.Filters.eq;
  *   "number_waiting": 12,
  *   "_passed": false,
  *   "_inconsistent_parties": false,
+ *   "_waited": false,
  * }
  * }</pre>
  */
@@ -87,94 +89,121 @@ public class AwaitCommandHandler
 
   private List<Bson> buildAggregationPipeline(CyclicBarrierCommand.Await command) {
     return List.of(
-        replaceRoot(
+        Aggregates.replaceRoot(
             new Document(
                 "$cond",
-                List.of(
+                Arrays.asList(
 
-                    // if: {$ne: [{$type: "$parties"}, "missing"]}
-                    new Document("$ne", List.of(new Document("$type", "$parties"), "missing")),
+                    /* ---------- if ( barrier exists ) ---------- */
+                    new Document(
+                        "$ne", Arrays.asList(new Document("$type", "$parties"), "missing")),
 
-                    // then:
+                    /* ================= TRUE ================= */
                     new Document(
                         "$cond",
-                        List.of(
+                        Arrays.asList(
 
-                            // if: {$eq: ["$broken", true]}
-                            new Document("$eq", List.of("$broken", true)),
+                            /* if ( input parties != parties ) */
+                            new Document("$ne", Arrays.asList("$parties", command.parties())),
 
-                            // then:
+                            /* inconsistent parties */
                             new Document(
                                 "$mergeObjects",
-                                List.of(
+                                Arrays.asList(
                                     "$$ROOT",
-                                    new Document("_passed", true)
-                                        .append("is_broken", true)
-                                        .append("_inconsistent_parties", false))),
+                                    new Document("_inconsistent_parties", true)
+                                        .append("_passed", false)
+                                        .append("_waited", false))),
 
-                            // else:
+                            /* ========= parties match ========= */
                             new Document(
                                 "$cond",
-                                List.of(
+                                Arrays.asList(
 
-                                    // if: {$ne: ["$parties", 2]}
-                                    new Document("$ne", List.of("$parties", command.parties())),
+                                    /* if ( is_broken ) */
+                                    new Document("$eq", Arrays.asList("$_is_broken", true)),
 
-                                    // then:
+                                    /* already broken */
                                     new Document(
                                         "$mergeObjects",
-                                        List.of(
+                                        Arrays.asList(
                                             "$$ROOT",
-                                            new Document("_passed", false)
-                                                .append("_inconsistent_parties", true))),
+                                            new Document("_is_broken", true)
+                                                .append("_waited", false))),
 
-                                    // else:
+                                    /* ===== not broken ===== */
                                     new Document(
                                         "$cond",
-                                        List.of(
+                                        Arrays.asList(
 
-                                            // if: {$eq: [{$add: ["$number_waiting", 1]},
-                                            // "$parties"]}
+                                            /* if ( generation == input generation ) */
                                             new Document(
                                                 "$eq",
-                                                List.of(
-                                                    new Document(
-                                                        "$add", List.of("$number_waiting", 1)),
-                                                    "$parties")),
+                                                Arrays.asList("$generation", command.generation())),
 
-                                            // then:
+                                            /* ===== generation match ===== */
                                             new Document(
-                                                "$mergeObjects",
-                                                List.of(
-                                                    "$$ROOT",
-                                                    new Document(
-                                                            "generation",
-                                                            new Document(
-                                                                "$add", List.of("$generation", 1L)))
-                                                        .append("number_waiting", 0)
-                                                        .append("_passed", true)
-                                                        .append("_inconsistent_parties", false))),
+                                                "$cond",
+                                                Arrays.asList(
 
-                                            // else:
-                                            new Document(
-                                                "$mergeObjects",
-                                                List.of(
-                                                    "$$ROOT",
-                                                    new Document("_passed", false)
-                                                        .append("_inconsistent_parties", false)
-                                                        .append(
-                                                            "number_waiting",
+                                                    /* if ( number_waiting + 1 == parties ) */
+                                                    new Document(
+                                                        "$eq",
+                                                        Arrays.asList(
                                                             new Document(
                                                                 "$add",
-                                                                List.of(
-                                                                    "$number_waiting", 1))))))))))),
+                                                                Arrays.asList(
+                                                                    "$number_waiting", 1)),
+                                                            "$parties")),
 
-                    // else (parties missing):
-                    new Document("parties", command.parties())
-                        .append("generation", 1L)
-                        .append("is_broken", false)
-                        .append("number_waiting", 1)
-                        .append("_passed", command.parties() == 1)))));
+                                                    /* ---- pass barrier ---- */
+                                                    new Document(
+                                                        "$mergeObjects",
+                                                        Arrays.asList(
+                                                            "$$ROOT",
+                                                            new Document(
+                                                                    "generation",
+                                                                    new Document(
+                                                                        "$add",
+                                                                        Arrays.asList(
+                                                                            "$generation", 1)))
+                                                                .append("number_waiting", 0)
+                                                                .append("_passed", true)
+                                                                .append("_waited", true))),
+
+                                                    /* ---- keep waiting ---- */
+                                                    new Document(
+                                                        "$mergeObjects",
+                                                        Arrays.asList(
+                                                            "$$ROOT",
+                                                            new Document(
+                                                                    "number_waiting",
+                                                                    new Document(
+                                                                        "$add",
+                                                                        Arrays.asList(
+                                                                            "$number_waiting", 1)))
+                                                                .append("_passed", false)
+                                                                .append(
+                                                                    "_inconsistent_parties", false)
+                                                                .append("_waited", true))))),
+
+                                            /* ===== generation mismatch ===== */
+                                            new Document(
+                                                "$mergeObjects",
+                                                Arrays.asList(
+                                                    "$$ROOT",
+                                                    new Document("_is_broken", false)
+                                                        .append("_passed", false)
+                                                        .append("_waited", false))))))))),
+
+                    /* ================= FALSE ================= */
+                    /* barrier not exists */
+                    new Document(
+                        "$mergeObjects",
+                        Arrays.asList(
+                            "$$ROOT",
+                            new Document("_inconsistent_parties", true)
+                                .append("_waited", false)))))));
   }
 
   @Override
@@ -209,6 +238,7 @@ public class AwaitCommandHandler
           return new CyclicBarrierCommand.AwaitResult(
               barrierDoc.getBoolean("_passed", false),
               barrierDoc.getBoolean("is_broken", false),
+              barrierDoc.getBoolean("_waited", false),
               barrierDoc.getLong("generation"));
         };
 

@@ -15,9 +15,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 
-/**
- * Test case for BARRIER-TC-019: Mixed test with nodes having different timeout settings.
- */
+/** Test case for BARRIER-TC-019: Mixed test with nodes having different timeout settings. */
 public class BarrierTc019Test extends BaseTest {
 
   @DisplayName("BARRIER-TC-019: 设置不同超时时间的节点混合测试")
@@ -45,6 +43,7 @@ public class BarrierTc019Test extends BaseTest {
                   barrier.await(1, TimeUnit.SECONDS);
                 } catch (Exception e) {
                   shortTimeoutException.set(e);
+                  System.err.println("party1 error " + e.getMessage());
                 } finally {
                   exceptionsCaught.countDown();
                 }
@@ -84,8 +83,7 @@ public class BarrierTc019Test extends BaseTest {
       party1.start();
 
       Assertions.assertTrue(
-          exceptionsCaught.await(12, TimeUnit.SECONDS),
-          "All parties should catch an exception");
+          exceptionsCaught.await(12, TimeUnit.SECONDS), "All parties should catch an exception");
 
       Assertions.assertInstanceOf(
           TimeoutException.class,

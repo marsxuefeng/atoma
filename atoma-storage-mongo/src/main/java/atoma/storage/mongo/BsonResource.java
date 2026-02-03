@@ -33,4 +33,11 @@ public final class BsonResource implements Resource {
   public <T> T get(String key) {
     return (T) this.bson.get(key);
   }
+
+  @Override
+  public <T> T get(String key, T defaultValue) {
+    T r;
+    if ((r = get(key)) != null) return r;
+    return defaultValue;
+  }
 }
