@@ -249,7 +249,6 @@ final class DefaultCyclicBarrier extends CyclicBarrier {
 
     String participantId = String.format("%s/%s", leaseId, ThreadUtils.getCurrentThreadId());
 
-    boolean waited = false;
     for (; ; ) {
       long remainingNanos = timed ? (clockTimeout - (System.nanoTime() - start)) : -1L;
       try {
@@ -270,7 +269,6 @@ final class DefaultCyclicBarrier extends CyclicBarrier {
           // Now, we must wait for the generation to change.
           return;
         }
-        if (result.waited()) waited = true;
 
         remainingNanos = timed ? (clockTimeout - (System.nanoTime() - start)) : -1L;
 
@@ -341,7 +339,7 @@ final class DefaultCyclicBarrier extends CyclicBarrier {
         localLock.unlock();
       }
 
-      if (waited) {
+      if (result.waited()) {
         // If we are here, the generation has changed.
         // We need to re-query the server state to determine if the barrier was broken or
         // passed.
