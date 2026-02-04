@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="atoma.test.barrier.BarrierTc025Test" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-02-04T04:54:23.865Z" hostname="manjaro" time="2.201">
-  <properties/>
-  <testcase name="BARRIER-TC-025: 单个节点在await()前失败" classname="atoma.test.barrier.BarrierTc025Test" time="2.2"/>
-  <system-out><![CDATA[12:54:23.948 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [167c10bc-ddf7-4212-a3ca-be667670353a] renew completed. Previous expire time: 2026-02-04T04:54:55.907Z Next expire time: 2026-02-04T04:55:27.907Z 
-]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

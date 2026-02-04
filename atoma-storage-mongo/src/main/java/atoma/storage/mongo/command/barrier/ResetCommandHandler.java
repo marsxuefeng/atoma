@@ -1,3 +1,19 @@
+/*
+ * Copyright 2025 XueFeng Ma
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package atoma.storage.mongo.command.barrier;
 
 import atoma.api.AtomaStateException;
@@ -20,7 +36,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
-import static atoma.storage.mongo.command.AtomaCollectionNamespace.BARRIER_NAMESPACE;
+import static atoma.storage.mongo.command.AtomaCollectionNamespace.BARRIER;
 import static com.mongodb.client.model.Aggregates.replaceRoot;
 import static com.mongodb.client.model.Filters.eq;
 import static java.util.Collections.emptyList;
@@ -38,12 +54,12 @@ import static java.util.Collections.emptyList;
  * <pre>{@code
  * [
  *   {
- *     "_id": "BARRIER-TC-008",
- *     "_passed": false,
- *     "generation": 4,
+ *     "_id": "BARRIER-TC-028",
+ *     "generation": 17,
  *     "is_broken": false,
  *     "participants": [],
- *     "parties": 2
+ *     "parties": 2,
+ *     "version": NumberLong(1)
  *   }
  * ]
  * }</pre>
@@ -66,12 +82,16 @@ public class ResetCommandHandler
    *     is_broken = false
    *     participants = []
    *     parties = <input parties>
+   *     version += 1
+   *     return
    * }else{
    *     $$ROOT
    *     parties = <input parties>
    *     generation = 1
    *     is_broken = false
    *     participants = []
+   *     version = 1
+   *     return
    * }
    * }</pre>
    *
@@ -99,7 +119,8 @@ public class ResetCommandHandler
                                     new Document("$add", Arrays.asList("$generation", 1L)))
                                 .append("is_broken", false)
                                 .append("parties", command.parties())
-                                .append("participants", emptyList()))),
+                                .append("participants", emptyList())
+                                .append("version", new Document("$add", List.of("$version", 1L))))),
 
                     // -------- else --------
                     new Document(
@@ -108,7 +129,8 @@ public class ResetCommandHandler
                             "$$ROOT",
                             new Document("generation", 1L)
                                 .append("is_broken", false)
-                                .append("participants", emptyList())))))));
+                                .append("participants", emptyList())
+                                .append("version", 1L)))))));
   }
 
   /**
@@ -123,7 +145,7 @@ public class ResetCommandHandler
   public CyclicBarrierCommand.GetStateResult execute(
       CyclicBarrierCommand.Reset command, MongoCommandHandlerContext context) {
     MongoClient client = context.getClient();
-    MongoCollection<Document> collection = getCollection(context, BARRIER_NAMESPACE);
+    MongoCollection<Document> collection = getCollection(context, BARRIER);
     List<Bson> pipeline = buildAggregationPipeline(command);
     Function<ClientSession, CyclicBarrierCommand.GetStateResult> cmdBlock =
         session -> {

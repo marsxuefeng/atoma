@@ -1,58 +1,161 @@
-## README_zh.md (中文版本)
+# Atoma: 分布式协调原子原语库
 
-**[English](README.md)**
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/your-username/atoma)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Maven Central](https://img.shields.io/maven-central/v/io.atoma/atoma-api.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:io.atoma)
 
-# Atoma: 基于 MongoDB 的分布式并发原语
+**Atoma** 是一个使用 Java 实现的、轻量级且高性能的分布式协调原语库。它旨在将传统并发编程中广为人知的同步工具（如 `Lock`, `Semaphore`, `CountDownLatch`）引入到分布式环境中，从而帮助开发者简单、可靠地构建分布式系统。
 
-Atoma 是一个强大的基于 Java 的项目，它提供了一套分布式并发控制原语，类似于 `java.util.concurrent` 包中的功能。这些原语旨在利用 MongoDB 作为底层持久化和协调存储，在多个应用程序实例之间可靠地运行。
+## 简介
 
-本项目旨在通过提供可靠的资源同步和协调机制，帮助开发人员构建容错的分布式系统。
+在复杂的分布式系统中，跨多台机器的协调与同步是一个普遍存在的难题。Atoma 提供了一套与 `java.util.concurrent` 包类似但专为分布式环境设计的 API，使得开发者可以用熟悉的方式解决分布式场景下的资源竞争、任务同步和流程控制等问题。
 
-## 功能特性
+项目的设计哲学是**API 优先**和**可插拔后端**。核心 API (`atoma-api`) 与具体的存储实现解耦，目前官方提供了一个基于 **MongoDB** 的实现 (`atoma-storage-mongo`)。
 
-* **分布式互斥锁 (Mutex Locks)**: 确保即使在不同的 JVM 或机器上，也只有一个实例或线程可以同时访问共享资源。支持可重入。
-* **分布式读写锁**: 允许在分布式环境中同时有多个读取者或单个写入者访问共享资源，优化了读多写少的场景。
-* **分布式信号量**: 在分布式环境中控制对有限资源池的访问。
-* **分布式屏障**: 在一个共同点同步多个参与者，确保所有参与者都达到某个阶段后才能继续。包括对双重屏障的支持。
-* **分布式倒计时锁 (Count-Down Latches)**: 允许一个或多个进程等待，直到分布式系统中其他进程执行的一组操作完成。
-* **租约管理 (Lease Management)**: 一种管理分布式并发原语生命周期和所有权的机制。
-* **基于 MongoDB 的实现**: 利用 MongoDB 的事务能力和变更流（Change Streams）进行状态持久化、协调以及分布式节点间的实时更新。
-* **弹性和容错性**: 设计时考虑了容错性，使用了 Failsafe 等库来实现健壮的分布式操作。
+## 核心特性
 
-## 工作原理
+- **丰富的原语支持**:
+  - **分布式锁 (`Lock`)**: 提供互斥访问，确保在任何时刻只有一个客户端可以访问共享资源。
+  - **分布式读写锁 (`ReadWriteLock`)**:允许多个读操作同时进行，但写操作是互斥的，适用于读多写少的场景。
+  - **分布式信号量 (`Semaphore`)**: 控制对共享资源的并发访问数量。
+  - **分布式倒计时门闩 (`CountDownLatch`)**: 允许一个或多个线程等待其他线程完成操作。
+  - **分布式循环栅栏 (`CyclicBarrier`)**: 让一组线程互相等待，直到所有线程都到达一个共同的屏障点。
+- **可插拔的存储后端**:
+  - 核心逻辑与存储层分离。
+  - 内置基于 MongoDB 的 `CoordinationStore` 实现。
+  - 开发者可以根据需要实现自己的存储后端，以适配不同的基础架构（如 ZooKeeper, Etcd, Redis 等）。
+- **高性能与低延迟**:
+  - 客户端与协调服务之间的通信经过优化，减少网络往返。
+  - 利用后端存储的原子操作，确保分布式环境下操作的一致性和正确性。
+- **简单易用的 API**:
+  - API 设计模仿 `java.util.concurrent`，降低学习成本。
+  - 提供 `AtomaClient` 作为统一的入口点，方便管理所有原语。
 
-Atoma 通过在 MongoDB 集合中管理其分布式原语的状态来实现其功能。它使用了：
+## 项目架构
 
-* **MongoDB 事务**: 确保修改分布式原语状态的操作的原子性和一致性。
-* **MongoDB 变更流**: 使分布式参与者能够实时响应状态变化，从而无需持续轮询即可实现高效协调。
+本项目采用模块化设计，主要模块如下：
 
-## 使用的外部库
+- `atoma-api`: 定义了所有分布式原语的核心接口和通用异常。这是用户和实现者都应依赖的模块。
+- `atoma-core`: 提供了 Atoma 客户端的核心实现，负责与后端协调存储进行通信。
+- `atoma-storage-mongo`: 基于 MongoDB 的存储层实现，实现了 `atoma-api` 中定义的 `CoordinationStore` 接口。
+- `atoma-benchmark`: 包含一系列 JMH 基准测试，用于评估不同原语的性能。
+- `atoma-test`: 包含项目的集成测试和单元测试套件。
 
-Atoma 的核心功能依赖于以下关键外部库：
+## 快速开始
 
-* **MongoDB Java Driver**: 用于与 MongoDB 交互。
-* **Google Guava**: Google 提供的一套核心 Java 工具库。
-* **Failsafe**: 一个用于处理分布式操作中故障的弹性与容错库。
-* **Lettuce**: 一个高性能的 Redis 客户端（尽管 MongoDB 是核心原语的主要存储，Redis 可能用于其他方面或替代实现）。
-* **SLF4J & Logback**: 用于灵活而强大的日志记录。
-* **AutoValue & AutoService**: Google 库，用于生成样板代码和服务加载。
+### 1. 先决条件
 
-## 文档
+- Java 11 或更高版本。
+- 一个正在运行的 MongoDB 实例。
 
-包含使用示例和 API 参考的完整文档可在项目的专用文档网站上找到，该网站使用 Next.js 和 Fumadocs 构建。
+### 2. 添加依赖
 
-## 开始使用
+**Gradle (Kotlin DSL)**
 
-*(此部分通常包含设置说明，例如如何在 Maven/Gradle 中添加依赖，以及基本的代码示例。由于我无法执行代码或提供动态内容，此处仅作占位符。)*
+```kotlin
+// build.gradle.kts
+dependencies {
+    implementation("io.atoma:atoma-core:1.0.0-SNAPSHOT")
+    implementation("io.atoma:atoma-storage-mongo:1.0.0-SNAPSHOT")
+}
+```
 
-## 贡献
+**Maven**
 
-我们欢迎贡献！请查阅我们的贡献指南（如果仓库中提供）以获取更多详情。
+```xml
+<!-- pom.xml -->
+<dependencies>
+    <dependency>
+        <groupId>io.atoma</groupId>
+        <artifactId>atoma-core</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+        <groupId>io.atoma</groupId>
+        <artifactId>atoma-storage-mongo</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+</dependencies>
+```
+
+### 3. 使用示例
+
+以下是一个使用分布式互斥锁 (`MutexLock`) 的简单示例：
+
+```java
+import atoma.api.lock.Lock;
+import atoma.core.AtomaClient;
+import atoma.storage.mongo.MongoCoordinationStore;
+
+public class DistributedLockExample {
+
+    public static void main(String[] args) {
+        // 1. 创建并配置一个 MongoDB 存储后端
+        String connectionString = "mongodb://localhost:27017";
+        String databaseName = "atoma_db";
+        MongoCoordinationStore store = new MongoCoordinationStore(connectionString, databaseName);
+
+        // 2. 创建 Atoma 客户端
+        AtomaClient client = new AtomaClient.Builder()
+                .address("localhost") // 标识客户端实例
+                .store(store)
+                .build();
+
+        // 3. 获取一个分布式锁实例
+        // "my-critical-task" 是锁的唯一名称
+        Lock mutexLock = client.getMutexLock("my-critical-task");
+
+        // 4. 在 try-finally 块中获取和释放锁，确保锁一定会被释放
+        try {
+            System.out.println("尝试获取锁...");
+            mutexLock.lock(); // 阻塞直到获取锁
+            System.out.println("成功获取锁，执行关键任务...");
+
+            // 模拟执行任务
+            Thread.sleep(10000);
+
+            System.out.println("任务执行完毕。");
+
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            System.err.println("线程被中断");
+        } finally {
+            mutexLock.unlock();
+            System.out.println("锁已释放。");
+        }
+
+        // 5. 关闭客户端，释放资源
+        client.close();
+    }
+}
+```
+
+## 从源码构建
+
+1. 克隆本仓库:
+   ```sh
+   git clone https://github.com/your-username/atoma.git
+   cd atoma
+   ```
+
+2. 使用 Gradle Wrapper 构建项目:
+   ```sh
+   ./gradlew build
+   ```
+   构建成功后，你可以在各个模块的 `build/libs` 目录下找到生成的 JAR 文件。
+
+## 如何贡献
+
+我们非常欢迎社区的贡献！无论是报告 Bug、提出功能建议还是提交代码。
+
+1.  **Fork** 本仓库。
+2.  创建一个新的功能分支 (`git checkout -b feature/your-feature-name`)。
+3.  进行修改并提交 (`git commit -m 'Add some feature'`)。
+4.  将你的分支推送到你的 Fork (`git push origin feature/your-feature-name`)。
+5.  创建一个 **Pull Request**。
+
+在提交 Pull Request 之前，请确保你的代码通过了所有测试 (`./gradlew test`)。
 
 ## 许可证
 
-*(在此处指定项目的许可证，例如 MIT, Apache 2.0)*
-
-## 联系方式
-
-如有问题或反馈，请在 GitHub 仓库中提交 Issue。
+本项目采用 [Apache License 2.0](LICENSE) 许可证。

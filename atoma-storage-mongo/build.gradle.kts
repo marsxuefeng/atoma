@@ -7,7 +7,6 @@ plugins {
 }
 
 group = "atoma.storage.mongo"
-version = "1.0"
 
 dependencies {
     api(project(":atoma-api"))

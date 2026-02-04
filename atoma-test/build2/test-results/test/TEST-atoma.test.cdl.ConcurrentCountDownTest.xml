@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="atoma.test.cdl.ConcurrentCountDownTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-02-04T04:54:24.418Z" hostname="manjaro" time="0.64">
-  <properties/>
-  <testcase name="DCL-TC-007: 100个线程同时调用countDown()" classname="atoma.test.cdl.ConcurrentCountDownTest" time="0.638"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

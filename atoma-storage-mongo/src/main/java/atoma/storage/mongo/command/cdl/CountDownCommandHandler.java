@@ -1,3 +1,19 @@
+/*
+ * Copyright 2025 XueFeng Ma
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package atoma.storage.mongo.command.cdl;
 
 import atoma.api.AtomaStateException;
@@ -16,11 +32,10 @@ import com.mongodb.client.model.ReturnDocument;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
-import static atoma.storage.mongo.command.AtomaCollectionNamespace.COUNTDOWN_LATCH_NAMESPACE;
+import static atoma.storage.mongo.command.AtomaCollectionNamespace.COUNTDOWN_LATCH;
 import static com.mongodb.client.model.Aggregates.replaceRoot;
 import static com.mongodb.client.model.Filters.eq;
 
@@ -39,6 +54,7 @@ import static com.mongodb.client.model.Filters.eq;
  * {
  *   "_id": "latch-resource-id",
  *   "count": 3,
+ *   "version": NumberLong(1),
  *   "_update_flag:": true
  * }
  * }</pre>
@@ -49,22 +65,80 @@ import static com.mongodb.client.model.Filters.eq;
 public class CountDownCommandHandler
     extends MongoCommandHandler<CountDownLatchCommand.CountDown, Void> {
 
-  private List<Bson> buildAggregationPipeline() {
+  /**
+   *
+   *
+   * <h3>Fake-code for count-down</h3>
+   *
+   * <pre>{@code
+   * if ( count-down-latch existed ) {
+   *     if ( $count > 0 ) : {
+   *         $$ROOT
+   *         count -= 1
+   *         version += 1
+   *         _update_flag = true
+   *     }else{
+   *         $$ROOT
+   *         _update_flag = false
+   *         version += 1
+   *     }
+   * } else {
+   *     version = 1
+   *     count = 1
+   *     _update_flag = true
+   *     count = 3
+   * }
+   * }</pre>
+   *
+   * @param command The {@link CountDownLatchCommand.CountDown} command.
+   * @return A {@link List} of {@link Bson} stages for the {@code findOneAndUpdate} operation.
+   */
+  private List<Bson> buildAggregationPipeline(CountDownLatchCommand.CountDown command) {
     return List.of(
         replaceRoot(
             new Document(
                 "$cond",
-                new Document("if", new Document("$gt", Arrays.asList("$count", 0)))
-                    .append(
-                        "then",
-                        new Document()
-                            .append("count", new Document("$add", Arrays.asList("$count", -1)))
-                            .append("_update_flag", true))
-                    .append(
-                        "else",
-                        new Document(
-                            "$mergeObjects",
-                            Arrays.asList("$$ROOT", new Document("_update_flag", false)))))));
+                List.of(
+
+                    // ===== if ( count-down-latch existed ) =====
+                    new Document("$ne", List.of(new Document("$type", "$count"), "missing")),
+
+                    // ===== THEN: latch existed =====
+                    new Document(
+                        "$cond",
+                        List.of(
+
+                            // if ( $count > 0 )
+                            new Document("$gt", List.of("$count", 0)),
+
+                            // ---- count > 0 ----
+                            new Document(
+                                "$mergeObjects",
+                                List.of(
+                                    "$$ROOT",
+                                    new Document(
+                                        "count", new Document("$subtract", List.of("$count", 1))),
+                                    new Document(
+                                        "version", new Document("$add", List.of("$version", 1L))),
+                                    new Document("_update_flag", true))),
+
+                            // ---- count <= 0 ----
+                            new Document(
+                                "$mergeObjects",
+                                List.of(
+                                    "$$ROOT",
+                                    new Document(
+                                        "version", new Document("$add", List.of("$version", 1L))),
+                                    new Document("_update_flag", false))))),
+
+                    // ===== ELSE: latch not existed (init) =====
+                    new Document(
+                        "$mergeObjects",
+                        List.of(
+                            "$$ROOT",
+                            new Document("version", 1L),
+                            new Document("count", command.count() - 1),
+                            new Document("_update_flag", true)))))));
   }
 
   /**
@@ -78,9 +152,9 @@ public class CountDownCommandHandler
   @Override
   public Void execute(CountDownLatchCommand.CountDown command, MongoCommandHandlerContext context) {
     MongoClient client = context.getClient();
-    MongoCollection<Document> collection = getCollection(context, COUNTDOWN_LATCH_NAMESPACE);
+    MongoCollection<Document> collection = getCollection(context, COUNTDOWN_LATCH);
 
-    List<Bson> pipeline = buildAggregationPipeline();
+    List<Bson> pipeline = buildAggregationPipeline(command);
 
     Function<ClientSession, Void> cmdBlock =
         session -> {
@@ -88,16 +162,12 @@ public class CountDownCommandHandler
               collection.findOneAndUpdate(
                   eq("_id", context.getResourceId()),
                   pipeline,
-                  new FindOneAndUpdateOptions().upsert(false).returnDocument(ReturnDocument.AFTER));
+                  new FindOneAndUpdateOptions().upsert(true).returnDocument(ReturnDocument.AFTER));
 
           if (countDownLatchDoc == null) {
             throw new IllegalStateException(
                 "Failed to count-down. the count-down-latch does not exist");
           }
-
-          /*if (!countDownLatchDoc.getBoolean("_update_flag"))
-            throw new IllegalStateException("The count is already negative");*/
-
           return null;
         };
 

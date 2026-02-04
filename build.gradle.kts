@@ -1,11 +1,21 @@
+val projectVersion: String by project
+
 plugins {
     id("java")
+    `maven-publish`
+    signing
 }
 
 group = "atoma"
-version = "1.0"
+
+
+val publishableModules = listOf(
+    "atoma-api", "atoma-core", "atoma-storage-mongo"
+)
+
 
 allprojects {
+    version = projectVersion
     apply(plugin = "java")
     repositories {
         mavenCentral()
@@ -15,7 +25,42 @@ allprojects {
     }
 }
 
+configure(subprojects.filter { it.name in publishableModules }) {
+    apply(plugin = "maven-publish")
+    apply(plugin = "signing")
 
-tasks.test {
-    useJUnitPlatform()
+    // 配置源码和文档Jar
+    tasks.register<Jar>("sourcesJar") {
+        from(sourceSets["main"].allSource)
+        archiveClassifier.set("sources")
+    }
+
+    tasks.register<Jar>("javadocJar") {
+        from(tasks.named("javadoc"))
+        archiveClassifier.set("javadoc")
+    }
+
+    publishing {
+        publications {
+            create<MavenPublication>("mavenJava") {
+                groupId = project.group.toString()
+                artifactId = project.name
+                version = project.version.toString()
+
+                from(components["java"])
+
+                artifact(tasks.named("sourcesJar"))
+                artifact(tasks.named("javadocJar"))
+
+                pom {
+                    name.set(project.name)
+                    description.set(project.description ?: "No description")
+                }
+            }
+        }
+    }
+
+    signing {
+        sign(publishing.publications["mavenJava"])
+    }
 }

@@ -6,7 +6,6 @@ plugins {
     id("net.ltgt.errorprone") version "4.1.0"
 }
 group = "atoma.core"
-version = "1.0"
 
 dependencies {
     api(project(":atoma-api"))

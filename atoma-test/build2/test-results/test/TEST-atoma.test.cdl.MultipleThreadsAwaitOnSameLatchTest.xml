@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="atoma.test.cdl.MultipleThreadsAwaitOnSameLatchTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-02-04T04:54:24.283Z" hostname="manjaro" time="1.172">
-  <properties/>
-  <testcase name="DCL-TC-002: 多个线程同时等待同一个latch" classname="atoma.test.cdl.MultipleThreadsAwaitOnSameLatchTest" time="1.171"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

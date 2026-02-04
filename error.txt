@@ -1,0 +1,3 @@
+ConcurrentCountDownTest	atoma.test.cdl.ConcurrentCountDownTest	1	1	0	10.097s	0%
+HighConcurrencyCountAccuracyTest	atoma.test.cdl.HighConcurrencyCountAccuracyTest	1	1	0	30.106s	0%
+SingleClientCountDownLatchTest	atoma.test.cdl.SingleClientCountDownLatchTest	1	1	0	0.099s	0%

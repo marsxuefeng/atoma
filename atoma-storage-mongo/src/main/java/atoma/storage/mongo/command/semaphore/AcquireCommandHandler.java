@@ -1,3 +1,19 @@
+/*
+ * Copyright 2025 XueFeng Ma
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package atoma.storage.mongo.command.semaphore;
 
 import atoma.api.AtomaStateException;
@@ -15,7 +31,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.ReturnDocument;
 import dev.failsafe.TimeoutExceededException;
-import org.bson.BsonNull;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -23,11 +38,12 @@ import java.time.Duration;
 import java.util.List;
 import java.util.function.Function;
 
-import static atoma.storage.mongo.command.AtomaCollectionNamespace.SEMAPHORE_NAMESPACE;
+import static atoma.storage.mongo.command.AtomaCollectionNamespace.SEMAPHORE;
 import static atoma.storage.mongo.command.MongoErrorCode.DUPLICATE_KEY;
 import static atoma.storage.mongo.command.MongoErrorCode.WRITE_CONFLICT;
 import static com.mongodb.client.model.Aggregates.replaceRoot;
 import static com.mongodb.client.model.Filters.eq;
+import static java.util.Collections.emptyMap;
 
 /**
  * Handles the server-side logic for acquiring permits from a distributed semaphore.
@@ -86,121 +102,143 @@ public class AcquireCommandHandler
    * semaphore-document, which has a very low cost and can help us solve the problems of the two
    * APIs mentioned above
    *
+   * <h3>Fake-code for acquire logical</h3>
+   *
+   * <pre>{@code
+   * if ( semaphore existed ) {
+   *     if ( <acquire permits>  <=  $available_permits ) {
+   *         $$ROOT
+   *         available_permits -= <acquire permits>
+   *         version += 1
+   *         leases.lease-abc: {
+   *             $inc: <acquire permits>
+   *         }
+   *         _update_flag = true
+   *         return
+   *     }else{
+   *         $$ROOT
+   *         _update_flag = false
+   *         return
+   *     }
+   * } else {
+   *     if ( <acquire permits>  <=  <initial_permits> ) {
+   *         version = 1
+   *         available_permits = <initial_permits> - <input permits>
+   *         initial_permits = <initial_permits>
+   *         _update_flag = true
+   *         leases.lease-abc= <input permits>
+   *         return
+   *     }else{
+   *         version = 1
+   *         available_permits = <input permits>
+   *         _update_flag = false
+   *         initial_permits = <input permits>
+   *         leases.lease-abc = {}
+   *         return
+   *     }
+   * }
+   * }</pre>
+   *
    * @see MongoCollection#findOneAndUpdate(Bson, List)
    * @see MongoCollection#updateOne(Bson, Bson)
    * @param command acquire command
    * @return A {@link List} of {@link Bson} stages for the {@code findOneAndUpdate} operation.
    */
   private List<Bson> buildAggregationPipeline(SemaphoreCommand.Acquire command) {
+    int acquirePermits = command.permits();
+    int initialPermits = command.initialPermits();
     return List.of(
         replaceRoot(
             new Document(
                 "$cond",
                 List.of(
+
+                    // ===== if ( semaphore existed ) =====
                     new Document(
-                        "$or",
+                        "$ne", List.of(new Document("$type", "$available_permits"), "missing")),
+
+                    // ================= existed =================
+                    new Document(
+                        "$cond",
                         List.of(
+
+                            // if ( acquirePermits <= available_permits )
+                            new Document("$lte", List.of(acquirePermits, "$available_permits")),
+
+                            // ---- acquire success ----
                             new Document(
-                                "$and",
+                                "$mergeObjects",
                                 List.of(
+                                    "$$ROOT",
+
+                                    // available_permits -= acquirePermits
                                     new Document(
-                                        "$eq",
-                                        List.of(
-                                            new Document("$type", "$available_permits"),
-                                            "missing")),
-                                    new Document(
-                                        "$eq",
-                                        List.of(
-                                            new Document("$type", "$initial_permits"),
-                                            "missing")))),
-
-                            // available_permits >= command.permits()
-                            new Document(
-                                "$gte", List.of("$available_permits", command.permits())))),
-
-                    // ===== then：acquire =====
-                    new Document()
-                        // initial_permits
-                        .append(
-                            "initial_permits",
-                            new Document(
-                                "$ifNull", List.of("$initial_permits", command.initialPermits())))
-
-                        // available_permits
-                        .append(
-                            "available_permits",
-                            new Document(
-                                "$cond",
-                                List.of(
-                                    new Document(
-                                        "$or",
-                                        List.of(
-                                            new Document(
-                                                "$eq",
-                                                List.of(
-                                                    new Document("$type", "$available_permits"),
-                                                    "missing")),
-                                            new Document(
-                                                "$eq",
-                                                List.of("$available_permits", BsonNull.VALUE)))),
-
-                                    // command.initialPermits - command.permits()
-                                    new Document(
-                                        "$subtract",
-                                        List.of(command.initialPermits(), command.permits())),
-
-                                    // acquire：available_permits - command.permits()
-                                    new Document(
-                                        "$subtract",
-                                        List.of("$available_permits", command.permits())))))
-
-                        // leases
-                        .append(
-                            "leases",
-                            new Document(
-                                "$let",
-                                new Document(
-                                        "vars",
+                                        "available_permits",
                                         new Document(
-                                            "old",
-                                            new Document(
-                                                "$ifNull", List.of("$leases", new Document()))))
-                                    .append(
-                                        "in",
+                                            "$subtract",
+                                            List.of("$available_permits", acquirePermits))),
+
+                                    // version += 1
+                                    new Document(
+                                        "version", new Document("$add", List.of("$version", 1L))),
+
+                                    // leases.lease-id += acquirePermits
+                                    new Document(
+                                        "leases",
                                         new Document(
-                                            "$setField",
-                                            new Document("field", command.leaseId())
-                                                .append("input", "$$old")
-                                                .append(
-                                                    "value",
+                                            "$mergeObjects",
+                                            List.of(
+                                                new Document(
+                                                    "$ifNull", List.of("$leases", emptyMap())),
+                                                new Document(
+                                                    command.leaseId(),
                                                     new Document(
                                                         "$add",
                                                         List.of(
                                                             new Document(
                                                                 "$ifNull",
                                                                 List.of(
-                                                                    new Document(
-                                                                        "$getField",
-                                                                        new Document(
-                                                                                "field",
-                                                                                command.leaseId())
-                                                                            .append(
-                                                                                "input", "$$old")),
+                                                                    "$leases." + command.leaseId(),
                                                                     0)),
-                                                            command.permits())))))))
+                                                            acquirePermits)))))),
+                                    new Document("_update_flag", true))),
 
-                        // version
-                        .append(
-                            "version",
+                            // ---- acquire failed ----
                             new Document(
-                                "$add",
-                                List.of(new Document("$ifNull", List.of("$version", 0L)), 1L)))
-                        .append("_update_flag", true),
+                                "$mergeObjects",
+                                List.of("$$ROOT", new Document("_update_flag", false))))),
 
-                    // ===== else =====
+                    // ================= not existed =================
                     new Document(
-                        "$mergeObjects",
-                        List.of("$$ROOT", new Document("_update_flag", false)))))));
+                        "$cond",
+                        List.of(
+
+                            // if ( acquirePermits <= initialPermits )
+                            new Document("$lte", List.of(acquirePermits, initialPermits)),
+
+                            // ---- init & acquire success ----
+                            new Document(
+                                "$mergeObjects",
+                                List.of(
+                                    "$$ROOT",
+                                    new Document("version", 1L),
+                                    new Document("initial_permits", initialPermits),
+                                    new Document(
+                                        "available_permits", initialPermits - acquirePermits),
+                                    new Document(
+                                        "leases", new Document(command.leaseId(), acquirePermits)),
+                                    new Document("_update_flag", true))),
+
+                            // ---- init but acquire failed ----
+                            new Document(
+                                "$mergeObjects",
+                                List.of(
+                                    "$$ROOT",
+                                    new Document("version", 1L),
+                                    new Document("initial_permits", initialPermits),
+                                    new Document("available_permits", initialPermits),
+                                    new Document("leases", emptyMap()),
+                                    new Document("_update_flag", false)))))))));
   }
 
   /**
@@ -217,7 +255,7 @@ public class AcquireCommandHandler
   public SemaphoreCommand.AcquireResult execute(
       SemaphoreCommand.Acquire command, MongoCommandHandlerContext context) {
     MongoClient client = context.getClient();
-    MongoCollection<Document> collection = getCollection(context, SEMAPHORE_NAMESPACE);
+    MongoCollection<Document> collection = getCollection(context, SEMAPHORE);
 
     List<Bson> pipeline = buildAggregationPipeline(command);
 

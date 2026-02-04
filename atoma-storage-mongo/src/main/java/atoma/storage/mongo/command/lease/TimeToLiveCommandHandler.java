@@ -1,3 +1,19 @@
+/*
+ * Copyright 2025 XueFeng Ma
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package atoma.storage.mongo.command.lease;
 
 import atoma.api.AtomaStateException;
@@ -27,8 +43,7 @@ public class TimeToLiveCommandHandler
   protected LeaseCommand.TimeToLiveResult execute(
       LeaseCommand.TimeToLive command, MongoCommandHandlerContext context) {
 
-    MongoCollection<Document> collection =
-        getCollection(context, AtomaCollectionNamespace.LEASE_NAMESPACE);
+    MongoCollection<Document> collection = getCollection(context, AtomaCollectionNamespace.LEASE);
 
     Function<ClientSession, LeaseCommand.TimeToLiveResult> cmdBlock =
         (session) -> {
@@ -48,9 +63,7 @@ public class TimeToLiveCommandHandler
           Document updatedDocument = collection.findOneAndUpdate(query, update, options);
 
           if (updatedDocument != null) {
-            String id = updatedDocument.getString("_id");
             long expireTimeMillis = updatedDocument.get("expire_time", Date.class).getTime();
-
             return new LeaseCommand.TimeToLiveResult(true, Instant.ofEpochMilli(expireTimeMillis));
           } else {
             // This should ideally not happen with upsert(true), but handle it just in case

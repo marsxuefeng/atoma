@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="atoma.test.cdl.HighConcurrencyCountAccuracyTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-02-04T04:54:25.749Z" hostname="manjaro" time="0.837">
-  <properties/>
-  <testcase name="DCL-TC-009: 高并发下count的准确性验证" classname="atoma.test.cdl.HighConcurrencyCountAccuracyTest" time="0.832"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

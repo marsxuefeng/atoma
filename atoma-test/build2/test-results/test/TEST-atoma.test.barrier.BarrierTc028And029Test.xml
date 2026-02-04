@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="atoma.test.barrier.BarrierTc028And029Test" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-02-04T04:54:24.286Z" hostname="manjaro" time="1.451">
-  <properties/>
-  <testcase name="BARRIER-TC-028 &amp; 029: 节点失败后的恢复与重新加入" classname="atoma.test.barrier.BarrierTc028And029Test" time="1.45"/>
-  <system-out><![CDATA[12:54:24.358 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [6a6b4e80-b27b-4188-a69c-1dd5d469f9b1] renew completed. Previous expire time: 2026-02-04T04:54:56.332Z Next expire time: 2026-02-04T04:55:28.332Z 
-]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

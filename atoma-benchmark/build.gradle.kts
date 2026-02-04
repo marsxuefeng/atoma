@@ -27,9 +27,9 @@ jmh {
     resultsFile = project.file("${buildDir}/reports/jmh/jmh-result.json")
     includes = listOf(
         "atoma.benchmark.MutexLockBenchmark",
-        "atoma.benchmark.CountDownLatchBenchmark",
-        "atoma.benchmark.CyclicBarrierBenchmark",
-        "atoma.benchmark.ReadWriteLockBenchmark",
-        "atoma.benchmark.SemaphoreBenchmark"
+//        "atoma.benchmark.CountDownLatchBenchmark",
+//        "atoma.benchmark.CyclicBarrierBenchmark",
+//        "atoma.benchmark.ReadWriteLockBenchmark",
+//        "atoma.benchmark.SemaphoreBenchmark"
     )
 }

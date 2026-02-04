@@ -308,11 +308,13 @@ public class SemaphoreReleaseTest extends BaseTest {
     AtomaClient client = new AtomaClient(scheduledExecutorService, mongoCoordinationStore);
 
     // 创建短生命周期的租约
-    Lease lease = client.grantLease(Duration.ofSeconds(1));
+    Lease lease = client.grantLease(Duration.ofSeconds(8));
     Semaphore semaphore = lease.getSemaphore("TEST-SEM-REL-009", 5);
 
     // 获取所有许可
     semaphore.acquire(5);
+
+    System.err.println("ACQ SUCC");
 
     // 模拟客户端异常退出
     crashAtomaClient(mongoCoordinationStore, scheduledExecutorService);

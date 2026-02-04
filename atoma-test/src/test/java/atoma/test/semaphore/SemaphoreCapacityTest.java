@@ -11,13 +11,14 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 @Deprecated
 public class SemaphoreCapacityTest extends BaseTest {
 
-//  @DisplayName("TEST-SEM-CAP-001: 创建不同容量的信号量，验证初始化配置")
-//  @Test
+  //  @DisplayName("TEST-SEM-CAP-001: 创建不同容量的信号量，验证初始化配置")
+  //  @Test
   public void testCreateSemaphoreWithDifferentCapacities() throws Exception {
     MongoCoordinationStore mongoCoordinationStore = newMongoCoordinationStore();
     ScheduledExecutorService scheduledExecutorService = newScheduledExecutorService();
@@ -101,7 +102,7 @@ public class SemaphoreCapacityTest extends BaseTest {
       // 尝试获取许可应该失败
       boolean acquired = false;
       try {
-        semaphore.acquire(1, 200L, java.util.concurrent.TimeUnit.MILLISECONDS);
+        semaphore.acquire(1, 200L, TimeUnit.MILLISECONDS);
         acquired = true;
       } catch (TimeoutException e) {
         // 预期失败

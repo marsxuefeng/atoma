@@ -1,3 +1,19 @@
+/*
+ * Copyright 2025 XueFeng Ma
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package atoma.storage.mongo.command.semaphore;
 
 import atoma.api.AtomaStateException;
@@ -17,7 +33,7 @@ import org.bson.Document;
 
 import java.util.function.Function;
 
-import static atoma.storage.mongo.command.AtomaCollectionNamespace.SEMAPHORE_NAMESPACE;
+import static atoma.storage.mongo.command.AtomaCollectionNamespace.SEMAPHORE;
 import static atoma.storage.mongo.command.MongoErrorCode.WRITE_CONFLICT;
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
@@ -52,7 +68,7 @@ import static com.mongodb.client.model.Updates.inc;
  *   "version": NumberLong(1),
  *   "_update_flag:": true
  * }
- * </pre>
+ * }</pre>
  */
 @SuppressWarnings("rawtypes")
 @AutoService({CommandHandler.class})
@@ -73,7 +89,7 @@ public class ReleaseCommandHandler extends MongoCommandHandler<SemaphoreCommand.
   @Override
   public Void execute(SemaphoreCommand.Release command, MongoCommandHandlerContext context) {
     MongoClient client = context.getClient();
-    MongoCollection<Document> collection = getCollection(context, SEMAPHORE_NAMESPACE);
+    MongoCollection<Document> collection = getCollection(context, SEMAPHORE);
     final String leaseField = "leases." + command.leaseId();
 
     Function<ClientSession, Void> cmdBlock =

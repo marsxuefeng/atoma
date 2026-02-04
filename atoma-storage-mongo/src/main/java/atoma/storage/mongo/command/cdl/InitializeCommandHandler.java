@@ -1,3 +1,19 @@
+/*
+ * Copyright 2025 XueFeng Ma
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package atoma.storage.mongo.command.cdl;
 
 import atoma.api.AtomaStateException;
@@ -16,9 +32,10 @@ import org.bson.Document;
 
 import java.util.function.Function;
 
-import static atoma.storage.mongo.command.AtomaCollectionNamespace.COUNTDOWN_LATCH_NAMESPACE;
+import static atoma.storage.mongo.command.AtomaCollectionNamespace.COUNTDOWN_LATCH;
 import static atoma.storage.mongo.command.MongoErrorCode.WRITE_CONFLICT;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.combine;
 import static com.mongodb.client.model.Updates.setOnInsert;
 
 /**
@@ -57,13 +74,13 @@ public class InitializeCommandHandler
   public Void execute(
       CountDownLatchCommand.Initialize command, MongoCommandHandlerContext context) {
     MongoClient client = context.getClient();
-    MongoCollection<Document> collection = getCollection(context, COUNTDOWN_LATCH_NAMESPACE);
+    MongoCollection<Document> collection = getCollection(context, COUNTDOWN_LATCH);
 
     Function<ClientSession, Void> cmdBlock =
         session -> {
           collection.updateOne(
               eq("_id", context.getResourceId()),
-              setOnInsert("count", command.count()),
+              combine(setOnInsert("count", command.count()), setOnInsert("version", 1L)),
               new UpdateOptions().upsert(true));
           return null;
         };

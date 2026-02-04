@@ -1,3 +1,19 @@
+/*
+ * Copyright 2025 XueFeng Ma
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package atoma.storage.mongo;
 
 import atoma.api.AtomaStateException;
@@ -39,13 +55,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static atoma.storage.mongo.command.AtomaCollectionNamespace.BARRIER_NAMESPACE;
-import static atoma.storage.mongo.command.AtomaCollectionNamespace.COUNTDOWN_LATCH_NAMESPACE;
-import static atoma.storage.mongo.command.AtomaCollectionNamespace.DOUBLE_BARRIER_NAMESPACE;
-import static atoma.storage.mongo.command.AtomaCollectionNamespace.LEASE_NAMESPACE;
-import static atoma.storage.mongo.command.AtomaCollectionNamespace.MUTEX_LOCK_NAMESPACE;
-import static atoma.storage.mongo.command.AtomaCollectionNamespace.RW_LOCK_NAMESPACE;
-import static atoma.storage.mongo.command.AtomaCollectionNamespace.SEMAPHORE_NAMESPACE;
+import static atoma.storage.mongo.command.AtomaCollectionNamespace.BARRIER;
+import static atoma.storage.mongo.command.AtomaCollectionNamespace.COUNTDOWN_LATCH;
+import static atoma.storage.mongo.command.AtomaCollectionNamespace.LEASE;
+import static atoma.storage.mongo.command.AtomaCollectionNamespace.MUTEX_LOCK;
+import static atoma.storage.mongo.command.AtomaCollectionNamespace.RW_LOCK;
+import static atoma.storage.mongo.command.AtomaCollectionNamespace.SEMAPHORE;
 import static atoma.storage.mongo.command.CommandExecutor.READ_CONCERN;
 import static atoma.storage.mongo.command.CommandExecutor.WRITE_CONCERN;
 import static com.mongodb.client.model.Aggregates.match;
@@ -82,13 +97,12 @@ public class MongoCoordinationStore implements CoordinationStore {
                     match(
                         in(
                             "ns.coll",
-                            LEASE_NAMESPACE,
-                            DOUBLE_BARRIER_NAMESPACE,
-                            BARRIER_NAMESPACE,
-                            COUNTDOWN_LATCH_NAMESPACE,
-                            SEMAPHORE_NAMESPACE,
-                            MUTEX_LOCK_NAMESPACE,
-                            RW_LOCK_NAMESPACE))))
+                                LEASE,
+                                BARRIER,
+                                COUNTDOWN_LATCH,
+                                SEMAPHORE,
+                                MUTEX_LOCK,
+                                RW_LOCK))))
             .fullDocument(FullDocument.UPDATE_LOOKUP)
             .fullDocumentBeforeChange(FullDocumentBeforeChange.WHEN_AVAILABLE)
             .cursor();
@@ -102,7 +116,7 @@ public class MongoCoordinationStore implements CoordinationStore {
   private void checkLeaseIndex() {
     MongoCollection<Document> collection =
         mongoDatabase
-            .getCollection(LEASE_NAMESPACE)
+            .getCollection(LEASE)
             .withReadConcern(READ_CONCERN)
             .withWriteConcern(WRITE_CONCERN);
 

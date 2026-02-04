@@ -1,3 +1,19 @@
+/*
+ * Copyright 2025 XueFeng Ma
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package atoma.core;
 
 import atoma.api.coordination.CoordinationStore;
@@ -46,6 +62,8 @@ final class DefaultCountDownLatch extends CountDownLatch {
   private final ReentrantLock localLock = new ReentrantLock();
   private final Condition latchZero = localLock.newCondition();
 
+  private final int count;
+
   /**
    * Constructs a new DefaultCountDownLatch client.
    *
@@ -63,6 +81,7 @@ final class DefaultCountDownLatch extends CountDownLatch {
 
     this.resourceId = resourceId;
     this.coordination = coordination;
+    this.count = count;
 
     // Atomically initialize the latch on the server if it doesn't exist.
     coordination.execute(resourceId, new CountDownLatchCommand.Initialize(count));
@@ -104,7 +123,7 @@ final class DefaultCountDownLatch extends CountDownLatch {
    */
   @Override
   public void countDown() {
-    coordination.execute(resourceId, new CountDownLatchCommand.CountDown());
+    coordination.execute(resourceId, new CountDownLatchCommand.CountDown(count));
   }
 
   @CheckReturnValue
@@ -162,7 +181,7 @@ final class DefaultCountDownLatch extends CountDownLatch {
   @Override
   public int getCount() {
     CountDownLatchCommand.GetCountResult result =
-        coordination.execute(resourceId, new CountDownLatchCommand.GetCount());
+        coordination.execute(resourceId, new CountDownLatchCommand.GetCount(count));
     return result.count();
   }
 
@@ -177,18 +196,18 @@ final class DefaultCountDownLatch extends CountDownLatch {
    */
   @Override
   public void destroy() {
-    coordination.execute(resourceId, new CountDownLatchCommand.Destroy());
     // Close the subscription locally after destroying the remote resource.
-    close();
+    if (closed.compareAndSet(false, true)) {
+      if (this.subscription != null) {
+        this.subscription.close();
+      }
+      coordination.execute(resourceId, new CountDownLatchCommand.Destroy());
+    }
   }
 
   /** Closes this latch client and releases the underlying subscription resource. */
   @Override
   public void close() {
-    if (closed.compareAndSet(false, true)) {
-      if (this.subscription != null) {
-        this.subscription.close();
-      }
-    }
+    destroy();
   }
 }

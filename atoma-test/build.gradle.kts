@@ -4,7 +4,6 @@ plugins {
 }
 
 group = "atoma.test"
-version = "1.0"
 
 repositories {
     mavenCentral()

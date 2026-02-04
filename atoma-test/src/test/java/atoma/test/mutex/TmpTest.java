@@ -8,12 +8,19 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static atoma.storage.mongo.command.AtomaCollectionNamespace.LEASE_NAMESPACE;
-import static com.mongodb.client.model.Accumulators.addToSet;
+import static atoma.storage.mongo.command.AtomaCollectionNamespace.LEASE;
+import static com.mongodb.client.model.Accumulators.first;
+import static com.mongodb.client.model.Accumulators.push;
+import static com.mongodb.client.model.Accumulators.sum;
 import static com.mongodb.client.model.Aggregates.group;
+import static com.mongodb.client.model.Aggregates.limit;
 import static com.mongodb.client.model.Aggregates.lookup;
 import static com.mongodb.client.model.Aggregates.match;
+import static com.mongodb.client.model.Aggregates.project;
 import static com.mongodb.client.model.Aggregates.unwind;
+import static com.mongodb.client.model.Projections.computed;
+import static com.mongodb.client.model.Projections.fields;
+import static com.mongodb.client.model.Projections.include;
 import static java.util.Arrays.asList;
 
 public class TmpTest {
@@ -37,12 +44,21 @@ public class TmpTest {
 
     final List<Bson> pipeline =
             asList(
-                    unwind("$participants"),
-                    lookup(LEASE_NAMESPACE, "participants.lease", "_id", "lease_doc"),
+                    project(
+                            fields(
+                                    include("_id", "available_permits", "version"),
+                                    computed("leases_as_array", new Document("$objectToArray", "$leases")))),
+                    unwind("$leases_as_array"),
+                    lookup(LEASE, "leases_as_array.k", "_id", "lease_doc"),
                     match(
                             new Document(
                                     "$expr", new Document("$eq", List.of(new Document("$size", "$lease_doc"), 0)))),
-                    group("$_id", addToSet("dead_participant_leases", "$participants.lease")));
+                    limit(500),
+                    group(
+                            "$_id",
+                            first("version", "$version"),
+                            sum("permits_to_return", "$leases_as_array.v"),
+                            push("dead_leases_keys", "$leases_as_array.k")));
 
     printScript(pipeline);
   }

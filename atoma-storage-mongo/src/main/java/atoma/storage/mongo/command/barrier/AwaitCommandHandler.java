@@ -1,3 +1,19 @@
+/*
+ * Copyright 2025 XueFeng Ma
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package atoma.storage.mongo.command.barrier;
 
 import atoma.api.AtomaStateException;
@@ -22,7 +38,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.function.Function;
 
-import static atoma.storage.mongo.command.AtomaCollectionNamespace.BARRIER_NAMESPACE;
+import static atoma.storage.mongo.command.AtomaCollectionNamespace.BARRIER;
 import static atoma.storage.mongo.command.MongoErrorCode.WRITE_CONFLICT;
 import static com.mongodb.client.model.Aggregates.replaceRoot;
 import static com.mongodb.client.model.Filters.eq;
@@ -67,34 +83,16 @@ import static java.util.Collections.emptyList;
  * <h3>MongoDB Document Schema</h3>
  *
  * <pre>{@code
- * {
- *   "_id": "barrier-resource-id",
- *   "parties": 5,
- *   "generation": NumberLong(1),
- *   "is_broken": false,
- *   "number_waiting": 12,
- *   "_passed": false,
- *   "_inconsistent_parties": false,
- *   "_waited": false,
- * }
- * }</pre>
- *
- * <h3>MongoDB Document Schema</h3>
- *
- * <pre>{@code
- * {
- *   "_id": "barrier-resource-id",
- *   "parties": 5,
- *   "generation": 1,
- *   "is_broken": false,
- *   "version": 12,
- *   "waiters": {
- *     "participants": [
- *       { "participant": "lease-abc/thread-1", "lease": "lease-abc" },
- *       { "participant": "lease-xyz/thread-8", "lease": "lease-xyz" }
- *     ]
+ * [
+ *   {
+ *     "_id": "BARRIER-TC-028",
+ *     "generation": 17,
+ *     "is_broken": false,
+ *     "participants": [],
+ *     "parties": 2,
+ *     "version": NumberLong(1)
  *   }
- * }
+ * ]
  * }</pre>
  */
 @SuppressWarnings("rawtypes")
@@ -126,11 +124,13 @@ public class AwaitCommandHandler
    *                     participants = []
    *                     generation += 1
    *                     _passed = true
+   *                     version += 1
    *                     return
    *                 }else{
    *                    $$ROOT
    *                    _passed = false
    *                    participants = $contactArray(participants, [ { participant:"participantId", lease: "leaseId" } ])
+   *                    version += 1
    *                    return
    *                 }
    *             }else {
@@ -189,7 +189,7 @@ public class AwaitCommandHandler
                                     new Document(
                                         "$cond",
                                         List.of(
-                                            // if ( generation == 1 )
+                                            // if ( generation == command.generation )
                                             new Document(
                                                 "$eq",
                                                 List.of("$generation", command.generation())),
@@ -222,6 +222,11 @@ public class AwaitCommandHandler
                                                                     new Document(
                                                                         "$add",
                                                                         List.of("$generation", 1L)))
+                                                                .append(
+                                                                    "version",
+                                                                    new Document(
+                                                                        "$add",
+                                                                        List.of("$version", 1L)))
                                                                 .append("_passed", true))),
 
                                                     // not matched barrier
@@ -244,7 +249,13 @@ public class AwaitCommandHandler
                                                                                     .append(
                                                                                         "lease",
                                                                                         command
-                                                                                            .leaseId()))))))))),
+                                                                                            .leaseId())))))
+                                                                .append(
+                                                                    "version",
+                                                                    new Document(
+                                                                        "$add",
+                                                                        List.of(
+                                                                            "$version", 1L))))))),
 
                                             // generation not equals
                                             new Document(
@@ -263,7 +274,7 @@ public class AwaitCommandHandler
   public CyclicBarrierCommand.AwaitResult execute(
       CyclicBarrierCommand.Await command, MongoCommandHandlerContext context) {
     MongoClient client = context.getClient();
-    MongoCollection<Document> collection = getCollection(context, BARRIER_NAMESPACE);
+    MongoCollection<Document> collection = getCollection(context, BARRIER);
 
     List<Bson> pipeline = buildAggregationPipeline(command);
 

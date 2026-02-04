@@ -3,7 +3,6 @@ plugins {
 }
 
 group = "atoma.api"
-version = "1.0"
 
 repositories {
     mavenCentral()

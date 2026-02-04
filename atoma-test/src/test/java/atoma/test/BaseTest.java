@@ -55,7 +55,7 @@ public abstract class BaseTest {
     MongoCollection<Document> collection =
         mongoClient
             .getDatabase("atoma_test")
-            .getCollection(AtomaCollectionNamespace.COUNTDOWN_LATCH_NAMESPACE);
+            .getCollection(AtomaCollectionNamespace.COUNTDOWN_LATCH);
     collection.deleteMany(new Document());
   }
 

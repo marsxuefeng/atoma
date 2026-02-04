@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="atoma.test.barrier.BarrierTc016Test" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-02-04T04:54:24.059Z" hostname="manjaro" time="0.354">
-  <properties/>
-  <testcase name="BARRIER-TC-016: 混合客户端延迟下的await()调用" classname="atoma.test.barrier.BarrierTc016Test" time="0.348"/>
-  <system-out><![CDATA[12:54:24.133 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [174c64d2-499e-476c-b8e8-68ba5a663d7b] renew completed. Previous expire time: 2026-02-04T04:54:56.114Z Next expire time: 2026-02-04T04:55:28.114Z 
-]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

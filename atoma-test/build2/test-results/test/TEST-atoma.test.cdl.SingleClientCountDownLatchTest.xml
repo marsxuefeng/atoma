@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="atoma.test.cdl.SingleClientCountDownLatchTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-02-04T04:54:37.023Z" hostname="manjaro" time="0.142">
-  <properties/>
-  <testcase name="DCL-TC-001: 单线程正常等待count减为0" classname="atoma.test.cdl.SingleClientCountDownLatchTest" time="0.141"/>
-  <system-out><![CDATA[12:54:37.043 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
-12:54:37.065 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
-]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
