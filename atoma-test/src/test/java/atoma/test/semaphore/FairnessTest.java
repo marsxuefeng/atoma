@@ -2,7 +2,7 @@ package atoma.test.semaphore;
 
 import atoma.api.Lease;
 import atoma.api.synchronizer.Semaphore;
-import atoma.client.AtomaClient;
+import atoma.core.AtomaClient;
 import atoma.storage.mongo.MongoCoordinationStore;
 import atoma.test.BaseTest;
 import org.assertj.core.api.Assertions;

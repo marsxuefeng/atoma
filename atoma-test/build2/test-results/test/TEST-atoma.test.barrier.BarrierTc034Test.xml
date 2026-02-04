@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="atoma.test.barrier.BarrierTc034Test" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-02-04T04:54:24.114Z" hostname="manjaro" time="0.161">
+  <properties/>
+  <testcase name="BARRIER-TC-034: 混合await和reset操作" classname="atoma.test.barrier.BarrierTc034Test" time="0.159"/>
+  <system-out><![CDATA[12:54:24.169 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [d7cd9db9-838d-4b2a-a8a8-94013ca6404a] renew completed. Previous expire time: 2026-02-04T04:54:56.150Z Next expire time: 2026-02-04T04:55:28.150Z 
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

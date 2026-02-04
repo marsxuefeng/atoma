@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="atoma.test.barrier.BarrierTc017Test" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-02-04T04:54:23.231Z" hostname="manjaro" time="13.48">
+  <properties/>
+  <testcase name="BARRIER-TC-017: 节点await()超时，其他节点正常" classname="atoma.test.barrier.BarrierTc017Test" time="13.476"/>
+  <system-out><![CDATA[12:54:23.328 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead participants from 1 barriers, modified count: 1
+12:54:23.382 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [2466e237-f5db-4d35-bd04-6a81c4afcd04] renew completed. Previous expire time: 2026-02-04T04:54:55.329Z Next expire time: 2026-02-04T04:55:27.329Z 
+12:54:26.955 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:27.365 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:28.960 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:29.340 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:30.955 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:32.957 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:33.348 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:34.947 [atoma-ttl-worker-3] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:35.338 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:36.701 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+]]></system-out>
+  <system-err><![CDATA[Part2 退出 Wait for barrier to trip timed out.
+atoma.api.BrokenBarrierException: The barrier was broken while waiting.
+	at atoma.core.DefaultCyclicBarrier.doAwait(DefaultCyclicBarrier.java:307)
+	at atoma.core.DefaultCyclicBarrier.await(DefaultCyclicBarrier.java:215)
+	at atoma.test.barrier.BarrierTc017Test.lambda$testSingleNodeTimeout$0(BarrierTc017Test.java:52)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+]]></system-err>
+</testsuite>

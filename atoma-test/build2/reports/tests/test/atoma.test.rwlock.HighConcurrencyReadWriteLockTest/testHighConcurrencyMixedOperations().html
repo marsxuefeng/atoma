@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - testHighConcurrencyMixedOperations()</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<div class="breadcrumbs">
+<a class="breadcrumb" href="../index.html">all</a> &gt; 
+<a class="breadcrumb" href="index.html">atoma.test.rwlock.HighConcurrencyReadWriteLockTest</a> &gt; 
+<span class="breadcrumb">testHighConcurrencyMixedOperations()</span>
+</div>
+<div class="tab-container">
+<ul class="tabLinks">
+<li>
+<a class="successGroup" href="#">Gradle Test Run :atoma-test:test</a>
+</li>
+</ul>
+<div class="tab">
+<h2>Gradle Test Run :atoma-test:test</h2>
+<h1>TEST-ACQ-010: 验证在高并发场景下锁的性能表现</h1>
+<div class="tab-container">
+<ul class="tabLinks">
+<li>
+<a class="" href="#">summary</a>
+</li>
+<li>
+<a class="" href="#">standard output</a>
+</li>
+</ul>
+<div class="tab">
+<h2>summary</h2>
+<div>
+<div class="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox">
+<div class="counter">1</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox">
+<div class="counter">0</div>
+<p>skipped</p>
+</div>
+</td>
+<td>
+<div class="infoBox duration">
+<div class="counter">14.310s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="tab">
+<h2>standard output</h2>
+<span class="code">
+<pre id="root-0-test-stdout-testHighConcurrencyMixedOperations()">12:54:27.292 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [fbd148b2-4eed-46de-ba5b-0e679b989dfd] renew completed. Previous expire time: 2026-02-04T04:54:35.237Z Next expire time: 2026-02-04T04:54:43.237Z 
+12:54:27.292 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [f011b0a6-511a-468d-8aed-ed7dafbcda42] renew completed. Previous expire time: 2026-02-04T04:54:35.237Z Next expire time: 2026-02-04T04:54:43.237Z 
+12:54:27.291 [atoma-ttl-worker-2] DEBUG atoma.core.DefaultLease - Lease [024f9391-a1a4-47e0-8b96-804ef6984317] renew completed. Previous expire time: 2026-02-04T04:54:35.237Z Next expire time: 2026-02-04T04:54:43.237Z 
+12:54:27.300 [atoma-ttl-worker-6] DEBUG atoma.core.DefaultLease - Lease [4cd1bdf2-24ad-442f-b9d5-64bf69757684] renew completed. Previous expire time: 2026-02-04T04:54:35.238Z Next expire time: 2026-02-04T04:54:43.238Z 
+12:54:27.304 [atoma-ttl-worker-4] DEBUG atoma.core.DefaultLease - Lease [62efdd10-6518-4582-ad0c-76ccc2a421ef] renew completed. Previous expire time: 2026-02-04T04:54:35.238Z Next expire time: 2026-02-04T04:54:43.238Z 
+12:54:27.304 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [8366f5c4-7184-489b-af5a-d142a5709ec2] renew completed. Previous expire time: 2026-02-04T04:54:35.237Z Next expire time: 2026-02-04T04:54:43.237Z 
+12:54:27.319 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [68a76a09-e9a3-4ade-b1a5-7c7824abca98] renew completed. Previous expire time: 2026-02-04T04:54:35.237Z Next expire time: 2026-02-04T04:54:43.237Z 
+12:54:27.321 [atoma-ttl-worker-6] DEBUG atoma.core.DefaultLease - Lease [1305b46b-5ae0-4271-b05d-ad9428d16c10] renew completed. Previous expire time: 2026-02-04T04:54:35.237Z Next expire time: 2026-02-04T04:54:43.237Z 
+12:54:27.333 [atoma-ttl-worker-3] DEBUG atoma.core.DefaultLease - Lease [84bf2c64-47f2-4ab5-8ec0-6e18d6388672] renew completed. Previous expire time: 2026-02-04T04:54:35.238Z Next expire time: 2026-02-04T04:54:43.238Z 
+12:54:27.333 [atoma-ttl-worker-5] DEBUG atoma.core.DefaultLease - Lease [3b55cf11-8f9a-4d7b-9bf6-0ef34bda1318] renew completed. Previous expire time: 2026-02-04T04:54:35.238Z Next expire time: 2026-02-04T04:54:43.238Z 
+12:54:27.336 [atoma-ttl-worker-2] DEBUG atoma.core.DefaultLease - Lease [ba69c761-34d8-42b1-8ff6-9f3420fd9341] renew completed. Previous expire time: 2026-02-04T04:54:35.240Z Next expire time: 2026-02-04T04:54:43.240Z 
+12:54:27.337 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [be14917d-c8dc-4302-921f-4ddcb3df8d61] renew completed. Previous expire time: 2026-02-04T04:54:35.238Z Next expire time: 2026-02-04T04:54:43.238Z 
+12:54:27.337 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [91624681-6ebc-4287-8034-4f326fee85c9] renew completed. Previous expire time: 2026-02-04T04:54:35.240Z Next expire time: 2026-02-04T04:54:43.240Z 
+12:54:27.343 [atoma-ttl-worker-4] DEBUG atoma.core.DefaultLease - Lease [cc5b2010-27e5-4a5e-88e6-da09011941ed] renew completed. Previous expire time: 2026-02-04T04:54:35.240Z Next expire time: 2026-02-04T04:54:43.240Z 
+12:54:27.351 [atoma-ttl-worker-7] DEBUG atoma.core.DefaultLease - Lease [4a03794f-358b-42eb-a18b-f3befd3bb4a3] renew completed. Previous expire time: 2026-02-04T04:54:35.238Z Next expire time: 2026-02-04T04:54:43.238Z 
+12:54:27.357 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [d6f18a4f-2bfe-43b4-9d0b-c1b713128798] renew completed. Previous expire time: 2026-02-04T04:54:35.239Z Next expire time: 2026-02-04T04:54:43.239Z 
+12:54:27.356 [atoma-ttl-worker-2] DEBUG atoma.core.DefaultLease - Lease [d4dee2a2-374b-4e5c-b2e1-014b22e34a4c] renew completed. Previous expire time: 2026-02-04T04:54:35.237Z Next expire time: 2026-02-04T04:54:43.237Z 
+12:54:27.357 [atoma-ttl-worker-6] DEBUG atoma.core.DefaultLease - Lease [a861f94d-17a2-4c27-bba2-320bc5b35d63] renew completed. Previous expire time: 2026-02-04T04:54:35.240Z Next expire time: 2026-02-04T04:54:43.240Z 
+12:54:27.366 [atoma-ttl-worker-5] DEBUG atoma.core.DefaultLease - Lease [5c880528-e5e6-45c2-be46-f46ea710ebee] renew completed. Previous expire time: 2026-02-04T04:54:35.238Z Next expire time: 2026-02-04T04:54:43.238Z 
+12:54:27.369 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [c38aae7b-f242-426d-a760-49dc1f07cb20] renew completed. Previous expire time: 2026-02-04T04:54:35.239Z Next expire time: 2026-02-04T04:54:43.239Z 
+12:54:27.524 [atoma-ttl-worker-3] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:29.497 [atoma-ttl-worker-3] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:33.490 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:35.267 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [f011b0a6-511a-468d-8aed-ed7dafbcda42] renew completed. Previous expire time: 2026-02-04T04:54:43.237Z Next expire time: 2026-02-04T04:54:51.237Z 
+12:54:35.269 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [fbd148b2-4eed-46de-ba5b-0e679b989dfd] renew completed. Previous expire time: 2026-02-04T04:54:43.237Z Next expire time: 2026-02-04T04:54:51.237Z 
+12:54:35.270 [atoma-ttl-worker-6] DEBUG atoma.core.DefaultLease - Lease [024f9391-a1a4-47e0-8b96-804ef6984317] renew completed. Previous expire time: 2026-02-04T04:54:43.237Z Next expire time: 2026-02-04T04:54:51.237Z 
+12:54:35.278 [atoma-ttl-worker-5] DEBUG atoma.core.DefaultLease - Lease [62efdd10-6518-4582-ad0c-76ccc2a421ef] renew completed. Previous expire time: 2026-02-04T04:54:43.238Z Next expire time: 2026-02-04T04:54:51.238Z 
+12:54:35.278 [atoma-ttl-worker-2] DEBUG atoma.core.DefaultLease - Lease [84bf2c64-47f2-4ab5-8ec0-6e18d6388672] renew completed. Previous expire time: 2026-02-04T04:54:43.238Z Next expire time: 2026-02-04T04:54:51.238Z 
+12:54:35.281 [atoma-ttl-worker-4] DEBUG atoma.core.DefaultLease - Lease [3b55cf11-8f9a-4d7b-9bf6-0ef34bda1318] renew completed. Previous expire time: 2026-02-04T04:54:43.238Z Next expire time: 2026-02-04T04:54:51.238Z 
+12:54:35.284 [atoma-ttl-worker-7] DEBUG atoma.core.DefaultLease - Lease [4cd1bdf2-24ad-442f-b9d5-64bf69757684] renew completed. Previous expire time: 2026-02-04T04:54:43.238Z Next expire time: 2026-02-04T04:54:51.238Z 
+12:54:35.284 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [be14917d-c8dc-4302-921f-4ddcb3df8d61] renew completed. Previous expire time: 2026-02-04T04:54:43.238Z Next expire time: 2026-02-04T04:54:51.238Z 
+12:54:35.285 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [8366f5c4-7184-489b-af5a-d142a5709ec2] renew completed. Previous expire time: 2026-02-04T04:54:43.237Z Next expire time: 2026-02-04T04:54:51.237Z 
+12:54:35.285 [atoma-ttl-worker-3] DEBUG atoma.core.DefaultLease - Lease [4a03794f-358b-42eb-a18b-f3befd3bb4a3] renew completed. Previous expire time: 2026-02-04T04:54:43.238Z Next expire time: 2026-02-04T04:54:51.238Z 
+12:54:35.287 [atoma-ttl-worker-5] DEBUG atoma.core.DefaultLease - Lease [1305b46b-5ae0-4271-b05d-ad9428d16c10] renew completed. Previous expire time: 2026-02-04T04:54:43.237Z Next expire time: 2026-02-04T04:54:51.237Z 
+12:54:35.287 [atoma-ttl-worker-4] DEBUG atoma.core.DefaultLease - Lease [68a76a09-e9a3-4ade-b1a5-7c7824abca98] renew completed. Previous expire time: 2026-02-04T04:54:43.237Z Next expire time: 2026-02-04T04:54:51.237Z 
+12:54:35.288 [atoma-ttl-worker-6] DEBUG atoma.core.DefaultLease - Lease [ba69c761-34d8-42b1-8ff6-9f3420fd9341] renew completed. Previous expire time: 2026-02-04T04:54:43.240Z Next expire time: 2026-02-04T04:54:51.240Z 
+12:54:35.288 [atoma-ttl-worker-2] DEBUG atoma.core.DefaultLease - Lease [cc5b2010-27e5-4a5e-88e6-da09011941ed] renew completed. Previous expire time: 2026-02-04T04:54:43.240Z Next expire time: 2026-02-04T04:54:51.240Z 
+12:54:35.292 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [a861f94d-17a2-4c27-bba2-320bc5b35d63] renew completed. Previous expire time: 2026-02-04T04:54:43.240Z Next expire time: 2026-02-04T04:54:51.240Z 
+12:54:35.292 [atoma-ttl-worker-7] DEBUG atoma.core.DefaultLease - Lease [91624681-6ebc-4287-8034-4f326fee85c9] renew completed. Previous expire time: 2026-02-04T04:54:43.240Z Next expire time: 2026-02-04T04:54:51.240Z 
+12:54:35.295 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [5c880528-e5e6-45c2-be46-f46ea710ebee] renew completed. Previous expire time: 2026-02-04T04:54:43.238Z Next expire time: 2026-02-04T04:54:51.238Z 
+12:54:35.304 [atoma-ttl-worker-3] DEBUG atoma.core.DefaultLease - Lease [d4dee2a2-374b-4e5c-b2e1-014b22e34a4c] renew completed. Previous expire time: 2026-02-04T04:54:43.237Z Next expire time: 2026-02-04T04:54:51.237Z 
+12:54:35.309 [atoma-ttl-worker-5] DEBUG atoma.core.DefaultLease - Lease [d6f18a4f-2bfe-43b4-9d0b-c1b713128798] renew completed. Previous expire time: 2026-02-04T04:54:43.239Z Next expire time: 2026-02-04T04:54:51.239Z 
+12:54:35.319 [atoma-ttl-worker-4] DEBUG atoma.core.DefaultLease - Lease [c38aae7b-f242-426d-a760-49dc1f07cb20] renew completed. Previous expire time: 2026-02-04T04:54:43.239Z Next expire time: 2026-02-04T04:54:51.239Z 
+12:54:35.490 [atoma-ttl-worker-6] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:37.487 [atoma-ttl-worker-6] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:39.486 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:41.486 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+High Concurrency Test Results:
+- Duration: 14298 ms
+- Total Operations: 2000
+- Operations/Second: 139.88
+- Read Operations: 1624 (81.2%)
+- Write Operations: 376 (18.8%)
+</pre>
+<button class="clipboard-copy-btn" aria-label="Copy to clipboard" data-copy-element-id="root-0-test-stdout-testHighConcurrencyMixedOperations()">Copy</button>
+</span>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="https://www.gradle.org">Gradle 9.3.0</a> at Feb 4, 2026, 12:57:24 PM</p>
+</div>
+</div>
+</body>
+</html>

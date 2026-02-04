@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="atoma.test.barrier.BarrierTc019Test" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-02-04T04:54:23.093Z" hostname="manjaro" time="2.27">
+  <properties/>
+  <testcase name="BARRIER-TC-019: 设置不同超时时间的节点混合测试" classname="atoma.test.barrier.BarrierTc019Test" time="2.268"/>
+  <system-out><![CDATA[12:54:23.180 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [c2baf055-3fef-4894-90eb-088b8721f379] renew completed. Previous expire time: 2026-02-04T04:54:55.158Z Next expire time: 2026-02-04T04:55:27.158Z 
+]]></system-out>
+  <system-err><![CDATA[atoma.api.BrokenBarrierException: The barrier is in a broken state.
+	at atoma.core.DefaultCyclicBarrier.doAwait(DefaultCyclicBarrier.java:246)
+	at atoma.core.DefaultCyclicBarrier.await(DefaultCyclicBarrier.java:215)
+	at atoma.test.barrier.BarrierTc019Test.lambda$testMixedTimeouts$1(BarrierTc019Test.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+atoma.api.BrokenBarrierException: The barrier is in a broken state.
+	at atoma.core.DefaultCyclicBarrier.doAwait(DefaultCyclicBarrier.java:246)
+	at atoma.core.DefaultCyclicBarrier.await(DefaultCyclicBarrier.java:215)
+	at atoma.test.barrier.BarrierTc019Test.lambda$testMixedTimeouts$2(BarrierTc019Test.java:71)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+]]></system-err>
+</testsuite>

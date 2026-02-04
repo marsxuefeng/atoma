@@ -2,7 +2,7 @@ package atoma.test.semaphore;
 
 import atoma.api.Lease;
 import atoma.api.synchronizer.Semaphore;
-import atoma.client.AtomaClient;
+import atoma.core.AtomaClient;
 import atoma.storage.mongo.MongoCoordinationStore;
 import atoma.test.BaseTest;
 import org.assertj.core.api.Assertions;
@@ -12,9 +12,9 @@ import org.junit.jupiter.api.Test;
 import java.time.Duration;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class NonBlockingTryAcquireTest extends BaseTest {
-
 
   @DisplayName("TEST-SEM-ACQ-005: 非阻塞方式尝试获取许可，立即返回结果，验证tryAcquire机制")
   @Test
@@ -42,7 +42,7 @@ public class NonBlockingTryAcquireTest extends BaseTest {
       try {
         semaphore.acquire(1, 0L, TimeUnit.MILLISECONDS); // 立即返回
         Assertions.fail("Should have failed immediately");
-      } catch (RuntimeException e) {
+      } catch (TimeoutException e) {
         // 预期的失败
         e.printStackTrace();
       }

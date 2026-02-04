@@ -1,7 +1,8 @@
 package atoma.test.barrier;
 
+import atoma.api.Lease;
 import atoma.api.synchronizer.CyclicBarrier;
-import atoma.client.AtomaClient;
+import atoma.core.AtomaClient;
 import atoma.storage.mongo.MongoCoordinationStore;
 import atoma.test.BaseTest;
 import org.junit.jupiter.api.Assertions;
@@ -9,13 +10,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Test case for BARRIER-TC-002: Multiple nodes initialize the same barrier ID simultaneously.
- */
+/** Test case for BARRIER-TC-002: Multiple nodes initialize the same barrier ID simultaneously. */
 public class BarrierTc002Test extends BaseTest {
 
   @DisplayName("BARRIER-TC-002: 多节点同时初始化相同屏障ID")
@@ -28,6 +26,8 @@ public class BarrierTc002Test extends BaseTest {
     CountDownLatch latch = new CountDownLatch(clientCount);
     CyclicBarrier[] barriers = new CyclicBarrier[clientCount];
     AtomaClient[] clients = new AtomaClient[clientCount];
+    Lease[] leases = new Lease[clientCount];
+
     ScheduledExecutorService[] executors = new ScheduledExecutorService[clientCount];
     MongoCoordinationStore[] stores = new MongoCoordinationStore[clientCount];
 
@@ -36,6 +36,7 @@ public class BarrierTc002Test extends BaseTest {
       stores[index] = newMongoCoordinationStore();
       executors[index] = newScheduledExecutorService();
       clients[index] = new AtomaClient(executors[index], stores[index]);
+      leases[index] = clients[index].grantLease();
     }
 
     for (int i = 0; i < clientCount; i++) {
@@ -43,7 +44,7 @@ public class BarrierTc002Test extends BaseTest {
       new Thread(
               () -> {
                 try {
-                  barriers[index] = clients[index].getCyclicBarrier(barrierId, parties);
+                  barriers[index] = leases[index].getCyclicBarrier(barrierId, parties);
                   Assertions.assertNotNull(barriers[index]);
                 } finally {
                   latch.countDown();
@@ -52,7 +53,8 @@ public class BarrierTc002Test extends BaseTest {
           .start();
     }
 
-    Assertions.assertTrue(latch.await(5, TimeUnit.SECONDS), "All clients should initialize the barrier");
+    Assertions.assertTrue(
+        latch.await(5, TimeUnit.SECONDS), "All clients should initialize the barrier");
 
     try {
       for (int i = 0; i < clientCount; i++) {
@@ -66,6 +68,7 @@ public class BarrierTc002Test extends BaseTest {
         if (barriers[i] != null) {
           barriers[i].close();
         }
+        leases[i].close();
         clients[i].close();
         executors[i].shutdownNow();
         stores[i].close();

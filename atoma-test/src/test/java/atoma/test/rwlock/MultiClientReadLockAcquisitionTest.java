@@ -3,7 +3,7 @@ package atoma.test.rwlock;
 import atoma.api.Lease;
 import atoma.api.lock.Lock;
 import atoma.api.lock.ReadWriteLock;
-import atoma.client.AtomaClient;
+import atoma.core.AtomaClient;
 import atoma.test.BaseTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

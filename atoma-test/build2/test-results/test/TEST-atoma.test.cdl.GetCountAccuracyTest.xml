@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="atoma.test.cdl.GetCountAccuracyTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-02-04T04:54:26.071Z" hostname="manjaro" time="0.259">
+  <properties/>
+  <testcase name="DCL-TC-028: getCount()方法的准确性验证" classname="atoma.test.cdl.GetCountAccuracyTest" time="0.254"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

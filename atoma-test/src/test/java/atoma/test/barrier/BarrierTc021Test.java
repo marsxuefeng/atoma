@@ -1,7 +1,8 @@
 package atoma.test.barrier;
 
+import atoma.api.Lease;
 import atoma.api.synchronizer.CyclicBarrier;
-import atoma.client.AtomaClient;
+import atoma.core.AtomaClient;
 import atoma.storage.mongo.MongoCoordinationStore;
 import atoma.test.BaseTest;
 import org.junit.jupiter.api.Assertions;
@@ -12,9 +13,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Test case for BARRIER-TC-021: Barrier resets automatically after all nodes pass.
- */
+/** Test case for BARRIER-TC-021: Barrier resets automatically after all nodes pass. */
 public class BarrierTc021Test extends BaseTest {
 
   @DisplayName("BARRIER-TC-021: 所有节点通过后自动重置屏障")
@@ -23,10 +22,10 @@ public class BarrierTc021Test extends BaseTest {
     MongoCoordinationStore mongoCoordinationStore = newMongoCoordinationStore();
     ScheduledExecutorService scheduledExecutorService = newScheduledExecutorService();
     AtomaClient client = new AtomaClient(scheduledExecutorService, mongoCoordinationStore);
-
+    Lease lease = client.grantLease();
     final String barrierId = "BARRIER-TC-021";
     final int parties = 2;
-    final CyclicBarrier barrier = client.getCyclicBarrier(barrierId, parties);
+    final CyclicBarrier barrier = lease.getCyclicBarrier(barrierId, parties);
 
     try {
       // First pass

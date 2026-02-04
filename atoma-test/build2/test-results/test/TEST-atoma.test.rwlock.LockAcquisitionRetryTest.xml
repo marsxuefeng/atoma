@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="atoma.test.rwlock.LockAcquisitionRetryTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-02-04T04:54:39.678Z" hostname="manjaro" time="3.725">
+  <properties/>
+  <testcase name="TEST-ACQ-008: 验证在网络异常或临时故障时锁获取的重试机制" classname="atoma.test.rwlock.LockAcquisitionRetryTest" time="3.025"/>
+  <testcase name="TEST-ACQ-008" classname="atoma.test.rwlock.LockAcquisitionRetryTest" time="0.127"/>
+  <testcase name="TEST-ACQ-008: 验证在网络异常或临时故障时锁获取的重试机制" classname="atoma.test.rwlock.LockAcquisitionRetryTest" time="0.573"/>
+  <system-out><![CDATA[12:54:39.695 [atoma-ttl-worker-5] DEBUG atoma.core.DefaultLease - Lease [73b81bac-98ee-452a-a47e-37dff907ce45] renew completed. Previous expire time: 2026-02-04T04:54:47.679Z Next expire time: 2026-02-04T04:54:55.679Z 
+12:54:40.832 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:40.995 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:42.716 [atoma-ttl-worker-7] DEBUG atoma.core.DefaultLease - Lease [ae037150-c8d3-4b4a-8162-9bb56f5ce1e1] renew completed. Previous expire time: 2026-02-04T04:54:50.704Z Next expire time: 2026-02-04T04:54:58.704Z 
+12:54:42.830 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:42.891 [atoma-ttl-worker-5] DEBUG atoma.core.DefaultLease - Lease [ecf01a35-b891-41a0-b9e8-5bb1ec5e1f13] renew completed. Previous expire time: 2026-02-04T04:54:50.832Z Next expire time: 2026-02-04T04:54:58.832Z 
+12:54:42.989 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

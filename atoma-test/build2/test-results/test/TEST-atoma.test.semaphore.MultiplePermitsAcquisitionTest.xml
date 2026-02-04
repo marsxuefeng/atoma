@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="atoma.test.semaphore.MultiplePermitsAcquisitionTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-02-04T04:54:43.404Z" hostname="manjaro" time="0.05">
+  <properties/>
+  <testcase name="TEST-SEM-ACQ-002: 获取多个许可并验证计数减少，验证许可计数机制" classname="atoma.test.semaphore.MultiplePermitsAcquisitionTest" time="0.049"/>
+  <system-out><![CDATA[12:54:43.414 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:43.420 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Deleted 1 empty read-write lock documents
+12:54:43.426 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:43.431 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [f28305c5-5586-4518-8827-7933b96f7855] renew completed. Previous expire time: 2026-02-04T04:54:46.422Z Next expire time: 2026-02-04T04:54:49.422Z 
+12:54:43.435 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 5 Semaphore Data: Document{{_id=TEST-SEM-ACQ-002, initial_permits=10, available_permits=5, leases=Document{{f28305c5-5586-4518-8827-7933b96f7855=5}}, version=5, _update_flag=true}}  
+12:54:43.439 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 6 Semaphore Data: Document{{_id=TEST-SEM-ACQ-002, initial_permits=10, available_permits=2, leases=Document{{f28305c5-5586-4518-8827-7933b96f7855=8}}, version=6, _update_flag=true}}  
+12:54:43.447 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

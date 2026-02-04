@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - testLockRenewalPacketLoss()</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<div class="breadcrumbs">
+<a class="breadcrumb" href="../index.html">all</a> &gt; 
+<a class="breadcrumb" href="index.html">atoma.test.mutex.LockRenewalPacketLossTest</a> &gt; 
+<span class="breadcrumb">testLockRenewalPacketLoss()</span>
+</div>
+<div class="tab-container">
+<ul class="tabLinks">
+<li>
+<a class="successGroup" href="#">Gradle Test Run :atoma-test:test</a>
+</li>
+</ul>
+<div class="tab">
+<h2>Gradle Test Run :atoma-test:test</h2>
+<h1>TC-27: 续期请求网络丢包</h1>
+<div class="tab-container">
+<ul class="tabLinks">
+<li>
+<a class="" href="#">summary</a>
+</li>
+<li>
+<a class="" href="#">standard output</a>
+</li>
+</ul>
+<div class="tab">
+<h2>summary</h2>
+<div>
+<div class="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox">
+<div class="counter">1</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox">
+<div class="counter">0</div>
+<p>skipped</p>
+</div>
+</td>
+<td>
+<div class="infoBox duration">
+<div class="counter">36.923s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="tab">
+<h2>standard output</h2>
+<span class="code">
+<pre id="root-0-test-stdout-testLockRenewalPacketLoss()">12:54:31.961 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [7ba94854-08fe-46ac-8321-d800793706cd] renew completed. Previous expire time: 2026-02-04T04:54:32.928Z Next expire time: 2026-02-04T04:54:33.928Z 
+12:54:31.968 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultMutexLock - Mutex lock received an event. Event-type: CREATED. Latest version: 1 Lock Data: Document{{_id=test-resource-tc27, lease=7ba94854-08fe-46ac-8321-d800793706cd, holder=Thread-20-92, version=1}}
+12:54:32.950 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [7ba94854-08fe-46ac-8321-d800793706cd] renew completed. Previous expire time: 2026-02-04T04:54:33.928Z Next expire time: 2026-02-04T04:54:34.928Z 
+12:54:33.455 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:33.936 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:33.936 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:33.947 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [7ba94854-08fe-46ac-8321-d800793706cd] renew completed. Previous expire time: 2026-02-04T04:54:34.928Z Next expire time: 2026-02-04T04:54:35.928Z 
+12:54:33.947 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Deleted 1 empty read-write lock documents
+12:54:33.983 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [935fd410-0d02-43c6-9c1f-b7bee0f0252c] renew completed. Previous expire time: 2026-02-04T04:55:03.967Z Next expire time: 2026-02-04T04:55:33.967Z 
+12:54:34.946 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [7ba94854-08fe-46ac-8321-d800793706cd] renew completed. Previous expire time: 2026-02-04T04:54:35.928Z Next expire time: 2026-02-04T04:54:36.928Z 
+12:54:35.452 [atoma-ttl-worker-3] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:35.937 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:37.450 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:37.933 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:39.445 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:39.947 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:41.447 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:41.932 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:43.444 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:43.453 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 1 semaphores, modified count: 1
+12:54:43.930 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:45.443 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:45.930 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:47.443 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:47.930 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:49.443 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:49.930 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:51.443 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:51.930 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:53.443 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:53.930 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:55.443 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:55.930 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:57.444 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:57.930 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:59.444 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:59.930 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:01.443 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:01.930 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:03.443 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:03.930 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:03.976 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [935fd410-0d02-43c6-9c1f-b7bee0f0252c] renew completed. Previous expire time: 2026-02-04T04:55:33.967Z Next expire time: 2026-02-04T04:56:03.967Z 
+12:55:05.443 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:05.930 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:07.443 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:07.930 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.782 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultMutexLock - Mutex lock received an event. Event-type: DELETED. Latest version: -1 Lock Data: null
+12:55:08.783 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultMutexLock - Mutex lock has waiters in queue : false 
+12:55:08.787 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultMutexLock - Mutex lock received an event. Event-type: CREATED. Latest version: 1 Lock Data: Document{{_id=test-resource-tc27, lease=935fd410-0d02-43c6-9c1f-b7bee0f0252c, holder=Thread-21-93, version=1}}
+12:55:08.794 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultMutexLock - Mutex lock received an event. Event-type: DELETED. Latest version: -1 Lock Data: null
+12:55:08.794 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultMutexLock - Mutex lock has waiters in queue : false 
+TC-27: 续期请求网络丢包 - PASSED
+</pre>
+<button class="clipboard-copy-btn" aria-label="Copy to clipboard" data-copy-element-id="root-0-test-stdout-testLockRenewalPacketLoss()">Copy</button>
+</span>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="https://www.gradle.org">Gradle 9.3.0</a> at Feb 4, 2026, 12:57:24 PM</p>
+</div>
+</div>
+</body>
+</html>

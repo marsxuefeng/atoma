@@ -43,12 +43,22 @@ public final class CyclicBarrierCommand {
   /**
    * Command for a party to await on the barrier.
    *
+   * @param participantId the id of participant.
+   * @param leaseId the lease of participant.
    * @param parties The number of parties required to trip the barrier. This is used to initialize
    *     the barrier on the first await.
    * @param generation The current generation of the barrier. A generation changes when the barrier
    *     is tripped or reset.
+   * @param timeout maximum wait time.
+   * @param timeUnit time unit
    */
-  public record Await(int parties, long generation, long timeout, TimeUnit timeUnit)
+  public record Await(
+      String participantId,
+      String leaseId,
+      int parties,
+      long generation,
+      long timeout,
+      TimeUnit timeUnit)
       implements Command<AwaitResult> {}
 
   /**
@@ -63,7 +73,7 @@ public final class CyclicBarrierCommand {
    * Command to reset the barrier to its initial state. This is useful for re-using a barrier after
    * it has been tripped or broken.
    */
-  public record Reset() implements Command<Void> {}
+  public record Reset(int parties) implements Command<GetStateResult> {}
 
   /**
    * Command to retrieve the current state of the barrier. This is primarily used for monitoring and

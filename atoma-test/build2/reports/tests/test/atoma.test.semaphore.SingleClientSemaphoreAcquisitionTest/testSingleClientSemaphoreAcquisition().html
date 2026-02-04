@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - testSingleClientSemaphoreAcquisition()</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<div class="breadcrumbs">
+<a class="breadcrumb" href="../index.html">all</a> &gt; 
+<a class="breadcrumb" href="index.html">atoma.test.semaphore.SingleClientSemaphoreAcquisitionTest</a> &gt; 
+<span class="breadcrumb">testSingleClientSemaphoreAcquisition()</span>
+</div>
+<div class="tab-container">
+<ul class="tabLinks">
+<li>
+<a class="successGroup" href="#">Gradle Test Run :atoma-test:test</a>
+</li>
+</ul>
+<div class="tab">
+<h2>Gradle Test Run :atoma-test:test</h2>
+<h1>TEST-SEM-ACQ: 单个客户端成功获取信号量许可，验证租约创建</h1>
+<div class="tab-container">
+<ul class="tabLinks">
+<li>
+<a class="" href="#">summary</a>
+</li>
+<li>
+<a class="" href="#">standard output</a>
+</li>
+</ul>
+<div class="tab">
+<h2>summary</h2>
+<div>
+<div class="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox">
+<div class="counter">1</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox">
+<div class="counter">0</div>
+<p>skipped</p>
+</div>
+</td>
+<td>
+<div class="infoBox duration">
+<div class="counter">0.424s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="tab">
+<h2>standard output</h2>
+<span class="code">
+<pre id="root-0-test-stdout-testSingleClientSemaphoreAcquisition()">12:54:32.094 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:32.106 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Deleted 1 empty read-write lock documents
+12:54:32.136 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:32.144 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [93319562-66b4-4ffc-a4c0-cb703573d29b] renew completed. Previous expire time: 2026-02-04T04:54:35.117Z Next expire time: 2026-02-04T04:54:38.117Z 
+12:54:32.155 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 41 Semaphore Data: Document{{_id=TEST-0002, initial_permits=20, available_permits=19, leases=Document{{93319562-66b4-4ffc-a4c0-cb703573d29b=1}}, version=41, _update_flag=true}}  
+12:54:32.169 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 42 Semaphore Data: Document{{_id=TEST-0002, initial_permits=20, available_permits=18, leases=Document{{93319562-66b4-4ffc-a4c0-cb703573d29b=2}}, version=42, _update_flag=true}}  
+12:54:32.185 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 43 Semaphore Data: Document{{_id=TEST-0002, initial_permits=20, available_permits=17, leases=Document{{93319562-66b4-4ffc-a4c0-cb703573d29b=3}}, version=43, _update_flag=true}}  
+12:54:32.196 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 44 Semaphore Data: Document{{_id=TEST-0002, initial_permits=20, available_permits=16, leases=Document{{93319562-66b4-4ffc-a4c0-cb703573d29b=4}}, version=44, _update_flag=true}}  
+12:54:32.206 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 45 Semaphore Data: Document{{_id=TEST-0002, initial_permits=20, available_permits=15, leases=Document{{93319562-66b4-4ffc-a4c0-cb703573d29b=5}}, version=45, _update_flag=true}}  
+12:54:32.215 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 46 Semaphore Data: Document{{_id=TEST-0002, initial_permits=20, available_permits=14, leases=Document{{93319562-66b4-4ffc-a4c0-cb703573d29b=6}}, version=46, _update_flag=true}}  
+12:54:32.223 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 47 Semaphore Data: Document{{_id=TEST-0002, initial_permits=20, available_permits=13, leases=Document{{93319562-66b4-4ffc-a4c0-cb703573d29b=7}}, version=47, _update_flag=true}}  
+12:54:32.235 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 48 Semaphore Data: Document{{_id=TEST-0002, initial_permits=20, available_permits=12, leases=Document{{93319562-66b4-4ffc-a4c0-cb703573d29b=8}}, version=48, _update_flag=true}}  
+12:54:32.253 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 49 Semaphore Data: Document{{_id=TEST-0002, initial_permits=20, available_permits=11, leases=Document{{93319562-66b4-4ffc-a4c0-cb703573d29b=9}}, version=49, _update_flag=true}}  
+12:54:32.261 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 50 Semaphore Data: Document{{_id=TEST-0002, initial_permits=20, available_permits=10, leases=Document{{93319562-66b4-4ffc-a4c0-cb703573d29b=10}}, version=50, _update_flag=true}}  
+12:54:32.282 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 51 Semaphore Data: Document{{_id=TEST-0002, initial_permits=20, available_permits=9, leases=Document{{93319562-66b4-4ffc-a4c0-cb703573d29b=11}}, version=51, _update_flag=true}}  
+12:54:32.299 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 52 Semaphore Data: Document{{_id=TEST-0002, initial_permits=20, available_permits=8, leases=Document{{93319562-66b4-4ffc-a4c0-cb703573d29b=12}}, version=52, _update_flag=true}}  
+12:54:32.307 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 53 Semaphore Data: Document{{_id=TEST-0002, initial_permits=20, available_permits=7, leases=Document{{93319562-66b4-4ffc-a4c0-cb703573d29b=13}}, version=53, _update_flag=true}}  
+12:54:32.313 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 54 Semaphore Data: Document{{_id=TEST-0002, initial_permits=20, available_permits=6, leases=Document{{93319562-66b4-4ffc-a4c0-cb703573d29b=14}}, version=54, _update_flag=true}}  
+12:54:32.334 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 55 Semaphore Data: Document{{_id=TEST-0002, initial_permits=20, available_permits=5, leases=Document{{93319562-66b4-4ffc-a4c0-cb703573d29b=15}}, version=55, _update_flag=true}}  
+12:54:32.347 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 56 Semaphore Data: Document{{_id=TEST-0002, initial_permits=20, available_permits=4, leases=Document{{93319562-66b4-4ffc-a4c0-cb703573d29b=16}}, version=56, _update_flag=true}}  
+12:54:32.358 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 57 Semaphore Data: Document{{_id=TEST-0002, initial_permits=20, available_permits=3, leases=Document{{93319562-66b4-4ffc-a4c0-cb703573d29b=17}}, version=57, _update_flag=true}}  
+12:54:32.371 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 58 Semaphore Data: Document{{_id=TEST-0002, initial_permits=20, available_permits=2, leases=Document{{93319562-66b4-4ffc-a4c0-cb703573d29b=18}}, version=58, _update_flag=true}}  
+12:54:32.392 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 59 Semaphore Data: Document{{_id=TEST-0002, initial_permits=20, available_permits=1, leases=Document{{93319562-66b4-4ffc-a4c0-cb703573d29b=19}}, version=59, _update_flag=true}}  
+12:54:32.405 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 60 Semaphore Data: Document{{_id=TEST-0002, initial_permits=20, available_permits=0, leases=Document{{93319562-66b4-4ffc-a4c0-cb703573d29b=20}}, version=60, _update_flag=true}}  
+12:54:32.431 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 60 Semaphore Data: Document{{_id=TEST-0002, initial_permits=20, available_permits=20, leases=Document{{93319562-66b4-4ffc-a4c0-cb703573d29b=0}}, version=60, _update_flag=true}}  
+12:54:32.459 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:32.487 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 1 semaphores, modified count: 1
+</pre>
+<button class="clipboard-copy-btn" aria-label="Copy to clipboard" data-copy-element-id="root-0-test-stdout-testSingleClientSemaphoreAcquisition()">Copy</button>
+</span>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="https://www.gradle.org">Gradle 9.3.0</a> at Feb 4, 2026, 12:57:24 PM</p>
+</div>
+</div>
+</body>
+</html>

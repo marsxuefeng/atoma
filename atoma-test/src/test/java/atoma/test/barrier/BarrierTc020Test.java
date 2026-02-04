@@ -1,8 +1,9 @@
 package atoma.test.barrier;
 
 import atoma.api.BrokenBarrierException;
+import atoma.api.Lease;
 import atoma.api.synchronizer.CyclicBarrier;
-import atoma.client.AtomaClient;
+import atoma.core.AtomaClient;
 import atoma.storage.mongo.MongoCoordinationStore;
 import atoma.test.BaseTest;
 import org.junit.jupiter.api.Assertions;
@@ -14,9 +15,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-/**
- * Test case for BARRIER-TC-020: Verify barrier state after a timeout.
- */
+/** Test case for BARRIER-TC-020: Verify barrier state after a timeout. */
 public class BarrierTc020Test extends BaseTest {
 
   @DisplayName("BARRIER-TC-020: 超时后屏障状态验证")
@@ -25,10 +24,10 @@ public class BarrierTc020Test extends BaseTest {
     MongoCoordinationStore mongoCoordinationStore = newMongoCoordinationStore();
     ScheduledExecutorService scheduledExecutorService = newScheduledExecutorService();
     AtomaClient client = new AtomaClient(scheduledExecutorService, mongoCoordinationStore);
-
+    Lease lease = client.grantLease();
     final String barrierId = "BARRIER-TC-020";
     final int parties = 2;
-    final CyclicBarrier barrier = client.getCyclicBarrier(barrierId, parties);
+    final CyclicBarrier barrier = lease.getCyclicBarrier(barrierId, parties);
     final CountDownLatch timeoutLatch = new CountDownLatch(1);
 
     Thread party1 = null;

@@ -10,6 +10,5 @@ dependencyResolutionManagement {
 include("atoma-api")
 include("atoma-storage-mongo")
 include("atoma-core")
-include("atoma-client")
 include("atoma-benchmark")
 include("atoma-test")

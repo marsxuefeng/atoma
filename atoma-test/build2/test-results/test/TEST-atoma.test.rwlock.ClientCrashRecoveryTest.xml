@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="atoma.test.rwlock.ClientCrashRecoveryTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-02-04T04:54:25.069Z" hostname="manjaro" time="103.723">
+  <properties/>
+  <testcase name="TEST-ACQ-009: 验证多个客户端崩溃后锁能够被自动清理" classname="atoma.test.rwlock.ClientCrashRecoveryTest" time="7.259"/>
+  <testcase name="TEST-ACQ-009: 验证客户端崩溃后锁能够被自动清理" classname="atoma.test.rwlock.ClientCrashRecoveryTest" time="3.235"/>
+  <testcase name="TEST-ACQ-009: 验证多个客户端崩溃后锁能够被自动清理" classname="atoma.test.rwlock.ClientCrashRecoveryTest" time="33.241"/>
+  <testcase name="TEST-ACQ-009: 验证客户端崩溃后锁能够被自动清理" classname="atoma.test.rwlock.ClientCrashRecoveryTest" time="59.981"/>
+  <system-out><![CDATA[12:54:25.269 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:26.206Z Next expire time: 2026-02-04T04:54:27.206Z 
+12:54:26.246 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:27.206Z Next expire time: 2026-02-04T04:54:28.206Z 
+12:54:26.839 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:27.204 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:27.230 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:28.206Z Next expire time: 2026-02-04T04:54:29.206Z 
+12:54:28.237 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:29.206Z Next expire time: 2026-02-04T04:54:30.206Z 
+12:54:28.843 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:29.212 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:29.235 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:30.206Z Next expire time: 2026-02-04T04:54:31.206Z 
+12:54:30.233 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:31.206Z Next expire time: 2026-02-04T04:54:32.206Z 
+12:54:31.232 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:32.206Z Next expire time: 2026-02-04T04:54:33.206Z 
+12:54:32.233 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:33.206Z Next expire time: 2026-02-04T04:54:34.206Z 
+12:54:32.373 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:32.419 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:32.427 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [3760aa63-2b31-411e-8430-bd2fe83dd557] renew completed. Previous expire time: 2026-02-04T04:54:40.398Z Next expire time: 2026-02-04T04:54:48.398Z 
+12:54:32.457 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 1 read-write locks, modified count: 1
+12:54:32.472 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Deleted 1 empty read-write lock documents
+12:54:32.489 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 semaphores, modified count: 0
+12:54:32.835 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:33.210 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:33.233 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:34.206Z Next expire time: 2026-02-04T04:54:35.206Z 
+12:54:34.231 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:35.206Z Next expire time: 2026-02-04T04:54:36.206Z 
+12:54:34.407 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:34.849 [atoma-ttl-worker-3] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:35.204 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:35.229 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:36.206Z Next expire time: 2026-02-04T04:54:37.206Z 
+12:54:35.508 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:35.525 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:35.536 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [1280c09d-a0ce-49fa-b403-1df9ae239b55] renew completed. Previous expire time: 2026-02-04T04:54:43.518Z Next expire time: 2026-02-04T04:54:51.518Z 
+12:54:35.563 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:35.569 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Deleted 1 empty read-write lock documents
+12:54:35.590 [Thread-25] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:35.590 [Thread-24] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:35.591 [Thread-23] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:35.590 [Thread-22] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:35.590 [Thread-21] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:35.617 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:35.622 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:35.622 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [8e257f9a-58f3-40f6-9212-232a7305e74d] renew completed. Previous expire time: 2026-02-04T04:54:36.604Z Next expire time: 2026-02-04T04:54:37.604Z 
+12:54:35.622 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [bbaacf5d-3110-4969-a21c-d31e95d283c3] renew completed. Previous expire time: 2026-02-04T04:54:36.603Z Next expire time: 2026-02-04T04:54:37.603Z 
+12:54:35.622 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:35.622 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [b4278238-5134-4e30-8017-3801cfbb8e89] renew completed. Previous expire time: 2026-02-04T04:54:36.604Z Next expire time: 2026-02-04T04:54:37.604Z 
+12:54:35.622 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [a412c48d-52f5-4ca4-907d-4bd3d023ea99] renew completed. Previous expire time: 2026-02-04T04:54:36.603Z Next expire time: 2026-02-04T04:54:37.603Z 
+12:54:35.622 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:35.622 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:35.623 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [d510320f-2b38-4d33-9111-6727eedd5cef] renew completed. Previous expire time: 2026-02-04T04:54:36.604Z Next expire time: 2026-02-04T04:54:37.604Z 
+12:54:36.232 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:37.206Z Next expire time: 2026-02-04T04:54:38.206Z 
+12:54:36.406 [atoma-ttl-worker-3] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:36.847 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:37.216 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:37.230 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:38.206Z Next expire time: 2026-02-04T04:54:39.206Z 
+12:54:38.231 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:39.206Z Next expire time: 2026-02-04T04:54:40.206Z 
+12:54:38.406 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:38.835 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:39.045 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:39.061 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:39.063 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [dd24a3f7-b741-45b4-8d2e-2b81f7719fa6] renew completed. Previous expire time: 2026-02-04T04:54:42.052Z Next expire time: 2026-02-04T04:54:45.052Z 
+12:54:39.208 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:39.229 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:40.206Z Next expire time: 2026-02-04T04:54:41.206Z 
+12:54:40.232 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:41.206Z Next expire time: 2026-02-04T04:54:42.206Z 
+12:54:40.402 [atoma-ttl-worker-4] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:40.831 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:41.060 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:41.072 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 1 semaphores, modified count: 1
+12:54:41.204 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:41.228 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:42.206Z Next expire time: 2026-02-04T04:54:43.206Z 
+12:54:42.064 [atoma-ttl-worker-2] DEBUG atoma.core.DefaultLease - Lease [dd24a3f7-b741-45b4-8d2e-2b81f7719fa6] renew completed. Previous expire time: 2026-02-04T04:54:45.052Z Next expire time: 2026-02-04T04:54:48.052Z 
+12:54:42.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:43.206Z Next expire time: 2026-02-04T04:54:44.206Z 
+12:54:42.400 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:42.830 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:43.056 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:43.201 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:43.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:44.206Z Next expire time: 2026-02-04T04:54:45.206Z 
+12:54:44.228 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:45.206Z Next expire time: 2026-02-04T04:54:46.206Z 
+12:54:44.399 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:44.824 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:45.056 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:45.062 [atoma-ttl-worker-4] DEBUG atoma.core.DefaultLease - Lease [dd24a3f7-b741-45b4-8d2e-2b81f7719fa6] renew completed. Previous expire time: 2026-02-04T04:54:48.052Z Next expire time: 2026-02-04T04:54:51.052Z 
+12:54:45.198 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:45.228 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:46.206Z Next expire time: 2026-02-04T04:54:47.206Z 
+12:54:46.229 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:47.206Z Next expire time: 2026-02-04T04:54:48.206Z 
+12:54:46.399 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:46.826 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:47.055 [atoma-ttl-worker-3] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:47.198 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:47.228 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:48.206Z Next expire time: 2026-02-04T04:54:49.206Z 
+12:54:48.064 [atoma-ttl-worker-5] DEBUG atoma.core.DefaultLease - Lease [dd24a3f7-b741-45b4-8d2e-2b81f7719fa6] renew completed. Previous expire time: 2026-02-04T04:54:51.052Z Next expire time: 2026-02-04T04:54:54.052Z 
+12:54:48.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:49.206Z Next expire time: 2026-02-04T04:54:50.206Z 
+12:54:48.399 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:48.824 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:49.054 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:49.198 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:49.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:50.206Z Next expire time: 2026-02-04T04:54:51.206Z 
+12:54:50.228 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:51.206Z Next expire time: 2026-02-04T04:54:52.206Z 
+12:54:50.399 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:50.824 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:51.054 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:51.061 [atoma-ttl-worker-7] DEBUG atoma.core.DefaultLease - Lease [dd24a3f7-b741-45b4-8d2e-2b81f7719fa6] renew completed. Previous expire time: 2026-02-04T04:54:54.052Z Next expire time: 2026-02-04T04:54:57.052Z 
+12:54:51.198 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:51.226 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:52.206Z Next expire time: 2026-02-04T04:54:53.206Z 
+12:54:52.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:53.206Z Next expire time: 2026-02-04T04:54:54.206Z 
+12:54:52.399 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:52.824 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:53.055 [atoma-ttl-worker-6] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:53.198 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:53.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:54.206Z Next expire time: 2026-02-04T04:54:55.206Z 
+12:54:54.062 [atoma-ttl-worker-4] DEBUG atoma.core.DefaultLease - Lease [dd24a3f7-b741-45b4-8d2e-2b81f7719fa6] renew completed. Previous expire time: 2026-02-04T04:54:57.052Z Next expire time: 2026-02-04T04:55:00.052Z 
+12:54:54.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:55.206Z Next expire time: 2026-02-04T04:54:56.206Z 
+12:54:54.399 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:54.825 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:55.055 [atoma-ttl-worker-3] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:55.198 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:55.226 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:56.206Z Next expire time: 2026-02-04T04:54:57.206Z 
+12:54:56.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:57.206Z Next expire time: 2026-02-04T04:54:58.206Z 
+12:54:56.399 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:56.824 [atoma-ttl-worker-5] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:57.056 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:57.071 [atoma-ttl-worker-5] DEBUG atoma.core.DefaultLease - Lease [dd24a3f7-b741-45b4-8d2e-2b81f7719fa6] renew completed. Previous expire time: 2026-02-04T04:55:00.052Z Next expire time: 2026-02-04T04:55:03.052Z 
+12:54:57.199 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:57.226 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:58.206Z Next expire time: 2026-02-04T04:54:59.206Z 
+12:54:58.229 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:54:59.206Z Next expire time: 2026-02-04T04:55:00.206Z 
+12:54:58.400 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:58.824 [atoma-ttl-worker-5] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:59.055 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:59.198 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:59.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:00.206Z Next expire time: 2026-02-04T04:55:01.206Z 
+12:55:00.068 [atoma-ttl-worker-7] DEBUG atoma.core.DefaultLease - Lease [dd24a3f7-b741-45b4-8d2e-2b81f7719fa6] renew completed. Previous expire time: 2026-02-04T04:55:03.052Z Next expire time: 2026-02-04T04:55:06.052Z 
+12:55:00.226 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:01.206Z Next expire time: 2026-02-04T04:55:02.206Z 
+12:55:00.399 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:00.824 [atoma-ttl-worker-5] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:01.055 [atoma-ttl-worker-6] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:01.198 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:01.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:02.206Z Next expire time: 2026-02-04T04:55:03.206Z 
+12:55:02.228 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:03.206Z Next expire time: 2026-02-04T04:55:04.206Z 
+12:55:02.400 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:02.825 [atoma-ttl-worker-5] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:03.054 [atoma-ttl-worker-6] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:03.061 [atoma-ttl-worker-4] DEBUG atoma.core.DefaultLease - Lease [dd24a3f7-b741-45b4-8d2e-2b81f7719fa6] renew completed. Previous expire time: 2026-02-04T04:55:06.052Z Next expire time: 2026-02-04T04:55:09.052Z 
+12:55:03.198 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:03.228 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:04.206Z Next expire time: 2026-02-04T04:55:05.206Z 
+12:55:04.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:05.206Z Next expire time: 2026-02-04T04:55:06.206Z 
+12:55:04.400 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:04.824 [atoma-ttl-worker-5] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:05.055 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:05.198 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:05.226 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:06.206Z Next expire time: 2026-02-04T04:55:07.206Z 
+12:55:06.064 [atoma-ttl-worker-2] DEBUG atoma.core.DefaultLease - Lease [dd24a3f7-b741-45b4-8d2e-2b81f7719fa6] renew completed. Previous expire time: 2026-02-04T04:55:09.052Z Next expire time: 2026-02-04T04:55:12.052Z 
+12:55:06.226 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:07.206Z Next expire time: 2026-02-04T04:55:08.206Z 
+12:55:06.399 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:06.824 [atoma-ttl-worker-5] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:07.055 [atoma-ttl-worker-5] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:07.199 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:07.226 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:08.206Z Next expire time: 2026-02-04T04:55:09.206Z 
+12:55:08.233 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:09.206Z Next expire time: 2026-02-04T04:55:10.206Z 
+12:55:08.399 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.838 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [14137d98-d68c-44f8-9fe5-30b35b980074] renew completed. Previous expire time: 2026-02-04T04:55:09.823Z Next expire time: 2026-02-04T04:55:10.823Z 
+12:55:09.210 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:09.249 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:10.206Z Next expire time: 2026-02-04T04:55:11.206Z 
+12:55:10.244 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:11.206Z Next expire time: 2026-02-04T04:55:12.206Z 
+12:55:10.404 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:10.830 [atoma-ttl-worker-5] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:11.197 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:11.243 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:12.206Z Next expire time: 2026-02-04T04:55:13.206Z 
+12:55:11.842 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:11.850 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:11.855 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:55:13.844Z Next expire time: 2026-02-04T04:55:15.844Z 
+12:55:12.239 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:13.206Z Next expire time: 2026-02-04T04:55:14.206Z 
+12:55:12.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:12.823 [atoma-ttl-worker-5] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:13.197 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:13.226 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:14.206Z Next expire time: 2026-02-04T04:55:15.206Z 
+12:55:13.849 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:13.853 [atoma-ttl-worker-2] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:55:15.844Z Next expire time: 2026-02-04T04:55:17.844Z 
+12:55:14.231 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:15.206Z Next expire time: 2026-02-04T04:55:16.206Z 
+12:55:14.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:14.825 [atoma-ttl-worker-5] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:15.199 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:15.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:16.206Z Next expire time: 2026-02-04T04:55:17.206Z 
+12:55:15.845 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:15.854 [atoma-ttl-worker-3] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:55:17.844Z Next expire time: 2026-02-04T04:55:19.844Z 
+12:55:16.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:17.206Z Next expire time: 2026-02-04T04:55:18.206Z 
+12:55:16.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:16.823 [atoma-ttl-worker-5] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:17.200 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:17.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:18.206Z Next expire time: 2026-02-04T04:55:19.206Z 
+12:55:17.845 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:17.855 [atoma-ttl-worker-4] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:55:19.844Z Next expire time: 2026-02-04T04:55:21.844Z 
+12:55:18.226 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:19.206Z Next expire time: 2026-02-04T04:55:20.206Z 
+12:55:18.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:18.823 [atoma-ttl-worker-5] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:19.197 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:19.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:20.206Z Next expire time: 2026-02-04T04:55:21.206Z 
+12:55:19.846 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:19.854 [atoma-ttl-worker-5] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:55:21.844Z Next expire time: 2026-02-04T04:55:23.844Z 
+12:55:20.226 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:21.206Z Next expire time: 2026-02-04T04:55:22.206Z 
+12:55:20.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:20.823 [atoma-ttl-worker-4] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:21.197 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:21.228 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:22.206Z Next expire time: 2026-02-04T04:55:23.206Z 
+12:55:21.846 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:21.870 [atoma-ttl-worker-6] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:55:23.844Z Next expire time: 2026-02-04T04:55:25.844Z 
+12:55:22.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:23.206Z Next expire time: 2026-02-04T04:55:24.206Z 
+12:55:22.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:22.823 [atoma-ttl-worker-4] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:23.196 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:23.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:24.206Z Next expire time: 2026-02-04T04:55:25.206Z 
+12:55:23.845 [atoma-ttl-worker-3] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:23.854 [atoma-ttl-worker-7] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:55:25.844Z Next expire time: 2026-02-04T04:55:27.844Z 
+12:55:24.229 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:25.206Z Next expire time: 2026-02-04T04:55:26.206Z 
+12:55:24.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:24.823 [atoma-ttl-worker-4] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:25.197 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:25.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:26.206Z Next expire time: 2026-02-04T04:55:27.206Z 
+12:55:25.845 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:25.854 [atoma-ttl-worker-4] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:55:27.844Z Next expire time: 2026-02-04T04:55:29.844Z 
+12:55:26.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:27.206Z Next expire time: 2026-02-04T04:55:28.206Z 
+12:55:26.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:26.824 [atoma-ttl-worker-4] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:27.197 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:27.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:28.206Z Next expire time: 2026-02-04T04:55:29.206Z 
+12:55:27.847 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:27.853 [atoma-ttl-worker-5] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:55:29.844Z Next expire time: 2026-02-04T04:55:31.844Z 
+12:55:28.228 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:29.206Z Next expire time: 2026-02-04T04:55:30.206Z 
+12:55:28.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:28.823 [atoma-ttl-worker-4] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:29.197 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:29.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:30.206Z Next expire time: 2026-02-04T04:55:31.206Z 
+12:55:29.846 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:29.854 [atoma-ttl-worker-6] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:55:31.844Z Next expire time: 2026-02-04T04:55:33.844Z 
+12:55:30.228 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:31.206Z Next expire time: 2026-02-04T04:55:32.206Z 
+12:55:30.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:30.823 [atoma-ttl-worker-4] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:31.198 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:31.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:32.206Z Next expire time: 2026-02-04T04:55:33.206Z 
+12:55:31.846 [atoma-ttl-worker-3] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:31.854 [atoma-ttl-worker-7] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:55:33.844Z Next expire time: 2026-02-04T04:55:35.844Z 
+12:55:32.228 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:33.206Z Next expire time: 2026-02-04T04:55:34.206Z 
+12:55:32.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:32.824 [atoma-ttl-worker-4] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:33.199 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:33.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:34.206Z Next expire time: 2026-02-04T04:55:35.206Z 
+12:55:33.845 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:33.853 [atoma-ttl-worker-4] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:55:35.844Z Next expire time: 2026-02-04T04:55:37.844Z 
+12:55:34.229 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:35.206Z Next expire time: 2026-02-04T04:55:36.206Z 
+12:55:34.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:34.823 [atoma-ttl-worker-4] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:35.199 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:35.228 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:36.206Z Next expire time: 2026-02-04T04:55:37.206Z 
+12:55:35.845 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:35.856 [atoma-ttl-worker-5] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:55:37.844Z Next expire time: 2026-02-04T04:55:39.844Z 
+12:55:36.228 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:37.206Z Next expire time: 2026-02-04T04:55:38.206Z 
+12:55:36.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:36.823 [atoma-ttl-worker-4] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:37.198 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:37.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:38.206Z Next expire time: 2026-02-04T04:55:39.206Z 
+12:55:37.846 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:37.855 [atoma-ttl-worker-6] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:55:39.844Z Next expire time: 2026-02-04T04:55:41.844Z 
+12:55:38.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:39.206Z Next expire time: 2026-02-04T04:55:40.206Z 
+12:55:38.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:38.823 [atoma-ttl-worker-4] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:39.198 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:39.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:40.206Z Next expire time: 2026-02-04T04:55:41.206Z 
+12:55:39.845 [atoma-ttl-worker-3] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:39.854 [atoma-ttl-worker-7] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:55:41.844Z Next expire time: 2026-02-04T04:55:43.844Z 
+12:55:40.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:41.206Z Next expire time: 2026-02-04T04:55:42.206Z 
+12:55:40.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:40.825 [atoma-ttl-worker-4] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:41.197 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:41.228 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:42.206Z Next expire time: 2026-02-04T04:55:43.206Z 
+12:55:41.845 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:41.853 [atoma-ttl-worker-4] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:55:43.844Z Next expire time: 2026-02-04T04:55:45.844Z 
+12:55:42.226 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:43.206Z Next expire time: 2026-02-04T04:55:44.206Z 
+12:55:42.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:42.825 [atoma-ttl-worker-4] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:43.197 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:43.230 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:44.206Z Next expire time: 2026-02-04T04:55:45.206Z 
+12:55:43.845 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:43.853 [atoma-ttl-worker-5] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:55:45.844Z Next expire time: 2026-02-04T04:55:47.844Z 
+12:55:44.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:45.206Z Next expire time: 2026-02-04T04:55:46.206Z 
+12:55:44.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:44.825 [atoma-ttl-worker-4] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:45.197 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:45.229 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:46.206Z Next expire time: 2026-02-04T04:55:47.206Z 
+12:55:45.848 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:45.854 [atoma-ttl-worker-6] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:55:47.844Z Next expire time: 2026-02-04T04:55:49.844Z 
+12:55:46.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:47.206Z Next expire time: 2026-02-04T04:55:48.206Z 
+12:55:46.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:46.823 [atoma-ttl-worker-4] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:47.197 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:47.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:48.206Z Next expire time: 2026-02-04T04:55:49.206Z 
+12:55:47.846 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:47.855 [atoma-ttl-worker-7] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:55:49.844Z Next expire time: 2026-02-04T04:55:51.844Z 
+12:55:48.226 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:49.206Z Next expire time: 2026-02-04T04:55:50.206Z 
+12:55:48.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:48.823 [atoma-ttl-worker-4] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:49.197 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:49.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:50.206Z Next expire time: 2026-02-04T04:55:51.206Z 
+12:55:49.845 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:49.856 [atoma-ttl-worker-4] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:55:51.844Z Next expire time: 2026-02-04T04:55:53.844Z 
+12:55:50.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:51.206Z Next expire time: 2026-02-04T04:55:52.206Z 
+12:55:50.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:50.822 [atoma-ttl-worker-4] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:51.197 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:51.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:52.206Z Next expire time: 2026-02-04T04:55:53.206Z 
+12:55:51.845 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:51.855 [atoma-ttl-worker-5] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:55:53.844Z Next expire time: 2026-02-04T04:55:55.844Z 
+12:55:52.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:53.206Z Next expire time: 2026-02-04T04:55:54.206Z 
+12:55:52.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:52.823 [atoma-ttl-worker-4] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:53.198 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:53.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:54.206Z Next expire time: 2026-02-04T04:55:55.206Z 
+12:55:53.846 [atoma-ttl-worker-3] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:53.853 [atoma-ttl-worker-6] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:55:55.844Z Next expire time: 2026-02-04T04:55:57.844Z 
+12:55:54.228 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:55.206Z Next expire time: 2026-02-04T04:55:56.206Z 
+12:55:54.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:54.823 [atoma-ttl-worker-4] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:55.197 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:55.228 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:56.206Z Next expire time: 2026-02-04T04:55:57.206Z 
+12:55:55.846 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:55.853 [atoma-ttl-worker-7] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:55:57.844Z Next expire time: 2026-02-04T04:55:59.844Z 
+12:55:56.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:57.206Z Next expire time: 2026-02-04T04:55:58.206Z 
+12:55:56.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:56.823 [atoma-ttl-worker-6] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:57.197 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:57.227 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:58.206Z Next expire time: 2026-02-04T04:55:59.206Z 
+12:55:57.845 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:57.853 [atoma-ttl-worker-4] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:55:59.844Z Next expire time: 2026-02-04T04:56:01.844Z 
+12:55:58.228 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:55:59.206Z Next expire time: 2026-02-04T04:56:00.206Z 
+12:55:58.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:58.823 [atoma-ttl-worker-6] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:59.196 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:59.227 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:56:00.206Z Next expire time: 2026-02-04T04:56:01.206Z 
+12:55:59.846 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:59.854 [atoma-ttl-worker-5] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:56:01.844Z Next expire time: 2026-02-04T04:56:03.844Z 
+12:56:00.227 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:56:01.206Z Next expire time: 2026-02-04T04:56:02.206Z 
+12:56:00.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:56:00.823 [atoma-ttl-worker-6] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:56:01.197 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:56:01.227 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:56:02.206Z Next expire time: 2026-02-04T04:56:03.206Z 
+12:56:01.846 [atoma-ttl-worker-3] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:56:01.854 [atoma-ttl-worker-6] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:56:03.844Z Next expire time: 2026-02-04T04:56:05.844Z 
+12:56:02.227 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:56:03.206Z Next expire time: 2026-02-04T04:56:04.206Z 
+12:56:02.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:56:02.825 [atoma-ttl-worker-6] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:56:03.197 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:56:03.227 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:56:04.206Z Next expire time: 2026-02-04T04:56:05.206Z 
+12:56:03.846 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:56:03.858 [atoma-ttl-worker-7] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:56:05.844Z Next expire time: 2026-02-04T04:56:07.844Z 
+12:56:04.228 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:56:05.206Z Next expire time: 2026-02-04T04:56:06.206Z 
+12:56:04.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:56:04.825 [atoma-ttl-worker-6] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:56:05.197 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:56:05.226 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:56:06.206Z Next expire time: 2026-02-04T04:56:07.206Z 
+12:56:05.845 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:56:05.864 [atoma-ttl-worker-4] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:56:07.844Z Next expire time: 2026-02-04T04:56:09.844Z 
+12:56:06.227 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:56:07.206Z Next expire time: 2026-02-04T04:56:08.206Z 
+12:56:06.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:56:06.823 [atoma-ttl-worker-6] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:56:07.197 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:56:07.227 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:56:08.206Z Next expire time: 2026-02-04T04:56:09.206Z 
+12:56:07.845 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:56:07.853 [atoma-ttl-worker-5] DEBUG atoma.core.DefaultLease - Lease [ed42ffaa-f7a1-40b8-8f88-8d780abeca81] renew completed. Previous expire time: 2026-02-04T04:56:09.844Z Next expire time: 2026-02-04T04:56:11.844Z 
+12:56:08.227 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [22f7db22-e29c-447b-9446-23a5df9a4394] renew completed. Previous expire time: 2026-02-04T04:56:09.206Z Next expire time: 2026-02-04T04:56:10.206Z 
+12:56:08.398 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+]]></system-out>
+  <system-err><![CDATA[创建新客户端尝试获取写锁
+java.lang.RuntimeException: Simulated abnormal exit
+	at atoma.test.rwlock.ClientCrashRecoveryTest.lambda$testAbnormalClientExit$0(ClientCrashRecoveryTest.java:93)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+创建新客户端验证锁已被释放
+]]></system-err>
+</testsuite>

@@ -6,5 +6,12 @@ import org.junit.platform.suite.api.SuiteDisplayName;
 
 @Suite
 @SuiteDisplayName("Atoma Test Suite")
-@SelectPackages(value = {"atoma.test.rwlock", "atoma.test.mutex", "atoma.test.semaphore","atoma.test.cdl","atoma.test.barrier"})
+@SelectPackages(
+    value = {
+      "atoma.test.rwlock",
+      "atoma.test.mutex",
+      "atoma.test.semaphore",
+      "atoma.test.cdl",
+      "atoma.test.barrier"
+    })
 public class AtomaTestSuite {}

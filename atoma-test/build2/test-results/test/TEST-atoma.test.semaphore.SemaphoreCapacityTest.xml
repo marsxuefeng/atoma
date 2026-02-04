@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="atoma.test.semaphore.SemaphoreCapacityTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-02-04T04:55:10.993Z" hostname="manjaro" time="0.523">
+  <properties/>
+  <testcase name="TEST-SEM-CAP-002: 获取全部许可后信号量为空，验证容量边界" classname="atoma.test.semaphore.SemaphoreCapacityTest" time="0.13"/>
+  <testcase name="TEST-SEM-CAP-004: 动态增加信号量容量，验证扩容机制" classname="atoma.test.semaphore.SemaphoreCapacityTest" time="0.039"/>
+  <testcase name="TEST-SEM-CAP-003: 容量为零的信号量行为，验证特殊情况处理" classname="atoma.test.semaphore.SemaphoreCapacityTest" time="0.22"/>
+  <testcase name="TEST-SEM-CAP-005: 动态减少信号量容量，验证缩容机制" classname="atoma.test.semaphore.SemaphoreCapacityTest" time="0.131"/>
+  <system-out><![CDATA[12:55:10.998 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:11.003 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:11.008 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [b39de7f8-a1d2-4855-9d3e-e89f369ee132] renew completed. Previous expire time: 2026-02-04T04:55:14Z Next expire time: 2026-02-04T04:55:17Z 
+12:55:11.011 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 8 Semaphore Data: Document{{_id=TEST-SEM-CAP-002, initial_permits=10, available_permits=0, leases=Document{{b39de7f8-a1d2-4855-9d3e-e89f369ee132=10}}, version=8, _update_flag=true}}  
+12:55:11.016 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 8 Semaphore Data: Document{{_id=TEST-SEM-CAP-002, initial_permits=10, available_permits=0, leases=Document{{b39de7f8-a1d2-4855-9d3e-e89f369ee132=10}}, version=8, _update_flag=false}}  
+12:55:11.118 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:11.122 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 1 semaphores, modified count: 1
+12:55:11.129 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:11.133 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:11.139 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [de87628f-1f4d-4b11-be08-04ee931641c0] renew completed. Previous expire time: 2026-02-04T04:55:14.130Z Next expire time: 2026-02-04T04:55:17.130Z 
+12:55:11.139 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 8 Semaphore Data: Document{{_id=TEST-SEM-CAP-004, initial_permits=5, available_permits=0, leases=Document{{de87628f-1f4d-4b11-be08-04ee931641c0=5}}, version=8, _update_flag=true}}  
+12:55:11.146 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 8 Semaphore Data: Document{{_id=TEST-SEM-CAP-004, initial_permits=5, available_permits=3, leases=Document{{de87628f-1f4d-4b11-be08-04ee931641c0=2}}, version=8, _update_flag=true}}  
+12:55:11.152 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 8 Semaphore Data: Document{{_id=TEST-SEM-CAP-004, initial_permits=5, available_permits=5, leases=Document{{de87628f-1f4d-4b11-be08-04ee931641c0=0}}, version=8, _update_flag=true}}  
+12:55:11.158 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:11.162 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 1 semaphores, modified count: 1
+12:55:11.170 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:11.176 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:11.180 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [14b2e182-8e4a-4748-ad9a-117de5f94118] renew completed. Previous expire time: 2026-02-04T04:55:14.171Z Next expire time: 2026-02-04T04:55:17.171Z 
+12:55:11.383 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:11.389 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:11.394 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:11.397 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [77102c24-2413-49e2-8896-4d1c3d212086] renew completed. Previous expire time: 2026-02-04T04:55:14.390Z Next expire time: 2026-02-04T04:55:17.390Z 
+12:55:11.399 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 15 Semaphore Data: Document{{_id=TEST-SEM-CAP-005, initial_permits=10, available_permits=6, leases=Document{{77102c24-2413-49e2-8896-4d1c3d212086=4}}, version=15, _update_flag=true}}  
+12:55:11.402 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 16 Semaphore Data: Document{{_id=TEST-SEM-CAP-005, initial_permits=10, available_permits=0, leases=Document{{77102c24-2413-49e2-8896-4d1c3d212086=10}}, version=16, _update_flag=true}}  
+12:55:11.406 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 16 Semaphore Data: Document{{_id=TEST-SEM-CAP-005, initial_permits=10, available_permits=0, leases=Document{{77102c24-2413-49e2-8896-4d1c3d212086=10}}, version=16, _update_flag=false}}  
+12:55:11.442 [atoma-ttl-worker-5] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:11.511 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:11.515 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 1 semaphores, modified count: 1
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

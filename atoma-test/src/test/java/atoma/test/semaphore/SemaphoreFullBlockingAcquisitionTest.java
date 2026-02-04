@@ -2,7 +2,7 @@ package atoma.test.semaphore;
 
 import atoma.api.Lease;
 import atoma.api.synchronizer.Semaphore;
-import atoma.client.AtomaClient;
+import atoma.core.AtomaClient;
 import atoma.storage.mongo.MongoCoordinationStore;
 import atoma.test.BaseTest;
 import org.assertj.core.api.Assertions;
@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.time.Duration;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class SemaphoreFullBlockingAcquisitionTest extends BaseTest {
 
@@ -39,7 +40,7 @@ public class SemaphoreFullBlockingAcquisitionTest extends BaseTest {
       try {
         semaphore.acquire(1, 1000L, TimeUnit.MILLISECONDS); // 等待1秒
         Assertions.fail("Should have timed out");
-      } catch (RuntimeException e) {
+      } catch (TimeoutException e) {
         // 预期的超时异常
         long elapsedTime = System.currentTimeMillis() - startTime;
         Assertions.assertThat(elapsedTime).isGreaterThanOrEqualTo(1000);

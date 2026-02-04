@@ -1,0 +1,12 @@
+package atoma.core;
+
+final class ThreadUtils {
+
+  public static String getCurrentThreadId() {
+    return String.format("%s-%d", Thread.currentThread().getName(), Thread.currentThread().getId());
+  }
+
+  public static String getCurrentHolderId(String leaseId) {
+    return String.format("%s-%s", leaseId, getCurrentThreadId());
+  }
+}

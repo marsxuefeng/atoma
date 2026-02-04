@@ -1,8 +1,9 @@
 package atoma.test.barrier;
 
 import atoma.api.BrokenBarrierException;
+import atoma.api.Lease;
 import atoma.api.synchronizer.CyclicBarrier;
-import atoma.client.AtomaClient;
+import atoma.core.AtomaClient;
 import atoma.storage.mongo.MongoCoordinationStore;
 import atoma.test.BaseTest;
 import org.junit.jupiter.api.Assertions;
@@ -29,12 +30,13 @@ public class BarrierTc017Test extends BaseTest {
     MongoCoordinationStore mongoCoordinationStore = newMongoCoordinationStore();
     ScheduledExecutorService scheduledExecutorService = newScheduledExecutorService();
     AtomaClient client = new AtomaClient(scheduledExecutorService, mongoCoordinationStore);
+    Lease lease = client.grantLease();
 
     // CORRECTED LOGIC: Set parties to 3, but only start 2 parties.
     // This ensures the barrier will wait until a timeout occurs.
     final String barrierId = "BARRIER-TC-017";
     final int parties = 3;
-    final CyclicBarrier barrier = client.getCyclicBarrier(barrierId, parties);
+    final CyclicBarrier barrier = lease.getCyclicBarrier(barrierId, parties);
 
     final CountDownLatch exceptionsCaught = new CountDownLatch(2);
     final AtomicReference<Throwable> party1Exception = new AtomicReference<>();

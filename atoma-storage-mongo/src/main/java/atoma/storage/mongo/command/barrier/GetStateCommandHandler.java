@@ -21,6 +21,7 @@ import java.util.function.Function;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.combine;
 import static com.mongodb.client.model.Updates.setOnInsert;
+import static java.util.Collections.emptyList;
 
 /**
  * Handles fetching the current state of a distributed {@code CyclicBarrier}.
@@ -71,18 +72,19 @@ public class GetStateCommandHandler
                       setOnInsert("parties", command.parties()),
                       setOnInsert("generation", 1L),
                       setOnInsert("is_broken", false),
-                      setOnInsert("number_waiting", 0)),
+                      setOnInsert("participants", emptyList())),
                   new FindOneAndUpdateOptions().upsert(true).returnDocument(ReturnDocument.AFTER));
 
           if (doc == null) {
             return new CyclicBarrierCommand.GetStateResult(0, 0, false, 0L);
           }
+
           int parties = doc.getInteger("parties", 0);
           boolean isBroken = doc.getBoolean("is_broken", false);
           long generation = doc.getLong("generation");
-          int numberWaiting = doc.getInteger("number_waiting");
+          var participants = doc.getList("participants", Document.class);
           return new CyclicBarrierCommand.GetStateResult(
-              parties, numberWaiting, isBroken, generation);
+              parties, participants == null ? 0 : participants.size(), isBroken, generation);
         };
 
     Result<CyclicBarrierCommand.GetStateResult> result =

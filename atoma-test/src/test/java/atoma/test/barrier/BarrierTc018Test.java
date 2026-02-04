@@ -1,7 +1,8 @@
 package atoma.test.barrier;
 
+import atoma.api.Lease;
 import atoma.api.synchronizer.CyclicBarrier;
-import atoma.client.AtomaClient;
+import atoma.core.AtomaClient;
 import atoma.storage.mongo.MongoCoordinationStore;
 import atoma.test.BaseTest;
 import org.junit.jupiter.api.Assertions;
@@ -24,12 +25,13 @@ public class BarrierTc018Test extends BaseTest {
     MongoCoordinationStore mongoCoordinationStore = newMongoCoordinationStore();
     ScheduledExecutorService scheduledExecutorService = newScheduledExecutorService();
     AtomaClient client = new AtomaClient(scheduledExecutorService, mongoCoordinationStore);
+    Lease lease = client.grantLease();
 
     // CORRECTED LOGIC: Set parties to 3, but only start 2 parties.
     final String barrierId = "BARRIER-TC-018";
     final int parties = 3;
     final int participatingParties = 2;
-    final CyclicBarrier barrier = client.getCyclicBarrier(barrierId, parties);
+    final CyclicBarrier barrier = lease.getCyclicBarrier(barrierId, parties);
 
     final CountDownLatch threadsFinished = new CountDownLatch(participatingParties);
     final AtomicInteger exceptionCount = new AtomicInteger(0);

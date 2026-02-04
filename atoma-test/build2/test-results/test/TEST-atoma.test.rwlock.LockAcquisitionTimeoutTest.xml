@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="atoma.test.rwlock.LockAcquisitionTimeoutTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-02-04T04:54:28.021Z" hostname="manjaro" time="1.425">
+  <properties/>
+  <testcase name="TEST-ACQ-007: 验证超时机制的正确性" classname="atoma.test.rwlock.LockAcquisitionTimeoutTest" time="0.047"/>
+  <testcase name="TEST-ACQ-007: 验证超时机制的正确性" classname="atoma.test.rwlock.LockAcquisitionTimeoutTest" time="1.165"/>
+  <testcase name="TEST-ACQ-007: 验证锁获取操作支持超时参数" classname="atoma.test.rwlock.LockAcquisitionTimeoutTest" time="0.098"/>
+  <testcase name="TEST-ACQ-007: 验证超时机制的正确性" classname="atoma.test.rwlock.LockAcquisitionTimeoutTest" time="0.053"/>
+  <testcase name="TEST-ACQ-007: 验证超时机制的正确性" classname="atoma.test.rwlock.LockAcquisitionTimeoutTest" time="0.051"/>
+  <system-out><![CDATA[12:54:28.052 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [4c277ff9-2c8b-42d6-ac35-430ba95d330e] renew completed. Previous expire time: 2026-02-04T04:54:36.023Z Next expire time: 2026-02-04T04:54:44.023Z 
+12:54:28.097 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [4c3af64e-a6b6-4e2c-92eb-c50dceb98f55] renew completed. Previous expire time: 2026-02-04T04:54:36.075Z Next expire time: 2026-02-04T04:54:44.075Z 
+12:54:29.173 [atoma-ttl-worker-3] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:29.193 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:29.231 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 1 semaphores, modified count: 1
+12:54:29.272 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [fa79de60-22d9-4901-844e-264e19021ad2] renew completed. Previous expire time: 2026-02-04T04:54:37.245Z Next expire time: 2026-02-04T04:54:45.245Z 
+12:54:29.318 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:29.360 [atoma-ttl-worker-6] DEBUG atoma.core.DefaultLease - Lease [bd636a89-c05f-430f-b568-10e7b76e03ae] renew completed. Previous expire time: 2026-02-04T04:54:37.345Z Next expire time: 2026-02-04T04:54:45.345Z 
+12:54:29.427 [atoma-ttl-worker-7] DEBUG atoma.core.DefaultLease - Lease [32b9baad-bf16-4306-8323-c17eb2490a54] renew completed. Previous expire time: 2026-02-04T04:54:37.397Z Next expire time: 2026-02-04T04:54:45.397Z 
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

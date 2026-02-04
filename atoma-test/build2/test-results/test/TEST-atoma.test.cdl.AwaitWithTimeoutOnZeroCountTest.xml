@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="atoma.test.cdl.AwaitWithTimeoutOnZeroCountTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-02-04T04:54:24.935Z" hostname="manjaro" time="0.173">
+  <properties/>
+  <testcase name="DCL-TC-006: 带超时的await()在count为0时立即返回" classname="atoma.test.cdl.AwaitWithTimeoutOnZeroCountTest" time="0.168"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

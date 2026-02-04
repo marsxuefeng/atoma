@@ -13,7 +13,6 @@ repositories {
 dependencies {
     api(project(":atoma-api"))
     api(project(":atoma-core"))
-    api(project(":atoma-client"))
     api(project(":atoma-storage-mongo"))
     testImplementation(lib.guava)
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
@@ -35,6 +34,7 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    maxParallelForks = 4
     filter {
         includeTestsMatching("atoma.test.mutex.*")
         includeTestsMatching("atoma.test.rwlock.*")

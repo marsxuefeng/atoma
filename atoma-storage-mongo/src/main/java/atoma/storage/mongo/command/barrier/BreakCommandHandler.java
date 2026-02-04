@@ -21,6 +21,7 @@ import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.combine;
 import static com.mongodb.client.model.Updates.set;
+import static java.util.Collections.emptyList;
 
 /**
  *
@@ -52,7 +53,7 @@ public class BreakCommandHandler extends MongoCommandHandler<CyclicBarrierComman
         session -> {
           collection.updateOne(
               and(eq("_id", context.getResourceId()), eq("generation", command.generation())),
-              combine(set("is_broken", true)));
+              combine(set("is_broken", true), set("participants", emptyList())));
           return null;
         };
 

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="atoma.test.cdl.AwaitTimeoutTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-02-04T04:54:25.368Z" hostname="manjaro" time="0.328">
+  <properties/>
+  <testcase name="DCL-TC-005: 带超时的await()在超时后返回" classname="atoma.test.cdl.AwaitTimeoutTest" time="0.321"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

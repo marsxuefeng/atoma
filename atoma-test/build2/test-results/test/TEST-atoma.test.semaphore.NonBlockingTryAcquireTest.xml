@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="atoma.test.semaphore.NonBlockingTryAcquireTest" tests="1" skipped="0" failures="1" errors="0" timestamp="2026-02-04T04:54:29.450Z" hostname="manjaro" time="0.22">
+  <properties/>
+  <testcase name="TEST-SEM-ACQ-005: 非阻塞方式尝试获取许可，立即返回结果，验证tryAcquire机制" classname="atoma.test.semaphore.NonBlockingTryAcquireTest" time="0.217">
+    <failure message="org.opentest4j.AssertionFailedError: &#10;expected: 1&#10; but was: 8" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: 
+expected: 1
+ but was: 8
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+	at atoma.test.semaphore.NonBlockingTryAcquireTest.testNonBlockingTryAcquire(NonBlockingTryAcquireTest.java:34)
+</failure>
+  </testcase>
+  <system-out><![CDATA[12:54:29.497 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:29.552 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:29.562 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [a2bc13da-0d29-4177-a1d7-1d8bced47efb] renew completed. Previous expire time: 2026-02-04T04:54:32.520Z Next expire time: 2026-02-04T04:54:35.520Z 
+12:54:29.577 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Deleted 1 empty read-write lock documents
+12:54:29.585 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 8 Semaphore Data: Document{{_id=TEST-SEM-ACQ-005, initial_permits=2, available_permits=8, leases=Document{{a2bc13da-0d29-4177-a1d7-1d8bced47efb=1}}, version=8, _update_flag=true}}  
+12:54:29.614 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:29.648 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 1 semaphores, modified count: 1
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

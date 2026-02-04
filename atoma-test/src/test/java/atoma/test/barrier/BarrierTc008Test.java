@@ -1,7 +1,8 @@
 package atoma.test.barrier;
 
+import atoma.api.Lease;
 import atoma.api.synchronizer.CyclicBarrier;
-import atoma.client.AtomaClient;
+import atoma.core.AtomaClient;
 import atoma.storage.mongo.MongoCoordinationStore;
 import atoma.test.BaseTest;
 import org.junit.jupiter.api.Assertions;
@@ -22,10 +23,11 @@ public class BarrierTc008Test extends BaseTest {
     MongoCoordinationStore mongoCoordinationStore = newMongoCoordinationStore();
     ScheduledExecutorService scheduledExecutorService = newScheduledExecutorService();
     AtomaClient client = new AtomaClient(scheduledExecutorService, mongoCoordinationStore);
+    Lease lease = client.grantLease();
 
     final String barrierId = "BARRIER-TC-008";
     final int parties = 2;
-    CyclicBarrier barrier = client.getCyclicBarrier(barrierId, parties);
+    CyclicBarrier barrier = lease.getCyclicBarrier(barrierId, parties);
 
     CountDownLatch awaitStarted = new CountDownLatch(1);
     AtomicInteger waitingCount = new AtomicInteger(-1);
@@ -38,6 +40,7 @@ public class BarrierTc008Test extends BaseTest {
                 barrier.await(10, TimeUnit.SECONDS);
               } catch (Exception e) {
                 // We expect a timeout here as the second party never arrives.
+                e.printStackTrace();
               }
             });
 

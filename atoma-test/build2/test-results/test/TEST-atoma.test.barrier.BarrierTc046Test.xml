@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="atoma.test.barrier.BarrierTc046Test" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-02-04T04:54:24.014Z" hostname="manjaro" time="0.13">
+  <properties/>
+  <testcase name="BARRIER-TC-046: 单个参与者的屏障行为验证" classname="atoma.test.barrier.BarrierTc046Test" time="0.129"/>
+  <system-out><![CDATA[12:54:24.073 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [55a0d3e0-664f-4eb3-bc08-b21fbcff1eaa] renew completed. Previous expire time: 2026-02-04T04:54:56.041Z Next expire time: 2026-02-04T04:55:28.041Z 
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

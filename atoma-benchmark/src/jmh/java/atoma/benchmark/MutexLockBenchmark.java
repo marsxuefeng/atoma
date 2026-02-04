@@ -1,7 +1,7 @@
 package atoma.benchmark;
 
 import atoma.api.Lease;
-import atoma.client.AtomaClient;
+import atoma.core.AtomaClient;
 import atoma.storage.mongo.MongoCoordinationStore;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -11,7 +11,6 @@ import org.openjdk.jmh.infra.Blackhole;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
-// @BenchmarkMode({Mode.Throughput, Mode.AverageTime, Mode.SampleTime})
 @BenchmarkMode({Mode.AverageTime, Mode.Throughput})
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)

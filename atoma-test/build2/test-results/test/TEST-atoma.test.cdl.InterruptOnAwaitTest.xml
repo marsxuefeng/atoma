@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="atoma.test.cdl.InterruptOnAwaitTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-02-04T04:54:38.409Z" hostname="manjaro" time="0.545">
+  <properties/>
+  <testcase name="DCL-TC-011: 在await()时中断线程" classname="atoma.test.cdl.InterruptOnAwaitTest" time="0.543"/>
+  <system-out><![CDATA[12:54:38.437 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:38.452 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:38.831 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

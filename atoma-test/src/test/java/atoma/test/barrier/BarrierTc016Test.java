@@ -1,7 +1,8 @@
 package atoma.test.barrier;
 
+import atoma.api.Lease;
 import atoma.api.synchronizer.CyclicBarrier;
-import atoma.client.AtomaClient;
+import atoma.core.AtomaClient;
 import atoma.storage.mongo.MongoCoordinationStore;
 import atoma.test.BaseTest;
 import org.junit.jupiter.api.Assertions;
@@ -12,9 +13,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Test case for BARRIER-TC-016: await() calls with mixed client-side delays.
- */
+/** Test case for BARRIER-TC-016: await() calls with mixed client-side delays. */
 public class BarrierTc016Test extends BaseTest {
 
   @DisplayName("BARRIER-TC-016: 混合客户端延迟下的await()调用")
@@ -23,10 +22,11 @@ public class BarrierTc016Test extends BaseTest {
     MongoCoordinationStore mongoCoordinationStore = newMongoCoordinationStore();
     ScheduledExecutorService scheduledExecutorService = newScheduledExecutorService();
     AtomaClient client = new AtomaClient(scheduledExecutorService, mongoCoordinationStore);
+    Lease lease = client.grantLease();
 
     final String barrierId = "BARRIER-TC-016";
     final int parties = 3;
-    final CyclicBarrier barrier = client.getCyclicBarrier(barrierId, parties);
+    final CyclicBarrier barrier = lease.getCyclicBarrier(barrierId, parties);
     final CountDownLatch passLatch = new CountDownLatch(parties);
 
     try {

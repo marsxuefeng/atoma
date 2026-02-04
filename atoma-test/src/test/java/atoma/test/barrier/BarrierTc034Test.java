@@ -1,8 +1,9 @@
 package atoma.test.barrier;
 
 import atoma.api.BrokenBarrierException;
+import atoma.api.Lease;
 import atoma.api.synchronizer.CyclicBarrier;
-import atoma.client.AtomaClient;
+import atoma.core.AtomaClient;
 import atoma.storage.mongo.MongoCoordinationStore;
 import atoma.test.BaseTest;
 import org.junit.jupiter.api.Assertions;
@@ -16,9 +17,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * Test case for BARRIER-TC-034: Mixed read/write operations (await, reset).
- */
+/** Test case for BARRIER-TC-034: Mixed read/write operations (await, reset). */
 public class BarrierTc034Test extends BaseTest {
 
   @DisplayName("BARRIER-TC-034: 混合await和reset操作")
@@ -27,10 +26,10 @@ public class BarrierTc034Test extends BaseTest {
     MongoCoordinationStore mongoCoordinationStore = newMongoCoordinationStore();
     ScheduledExecutorService scheduledExecutorService = newScheduledExecutorService();
     AtomaClient client = new AtomaClient(scheduledExecutorService, mongoCoordinationStore);
-
+    Lease lease = client.grantLease();
     final String barrierId = "BARRIER-TC-034";
     final int parties = 5;
-    final CyclicBarrier barrier = client.getCyclicBarrier(barrierId, parties);
+    final CyclicBarrier barrier = lease.getCyclicBarrier(barrierId, parties);
     final CountDownLatch threadsFinished = new CountDownLatch(parties);
     final AtomicBoolean chaosDone = new AtomicBoolean(false);
     ExecutorService threadPool = Executors.newFixedThreadPool(parties + 1);

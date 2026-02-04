@@ -156,9 +156,6 @@ public final class AcquireCommandHandler
 
           // Acquisition failed.
           if (lockDoc != null) {
-            System.out.printf(
-                "Thread %s update done %s%n", Thread.currentThread().getName(), lockDoc);
-
             return new LockCommand.AcquireResult(false, lockDoc.getLong("version"));
           }
 

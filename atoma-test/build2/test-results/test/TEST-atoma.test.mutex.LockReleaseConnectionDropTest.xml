@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="atoma.test.mutex.LockReleaseConnectionDropTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-02-04T04:54:38.955Z" hostname="manjaro" time="0.722">
+  <properties/>
+  <testcase name="TC-28: 释放锁时连接断开" classname="atoma.test.mutex.LockReleaseConnectionDropTest" time="0.722"/>
+  <system-out><![CDATA[12:54:38.973 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:38.992 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:38.999 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [225e991c-d04d-4bd9-9b70-f8fa77a140cf] renew completed. Previous expire time: 2026-02-04T04:55:08.985Z Next expire time: 2026-02-04T04:55:38.985Z 
+12:54:39.005 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultMutexLock - Mutex lock received an event. Event-type: CREATED. Latest version: 1 Lock Data: Document{{_id=test-resource-tc28, lease=225e991c-d04d-4bd9-9b70-f8fa77a140cf, holder=Thread-8-73, version=1}}
+12:54:39.511 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultMutexLock - Mutex lock received an event. Event-type: DELETED. Latest version: -1 Lock Data: null
+12:54:39.512 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultMutexLock - Mutex lock has waiters in queue : false 
+12:54:39.629 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [45e6e5b6-1e4e-4433-93de-b7f233ef853f] renew completed. Previous expire time: 2026-02-04T04:55:09.616Z Next expire time: 2026-02-04T04:55:39.616Z 
+12:54:39.630 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultMutexLock - Mutex lock received an event. Event-type: CREATED. Latest version: 1 Lock Data: Document{{_id=test-resource-tc28, lease=45e6e5b6-1e4e-4433-93de-b7f233ef853f, holder=Thread-9-74, version=1}}
+12:54:39.630 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultMutexLock - Mutex lock received an event. Event-type: CREATED. Latest version: 1 Lock Data: Document{{_id=test-resource-tc28, lease=45e6e5b6-1e4e-4433-93de-b7f233ef853f, holder=Thread-9-74, version=1}}
+12:54:39.635 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultMutexLock - Mutex lock received an event. Event-type: DELETED. Latest version: -1 Lock Data: null
+12:54:39.636 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultMutexLock - Mutex lock has waiters in queue : false 
+12:54:39.636 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultMutexLock - Mutex lock received an event. Event-type: DELETED. Latest version: -1 Lock Data: null
+12:54:39.636 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultMutexLock - Mutex lock has waiters in queue : false 
+12:54:39.650 [Thread-9] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:39.673 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+TC-28: 释放锁时连接断开 - PASSED
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

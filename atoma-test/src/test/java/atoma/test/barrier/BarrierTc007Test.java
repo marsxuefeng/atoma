@@ -1,7 +1,8 @@
 package atoma.test.barrier;
 
+import atoma.api.Lease;
 import atoma.api.synchronizer.CyclicBarrier;
-import atoma.client.AtomaClient;
+import atoma.core.AtomaClient;
 import atoma.storage.mongo.MongoCoordinationStore;
 import atoma.test.BaseTest;
 import org.junit.jupiter.api.Assertions;
@@ -19,6 +20,7 @@ public class BarrierTc007Test extends BaseTest {
     MongoCoordinationStore mongoCoordinationStore = newMongoCoordinationStore();
     ScheduledExecutorService scheduledExecutorService = newScheduledExecutorService();
     AtomaClient client = new AtomaClient(scheduledExecutorService, mongoCoordinationStore);
+    Lease lease = client.grantLease();
 
     final String barrierId = "BARRIER-TC-007";
     final int parties = 2;
@@ -27,12 +29,12 @@ public class BarrierTc007Test extends BaseTest {
     CyclicBarrier barrier2 = null;
     try {
       // First initialization
-      barrier1 = client.getCyclicBarrier(barrierId, parties);
+      barrier1 = lease.getCyclicBarrier(barrierId, parties);
       Assertions.assertNotNull(barrier1, "First barrier should be initialized");
       Assertions.assertEquals(parties, barrier1.getParties());
 
       // Second initialization with the same parameters
-      barrier2 = client.getCyclicBarrier(barrierId, parties);
+      barrier2 = lease.getCyclicBarrier(barrierId, parties);
       Assertions.assertNotNull(barrier2, "Second barrier should also be initialized");
       Assertions.assertEquals(parties, barrier2.getParties());
 

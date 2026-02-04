@@ -3,31 +3,19 @@ package atoma.test.rwlock;
 import atoma.api.Lease;
 import atoma.api.lock.Lock;
 import atoma.api.lock.ReadWriteLock;
-import atoma.client.AtomaClient;
+import atoma.core.AtomaClient;
 import atoma.test.BaseTest;
-import org.bson.Document;
-import org.bson.conversions.Bson;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static atoma.storage.mongo.command.AtomaCollectionNamespace.LEASE_NAMESPACE;
-import static com.mongodb.client.model.Accumulators.addToSet;
-import static com.mongodb.client.model.Accumulators.first;
 import static com.mongodb.client.model.Aggregates.group;
 import static com.mongodb.client.model.Aggregates.lookup;
-import static com.mongodb.client.model.Aggregates.match;
-import static com.mongodb.client.model.Aggregates.project;
 import static com.mongodb.client.model.Aggregates.unwind;
 import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Projections.computed;
 import static com.mongodb.client.model.Projections.fields;
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -9,9 +9,9 @@ import java.util.concurrent.TimeoutException;
 /**
  * A distributed counting semaphore.
  *
- * <p>Conceptually, a semaphore maintains a set of permits. The {@link #acquire(int)} method
- * blocks if necessary until enough permits are available, and then takes them. The {@link
- * #release(int)} method adds permits, potentially releasing a blocking acquirer.
+ * <p>Conceptually, a semaphore maintains a set of permits. The {@link #acquire(int)} method blocks
+ * if necessary until enough permits are available, and then takes them. The {@link #release(int)}
+ * method adds permits, potentially releasing a blocking acquirer.
  *
  * <p>This is an abstract class for a distributed implementation, meaning the state of the semaphore
  * is managed consistently across multiple clients or services.
@@ -37,7 +37,8 @@ public abstract class Semaphore extends Leasable {
    * @param waitTime the maximum time to wait for the permits
    * @param timeUnit the time unit of the {@code waitTime} argument
    * @throws InterruptedException if the current thread is interrupted while waiting
-   * @throws OperationTimeoutException if the waiting time elapses before the permits can be acquired
+   * @throws OperationTimeoutException if the waiting time elapses before the permits can be
+   *     acquired
    * @throws IllegalArgumentException if {@code permits} is not a positive number
    */
   public abstract void acquire(int permits, Long waitTime, TimeUnit timeUnit)

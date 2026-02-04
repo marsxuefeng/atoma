@@ -1,7 +1,8 @@
 package atoma.test.barrier;
 
+import atoma.api.Lease;
 import atoma.api.synchronizer.CyclicBarrier;
-import atoma.client.AtomaClient;
+import atoma.core.AtomaClient;
 import atoma.storage.mongo.MongoCoordinationStore;
 import atoma.test.BaseTest;
 import org.junit.jupiter.api.Assertions;
@@ -20,8 +21,8 @@ public class SingleClientBarrierTest extends BaseTest {
     MongoCoordinationStore mongoCoordinationStore = newMongoCoordinationStore();
     ScheduledExecutorService scheduledExecutorService = newScheduledExecutorService();
     AtomaClient client = new AtomaClient(scheduledExecutorService, mongoCoordinationStore);
-
-    CyclicBarrier cyclicBarrier = client.getCyclicBarrier("BARRIER-TC-001", 2);
+    Lease lease = client.grantLease();
+    CyclicBarrier cyclicBarrier = lease.getCyclicBarrier("BARRIER-TC-001", 2);
     int clientCount = 2;
 
     CountDownLatch countDownLatch = new CountDownLatch(2);

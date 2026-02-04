@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="atoma.test.cdl.RepeatedCountDownTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-02-04T04:54:31.720Z" hostname="manjaro" time="0.162">
+  <properties/>
+  <testcase name="DCL-TC-003 &amp; DCL-TC-022: 重复调用countDown()方法 &amp; 调用次数超过初始值" classname="atoma.test.cdl.RepeatedCountDownTest" time="0.161"/>
+  <system-out><![CDATA[12:54:31.823 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

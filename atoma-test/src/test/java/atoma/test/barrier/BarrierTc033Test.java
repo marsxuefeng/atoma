@@ -1,7 +1,8 @@
 package atoma.test.barrier;
 
+import atoma.api.Lease;
 import atoma.api.synchronizer.CyclicBarrier;
-import atoma.client.AtomaClient;
+import atoma.core.AtomaClient;
 import atoma.storage.mongo.MongoCoordinationStore;
 import atoma.test.BaseTest;
 import org.junit.jupiter.api.Assertions;
@@ -14,9 +15,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Test case for BARRIER-TC-033: High concurrency nodes simultaneously await().
- */
+/** Test case for BARRIER-TC-033: High concurrency nodes simultaneously await(). */
 public class BarrierTc033Test extends BaseTest {
 
   @DisplayName("BARRIER-TC-033: 高并发节点同时await()")
@@ -25,10 +24,10 @@ public class BarrierTc033Test extends BaseTest {
     MongoCoordinationStore mongoCoordinationStore = newMongoCoordinationStore();
     ScheduledExecutorService scheduledExecutorService = newScheduledExecutorService();
     AtomaClient client = new AtomaClient(scheduledExecutorService, mongoCoordinationStore);
-
+    Lease lease = client.grantLease();
     final String barrierId = "BARRIER-TC-033";
     final int parties = 10; // Using a higher number of parties for concurrency test
-    final CyclicBarrier barrier = client.getCyclicBarrier(barrierId, parties);
+    final CyclicBarrier barrier = lease.getCyclicBarrier(barrierId, parties);
     final CountDownLatch passLatch = new CountDownLatch(parties);
     ExecutorService threadPool = Executors.newFixedThreadPool(parties);
 
@@ -46,8 +45,7 @@ public class BarrierTc033Test extends BaseTest {
       }
 
       Assertions.assertTrue(
-          passLatch.await(15, TimeUnit.SECONDS),
-          "All concurrent parties should pass the barrier");
+          passLatch.await(15, TimeUnit.SECONDS), "All concurrent parties should pass the barrier");
       Assertions.assertEquals(
           0,
           barrier.getNumberWaiting(),

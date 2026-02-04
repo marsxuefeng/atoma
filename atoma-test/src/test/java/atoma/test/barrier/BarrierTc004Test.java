@@ -1,6 +1,7 @@
 package atoma.test.barrier;
 
-import atoma.client.AtomaClient;
+import atoma.api.Lease;
+import atoma.core.AtomaClient;
 import atoma.storage.mongo.MongoCoordinationStore;
 import atoma.test.BaseTest;
 import org.junit.jupiter.api.Assertions;
@@ -18,16 +19,17 @@ public class BarrierTc004Test extends BaseTest {
     MongoCoordinationStore mongoCoordinationStore = newMongoCoordinationStore();
     ScheduledExecutorService scheduledExecutorService = newScheduledExecutorService();
     AtomaClient client = new AtomaClient(scheduledExecutorService, mongoCoordinationStore);
-
+    Lease lease = client.grantLease();
     final String barrierId = "BARRIER-TC-004";
     final int parties = 0;
 
     try {
       Assertions.assertThrows(
           IllegalArgumentException.class,
-          () -> client.getCyclicBarrier(barrierId, parties),
+          () -> lease.getCyclicBarrier(barrierId, parties),
           "Initializing with zero parties should throw IllegalArgumentException");
     } finally {
+      lease.close();
       client.close();
       scheduledExecutorService.shutdownNow();
       mongoCoordinationStore.close();

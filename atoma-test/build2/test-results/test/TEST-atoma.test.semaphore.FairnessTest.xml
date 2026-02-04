@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="atoma.test.semaphore.FairnessTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-02-04T04:54:41.542Z" hostname="manjaro" time="0.127">
+  <properties/>
+  <testcase name="TEST-SEM-ACQ-010: 获取许可时的公平性测试，验证FIFO顺序" classname="atoma.test.semaphore.FairnessTest" time="0.126"/>
+  <system-out><![CDATA[12:54:41.553 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:41.559 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Deleted 1 empty read-write lock documents
+12:54:41.566 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:41.574 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [96e03d71-557d-4bc7-8b0f-35a825002ef2] renew completed. Previous expire time: 2026-02-04T04:54:44.561Z Next expire time: 2026-02-04T04:54:47.561Z 
+12:54:41.575 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 13 Semaphore Data: Document{{_id=TEST-SEM-ACQ-010, initial_permits=1, available_permits=0, leases=Document{{96e03d71-557d-4bc7-8b0f-35a825002ef2=1}}, version=13, _update_flag=true}}  
+12:54:41.582 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 13 Semaphore Data: Document{{_id=TEST-SEM-ACQ-010, initial_permits=1, available_permits=1, leases=Document{{96e03d71-557d-4bc7-8b0f-35a825002ef2=0}}, version=13, _update_flag=true}}  
+12:54:41.591 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 14 Semaphore Data: Document{{_id=TEST-SEM-ACQ-010, initial_permits=1, available_permits=0, leases=Document{{96e03d71-557d-4bc7-8b0f-35a825002ef2=1}}, version=14, _update_flag=true}}  
+12:54:41.591 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 14 Semaphore Data: Document{{_id=TEST-SEM-ACQ-010, initial_permits=1, available_permits=0, leases=Document{{96e03d71-557d-4bc7-8b0f-35a825002ef2=1}}, version=14, _update_flag=false}}  
+12:54:41.596 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 14 Semaphore Data: Document{{_id=TEST-SEM-ACQ-010, initial_permits=1, available_permits=1, leases=Document{{96e03d71-557d-4bc7-8b0f-35a825002ef2=0}}, version=14, _update_flag=false}}  
+12:54:41.602 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 15 Semaphore Data: Document{{_id=TEST-SEM-ACQ-010, initial_permits=1, available_permits=0, leases=Document{{96e03d71-557d-4bc7-8b0f-35a825002ef2=1}}, version=15, _update_flag=true}}  
+12:54:41.607 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 15 Semaphore Data: Document{{_id=TEST-SEM-ACQ-010, initial_permits=1, available_permits=1, leases=Document{{96e03d71-557d-4bc7-8b0f-35a825002ef2=0}}, version=15, _update_flag=false}}  
+12:54:41.607 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 15 Semaphore Data: Document{{_id=TEST-SEM-ACQ-010, initial_permits=1, available_permits=1, leases=Document{{96e03d71-557d-4bc7-8b0f-35a825002ef2=0}}, version=15, _update_flag=false}}  
+12:54:41.614 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 16 Semaphore Data: Document{{_id=TEST-SEM-ACQ-010, initial_permits=1, available_permits=0, leases=Document{{96e03d71-557d-4bc7-8b0f-35a825002ef2=1}}, version=16, _update_flag=true}}  
+12:54:41.614 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 16 Semaphore Data: Document{{_id=TEST-SEM-ACQ-010, initial_permits=1, available_permits=0, leases=Document{{96e03d71-557d-4bc7-8b0f-35a825002ef2=1}}, version=16, _update_flag=false}}  
+12:54:41.620 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 16 Semaphore Data: Document{{_id=TEST-SEM-ACQ-010, initial_permits=1, available_permits=1, leases=Document{{96e03d71-557d-4bc7-8b0f-35a825002ef2=0}}, version=16, _update_flag=false}}  
+12:54:41.622 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 17 Semaphore Data: Document{{_id=TEST-SEM-ACQ-010, initial_permits=1, available_permits=0, leases=Document{{96e03d71-557d-4bc7-8b0f-35a825002ef2=1}}, version=17, _update_flag=true}}  
+12:54:41.628 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 17 Semaphore Data: Document{{_id=TEST-SEM-ACQ-010, initial_permits=1, available_permits=0, leases=Document{{96e03d71-557d-4bc7-8b0f-35a825002ef2=1}}, version=17, _update_flag=false}}  
+12:54:41.631 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 17 Semaphore Data: Document{{_id=TEST-SEM-ACQ-010, initial_permits=1, available_permits=1, leases=Document{{96e03d71-557d-4bc7-8b0f-35a825002ef2=0}}, version=17, _update_flag=false}}  
+12:54:41.636 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 18 Semaphore Data: Document{{_id=TEST-SEM-ACQ-010, initial_permits=1, available_permits=0, leases=Document{{96e03d71-557d-4bc7-8b0f-35a825002ef2=1}}, version=18, _update_flag=true}}  
+12:54:41.640 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 18 Semaphore Data: Document{{_id=TEST-SEM-ACQ-010, initial_permits=1, available_permits=1, leases=Document{{96e03d71-557d-4bc7-8b0f-35a825002ef2=0}}, version=18, _update_flag=true}}  
+12:54:41.656 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:41.666 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 1 semaphores, modified count: 1
+]]></system-out>
+  <system-err><![CDATA[Release done. 1
+Thread: 3 acquire starting 
+Thread: 4 acquire starting 
+Thread: 1 acquire starting 
+Thread: 0 acquire starting 
+Thread: 2 acquire starting 
+Thread: 2 acquire done 
+Thread: 2 release starting 
+Thread: 2 release done 
+Thread: 4 acquire done 
+Thread: 4 release starting 
+Thread: 4 release done 
+Thread: 1 acquire done 
+Thread: 1 release starting 
+Thread: 1 release done 
+Thread: 3 acquire done 
+Thread: 3 release starting 
+Thread: 3 release done 
+Thread: 0 acquire done 
+Thread: 0 release starting 
+Thread: 0 release done 
+]]></system-err>
+</testsuite>

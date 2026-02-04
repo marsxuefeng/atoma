@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="atoma.test.barrier.BarrierTc047Test" tests="5" skipped="0" failures="1" errors="0" timestamp="2026-02-04T04:54:24.416Z" hostname="manjaro" time="7.301">
+  <properties/>
+  <testcase name="[1] &quot;barrier-with-hyphens&quot;" classname="atoma.test.barrier.BarrierTc047Test" time="0.395"/>
+  <testcase name="[2] &quot;barrier_with_underscores&quot;" classname="atoma.test.barrier.BarrierTc047Test" time="6.303">
+    <failure message="org.opentest4j.AssertionFailedError: All parties should pass for ID: barrier_with_underscores ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: All parties should pass for ID: barrier_with_underscores ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:158)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:139)
+	at org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:69)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:41)
+	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:228)
+	at atoma.test.barrier.BarrierTc047Test.testSpecialCharacterIds(BarrierTc047Test.java:53)
+</failure>
+  </testcase>
+  <testcase name="[3] &quot;barrier.with.dots&quot;" classname="atoma.test.barrier.BarrierTc047Test" time="0.129"/>
+  <testcase name="[4] &quot;barrier/with/slashes&quot;" classname="atoma.test.barrier.BarrierTc047Test" time="0.106"/>
+  <testcase name="[5] &quot;barrier-ผสม-พิเศษ-&#x1f60a;&quot;" classname="atoma.test.barrier.BarrierTc047Test" time="0.145"/>
+  <system-out><![CDATA[12:54:24.750 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [19955dd0-8466-466b-ac2b-53e22125b547] renew completed. Previous expire time: 2026-02-04T04:54:56.687Z Next expire time: 2026-02-04T04:55:28.687Z 
+12:54:25.294 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [ac643efa-08ef-48eb-9c54-a52550bda87b] renew completed. Previous expire time: 2026-02-04T04:54:57.236Z Next expire time: 2026-02-04T04:55:29.236Z 
+12:54:27.245 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:27.470 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:29.237 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:29.463 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:29.478 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Deleted 1 empty read-write lock documents
+12:54:31.234 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:31.370 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:31.397 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:31.409 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [3806018d-0d44-415d-876b-eb8c4a4d519c] renew completed. Previous expire time: 2026-02-04T04:55:03.388Z Next expire time: 2026-02-04T04:55:35.388Z 
+12:54:31.522 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:31.525 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [9b01fd60-fe71-4a15-85e6-6dbd7f06bf59] renew completed. Previous expire time: 2026-02-04T04:55:03.506Z Next expire time: 2026-02-04T04:55:35.506Z 
+12:54:31.630 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [af2704f4-f60b-4de1-a46c-f8d183097535] renew completed. Previous expire time: 2026-02-04T04:55:03.610Z Next expire time: 2026-02-04T04:55:35.610Z 
+]]></system-out>
+  <system-err><![CDATA[Exception in thread "Thread-13" org.opentest4j.AssertionFailedError: Await should not fail for ID: barrier_with_underscores
+	at org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:47)
+	at org.junit.jupiter.api.Assertions.fail(Assertions.java:157)
+	at atoma.test.barrier.BarrierTc047Test.lambda$testSpecialCharacterIds$0(BarrierTc047Test.java:47)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+Caused by: java.util.concurrent.TimeoutException: Wait for barrier to trip timed out.
+	at atoma.core.DefaultCyclicBarrier.doAwait(DefaultCyclicBarrier.java:299)
+	at atoma.core.DefaultCyclicBarrier.await(DefaultCyclicBarrier.java:215)
+	at atoma.test.barrier.BarrierTc047Test.lambda$testSpecialCharacterIds$0(BarrierTc047Test.java:44)
+	... 1 more
+]]></system-err>
+</testsuite>

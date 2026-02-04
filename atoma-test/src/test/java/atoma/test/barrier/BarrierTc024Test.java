@@ -1,7 +1,8 @@
 package atoma.test.barrier;
 
+import atoma.api.Lease;
 import atoma.api.synchronizer.CyclicBarrier;
-import atoma.client.AtomaClient;
+import atoma.core.AtomaClient;
 import atoma.storage.mongo.MongoCoordinationStore;
 import atoma.test.BaseTest;
 import org.junit.jupiter.api.Assertions;
@@ -12,9 +13,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Test case for BARRIER-TC-024: Verify barrier state consistency after multiple cycles.
- */
+/** Test case for BARRIER-TC-024: Verify barrier state consistency after multiple cycles. */
 public class BarrierTc024Test extends BaseTest {
 
   @DisplayName("BARRIER-TC-024: 多次循环后屏障状态一致性验证")
@@ -23,11 +22,11 @@ public class BarrierTc024Test extends BaseTest {
     MongoCoordinationStore mongoCoordinationStore = newMongoCoordinationStore();
     ScheduledExecutorService scheduledExecutorService = newScheduledExecutorService();
     AtomaClient client = new AtomaClient(scheduledExecutorService, mongoCoordinationStore);
-
+    Lease lease = client.grantLease();
     final String barrierId = "BARRIER-TC-024";
     final int parties = 3;
     final int cycles = 5;
-    final CyclicBarrier barrier = client.getCyclicBarrier(barrierId, parties);
+    final CyclicBarrier barrier = lease.getCyclicBarrier(barrierId, parties);
 
     try {
       for (int i = 1; i <= cycles; i++) {
@@ -41,7 +40,7 @@ public class BarrierTc024Test extends BaseTest {
                       barrier.await(5, TimeUnit.SECONDS);
                       passLatch.countDown();
                     } catch (Exception e) {
-                      Assertions.fail("Await should not fail during cycle "  , e);
+                      Assertions.fail("Await should not fail during cycle ", e);
                     }
                   })
               .start();
@@ -52,11 +51,8 @@ public class BarrierTc024Test extends BaseTest {
         // Allow a moment for the state to propagate and reset.
         TimeUnit.MILLISECONDS.sleep(100);
         Assertions.assertEquals(
-            0,
-            barrier.getNumberWaiting(),
-            "Waiting count should be 0 after cycle " + i);
-        Assertions.assertFalse(
-            barrier.isBroken(), "Barrier should not be broken after cycle " + i);
+            0, barrier.getNumberWaiting(), "Waiting count should be 0 after cycle " + i);
+        Assertions.assertFalse(barrier.isBroken(), "Barrier should not be broken after cycle " + i);
       }
     } finally {
       barrier.close();

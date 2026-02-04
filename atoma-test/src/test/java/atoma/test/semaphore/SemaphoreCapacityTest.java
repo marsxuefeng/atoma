@@ -2,7 +2,7 @@ package atoma.test.semaphore;
 
 import atoma.api.Lease;
 import atoma.api.synchronizer.Semaphore;
-import atoma.client.AtomaClient;
+import atoma.core.AtomaClient;
 import atoma.storage.mongo.MongoCoordinationStore;
 import atoma.test.BaseTest;
 import org.assertj.core.api.Assertions;
@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeoutException;
 
 @Deprecated
 public class SemaphoreCapacityTest extends BaseTest {
@@ -69,7 +70,7 @@ public class SemaphoreCapacityTest extends BaseTest {
       try {
         semaphore.acquire(1, 100L, java.util.concurrent.TimeUnit.MILLISECONDS);
         acquired = true;
-      } catch (RuntimeException e) {
+      } catch (TimeoutException e) {
         // 预期失败
       }
       Assertions.assertThat(acquired).isFalse();
@@ -102,7 +103,7 @@ public class SemaphoreCapacityTest extends BaseTest {
       try {
         semaphore.acquire(1, 200L, java.util.concurrent.TimeUnit.MILLISECONDS);
         acquired = true;
-      } catch (RuntimeException e) {
+      } catch (TimeoutException e) {
         // 预期失败
       }
       Assertions.assertThat(acquired).isFalse();
@@ -178,7 +179,7 @@ public class SemaphoreCapacityTest extends BaseTest {
       try {
         semaphore.acquire(1, 100L, java.util.concurrent.TimeUnit.MILLISECONDS);
         acquired = true;
-      } catch (RuntimeException e) {
+      } catch (TimeoutException e) {
         // 预期失败
       }
       Assertions.assertThat(acquired).isFalse();

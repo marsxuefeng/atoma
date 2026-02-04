@@ -1,8 +1,9 @@
 package atoma.test.barrier;
 
 import atoma.api.BrokenBarrierException;
+import atoma.api.Lease;
 import atoma.api.synchronizer.CyclicBarrier;
-import atoma.client.AtomaClient;
+import atoma.core.AtomaClient;
 import atoma.storage.mongo.MongoCoordinationStore;
 import atoma.test.BaseTest;
 import org.junit.jupiter.api.Assertions;
@@ -24,10 +25,10 @@ public class BarrierTc019Test extends BaseTest {
     MongoCoordinationStore mongoCoordinationStore = newMongoCoordinationStore();
     ScheduledExecutorService scheduledExecutorService = newScheduledExecutorService();
     AtomaClient client = new AtomaClient(scheduledExecutorService, mongoCoordinationStore);
-
+      Lease lease = client.grantLease();
     final String barrierId = "BARRIER-TC-019";
     final int parties = 3;
-    final CyclicBarrier barrier = client.getCyclicBarrier(barrierId, parties);
+    final CyclicBarrier barrier = lease.getCyclicBarrier(barrierId, parties);
 
     final CountDownLatch exceptionsCaught = new CountDownLatch(parties);
     final AtomicReference<Throwable> shortTimeoutException = new AtomicReference<>();
@@ -43,7 +44,6 @@ public class BarrierTc019Test extends BaseTest {
                   barrier.await(1, TimeUnit.SECONDS);
                 } catch (Exception e) {
                   shortTimeoutException.set(e);
-                  System.err.println("party1 error " + e.getMessage());
                 } finally {
                   exceptionsCaught.countDown();
                 }
@@ -57,6 +57,7 @@ public class BarrierTc019Test extends BaseTest {
                   barrier.await(5, TimeUnit.SECONDS);
                 } catch (Exception e) {
                   mediumTimeoutException.set(e);
+                  e.printStackTrace();
                 } finally {
                   exceptionsCaught.countDown();
                 }
@@ -70,6 +71,7 @@ public class BarrierTc019Test extends BaseTest {
                   barrier.await(10, TimeUnit.SECONDS);
                 } catch (Exception e) {
                   longTimeoutException.set(e);
+                    e.printStackTrace();
                 } finally {
                   exceptionsCaught.countDown();
                 }
@@ -77,10 +79,11 @@ public class BarrierTc019Test extends BaseTest {
 
       // Start all parties, ensuring the ones with longer timeouts start first
       // to make it more likely they are already waiting when the short one times out.
+
+      party1.start();
+      TimeUnit.SECONDS.sleep(2); // Small delay
       party3.start();
       party2.start();
-      TimeUnit.MILLISECONDS.sleep(50); // Small delay
-      party1.start();
 
       Assertions.assertTrue(
           exceptionsCaught.await(12, TimeUnit.SECONDS), "All parties should catch an exception");

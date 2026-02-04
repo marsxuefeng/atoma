@@ -1,7 +1,8 @@
 package atoma.test.barrier;
 
+import atoma.api.Lease;
 import atoma.api.synchronizer.CyclicBarrier;
-import atoma.client.AtomaClient;
+import atoma.core.AtomaClient;
 import atoma.storage.mongo.MongoCoordinationStore;
 import atoma.test.BaseTest;
 import org.junit.jupiter.api.Assertions;
@@ -22,6 +23,7 @@ public class BarrierTc005Test extends BaseTest {
     MongoCoordinationStore mongoCoordinationStore = newMongoCoordinationStore();
     ScheduledExecutorService scheduledExecutorService = newScheduledExecutorService();
     AtomaClient client = new AtomaClient(scheduledExecutorService, mongoCoordinationStore);
+    Lease lease = client.grantLease();
 
     final String barrierId = "BARRIER-TC-005";
     // Assuming no hard system limit is enforced by the client,
@@ -30,14 +32,12 @@ public class BarrierTc005Test extends BaseTest {
 
     CyclicBarrier cyclicBarrier = null;
     try {
-      cyclicBarrier = client.getCyclicBarrier(barrierId, parties);
+      cyclicBarrier = lease.getCyclicBarrier(barrierId, parties);
       Assertions.assertNotNull(cyclicBarrier, "CyclicBarrier should be created successfully");
       Assertions.assertEquals(
           parties, cyclicBarrier.getParties(), "The number of parties should be set correctly");
     } finally {
-      if (cyclicBarrier != null) {
-        cyclicBarrier.close();
-      }
+      lease.close();
       client.close();
       scheduledExecutorService.shutdownNow();
       mongoCoordinationStore.close();

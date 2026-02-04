@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="atoma.test.rwlock.ReadLockBlocksWriteLockTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-02-04T04:54:38.912Z" hostname="manjaro" time="2.081">
+  <properties/>
+  <testcase name="TEST-ACQ-005: 验证当读锁被持有时，写锁获取请求会被阻塞" classname="atoma.test.rwlock.ReadLockBlocksWriteLockTest" time="1.043"/>
+  <testcase name="TEST-ACQ-005: 验证当读锁被持有时，写锁获取请求会被阻塞" classname="atoma.test.rwlock.ReadLockBlocksWriteLockTest" time="1.038"/>
+  <system-out><![CDATA[12:54:38.926 [atoma-ttl-worker-2] DEBUG atoma.core.DefaultLease - Lease [b1c03dcd-b318-4674-999d-d86d5d992405] renew completed. Previous expire time: 2026-02-04T04:54:46.913Z Next expire time: 2026-02-04T04:54:54.913Z 
+12:54:38.946 [atoma-ttl-worker-4] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:54:39.970 [atoma-ttl-worker-6] DEBUG atoma.core.DefaultLease - Lease [bd9659e2-fb69-4c45-9511-03e0156bfb6d] renew completed. Previous expire time: 2026-02-04T04:54:47.956Z Next expire time: 2026-02-04T04:54:55.956Z 
+12:54:40.943 [atoma-ttl-worker-4] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="atoma.test.semaphore.SemaphoreReleaseTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-02-04T04:55:21.897Z" hostname="manjaro" time="121.927">
+  <properties/>
+  <testcase name="TEST-SEM-REL-002: 客户端主动释放多个许可，验证批量释放机制" classname="atoma.test.semaphore.SemaphoreReleaseTest" time="0.046"/>
+  <testcase name="TEST-SEM-REL-004: 租约过期自动释放许可，验证自动回收" classname="atoma.test.semaphore.SemaphoreReleaseTest" time="1.528"/>
+  <testcase name="TEST-SEM-REL-005: 释放不存在的许可，验证错误处理" classname="atoma.test.semaphore.SemaphoreReleaseTest" time="0.028"/>
+  <testcase name="TEST-SEM-REL-007: 并发释放许可，验证计数一致性" classname="atoma.test.semaphore.SemaphoreReleaseTest" time="0.036"/>
+  <testcase name="TEST-SEM-REL-009: 客户端异常退出后的许可清理，验证资源回收" classname="atoma.test.semaphore.SemaphoreReleaseTest" time="120.047"/>
+  <testcase name="TEST-SEM-REL-008: 强制释放所有许可，验证管理接口功能" classname="atoma.test.semaphore.SemaphoreReleaseTest" time="0.032"/>
+  <testcase name="TEST-SEM-REL-006: 释放许可超量处理，验证容量保护" classname="atoma.test.semaphore.SemaphoreReleaseTest" time="0.039"/>
+  <testcase name="TEST-SEM-REL-001: 客户端主动释放单个许可，验证许可计数增加" classname="atoma.test.semaphore.SemaphoreReleaseTest" time="0.034"/>
+  <testcase name="TEST-SEM-REL-003: 释放许可后唤醒等待客户端，验证通知机制" classname="atoma.test.semaphore.SemaphoreReleaseTest" time="0.133"/>
+  <system-out><![CDATA[12:55:21.903 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:21.907 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Deleted 1 empty read-write lock documents
+12:55:21.912 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:21.919 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [082ecd62-54e5-4d0b-aa85-f257f28b125c] renew completed. Previous expire time: 2026-02-04T04:55:24.908Z Next expire time: 2026-02-04T04:55:27.908Z 
+12:55:21.920 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 4 Semaphore Data: Document{{_id=TEST-SEM-REL-002, initial_permits=10, available_permits=3, leases=Document{{082ecd62-54e5-4d0b-aa85-f257f28b125c=7}}, version=4, _update_flag=true}}  
+12:55:21.926 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 4 Semaphore Data: Document{{_id=TEST-SEM-REL-002, initial_permits=10, available_permits=8, leases=Document{{082ecd62-54e5-4d0b-aa85-f257f28b125c=2}}, version=4, _update_flag=true}}  
+12:55:21.931 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 4 Semaphore Data: Document{{_id=TEST-SEM-REL-002, initial_permits=10, available_permits=10, leases=Document{{082ecd62-54e5-4d0b-aa85-f257f28b125c=0}}, version=4, _update_flag=true}}  
+12:55:21.936 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:21.941 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 1 semaphores, modified count: 1
+12:55:21.949 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:21.954 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:21.958 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [bdc7f296-037d-4ed2-91a3-20779831fa19] renew completed. Previous expire time: 2026-02-04T04:55:22.950Z Next expire time: 2026-02-04T04:55:23.950Z 
+12:55:21.958 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 4 Semaphore Data: Document{{_id=TEST-SEM-REL-004, initial_permits=5, available_permits=2, leases=Document{{bdc7f296-037d-4ed2-91a3-20779831fa19=3}}, version=4, _update_flag=true}}  
+12:55:22.823 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:22.958 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [bdc7f296-037d-4ed2-91a3-20779831fa19] renew completed. Previous expire time: 2026-02-04T04:55:23.950Z Next expire time: 2026-02-04T04:55:24.950Z 
+12:55:23.466 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:23.470 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 1 semaphores, modified count: 1
+12:55:23.476 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:23.480 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:23.485 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 4 Semaphore Data: Document{{_id=TEST-SEM-REL-005, initial_permits=5, available_permits=4, leases=Document{{a2e6f9fb-1b9d-467e-9107-ccc622824d95=1}}, version=4, _update_flag=true}}  
+12:55:23.487 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [a2e6f9fb-1b9d-467e-9107-ccc622824d95] renew completed. Previous expire time: 2026-02-04T04:55:26.477Z Next expire time: 2026-02-04T04:55:29.477Z 
+12:55:23.494 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:23.499 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 1 semaphores, modified count: 1
+12:55:23.505 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:23.512 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:23.515 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [91e7bc23-465c-4975-a5a2-932ab237cd8a] renew completed. Previous expire time: 2026-02-04T04:55:26.507Z Next expire time: 2026-02-04T04:55:29.507Z 
+12:55:23.516 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 4 Semaphore Data: Document{{_id=TEST-SEM-REL-007, initial_permits=10, available_permits=0, leases=Document{{91e7bc23-465c-4975-a5a2-932ab237cd8a=10}}, version=4, _update_flag=true}}  
+12:55:23.521 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 4 Semaphore Data: Document{{_id=TEST-SEM-REL-007, initial_permits=10, available_permits=6, leases=Document{{91e7bc23-465c-4975-a5a2-932ab237cd8a=4}}, version=4, _update_flag=true}}  
+12:55:23.521 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 4 Semaphore Data: Document{{_id=TEST-SEM-REL-007, initial_permits=10, available_permits=6, leases=Document{{91e7bc23-465c-4975-a5a2-932ab237cd8a=4}}, version=4, _update_flag=true}}  
+12:55:23.521 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 4 Semaphore Data: Document{{_id=TEST-SEM-REL-007, initial_permits=10, available_permits=6, leases=Document{{91e7bc23-465c-4975-a5a2-932ab237cd8a=4}}, version=4, _update_flag=true}}  
+12:55:23.525 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 4 Semaphore Data: Document{{_id=TEST-SEM-REL-007, initial_permits=10, available_permits=10, leases=Document{{91e7bc23-465c-4975-a5a2-932ab237cd8a=0}}, version=4, _update_flag=true}}  
+12:55:23.525 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 4 Semaphore Data: Document{{_id=TEST-SEM-REL-007, initial_permits=10, available_permits=10, leases=Document{{91e7bc23-465c-4975-a5a2-932ab237cd8a=0}}, version=4, _update_flag=true}}  
+12:55:23.530 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:23.535 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 1 semaphores, modified count: 1
+12:55:23.541 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:23.547 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:23.551 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [b30d1d46-7be3-45dd-9aea-ad0fc21a19b9] renew completed. Previous expire time: 2026-02-04T04:55:24.543Z Next expire time: 2026-02-04T04:55:25.543Z 
+12:55:23.755 [atoma-ttl-worker-4] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:24.823 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:25.755 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:26.824 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:27.755 [atoma-ttl-worker-2] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:28.824 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:29.755 [atoma-ttl-worker-7] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:29.864 [atoma-ttl-worker-5] DEBUG atoma.core.DefaultLease - Lease [d6599361-39c2-428c-a407-c0a252c56761] renew completed. Previous expire time: 2026-02-04T04:55:37.857Z Next expire time: 2026-02-04T04:55:45.857Z 
+12:55:29.879 [atoma-ttl-worker-6] DEBUG atoma.core.DefaultLease - Lease [3cb8179e-8304-4dfd-a355-574a735af252] renew completed. Previous expire time: 2026-02-04T04:55:37.871Z Next expire time: 2026-02-04T04:55:45.871Z 
+12:55:29.893 [atoma-ttl-worker-4] DEBUG atoma.core.DefaultLease - Lease [58692ead-e114-4fcf-8bea-9f426aa853f0] renew completed. Previous expire time: 2026-02-04T04:55:37.885Z Next expire time: 2026-02-04T04:55:45.885Z 
+12:55:30.823 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:31.756 [atoma-ttl-worker-3] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:32.825 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:33.755 [atoma-ttl-worker-3] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:34.823 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:35.756 [atoma-ttl-worker-3] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:36.823 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:37.755 [atoma-ttl-worker-3] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:37.864 [atoma-ttl-worker-4] DEBUG atoma.core.DefaultLease - Lease [d6599361-39c2-428c-a407-c0a252c56761] renew completed. Previous expire time: 2026-02-04T04:55:45.857Z Next expire time: 2026-02-04T04:55:53.857Z 
+12:55:37.880 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [3cb8179e-8304-4dfd-a355-574a735af252] renew completed. Previous expire time: 2026-02-04T04:55:45.871Z Next expire time: 2026-02-04T04:55:53.871Z 
+12:55:37.892 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [58692ead-e114-4fcf-8bea-9f426aa853f0] renew completed. Previous expire time: 2026-02-04T04:55:45.885Z Next expire time: 2026-02-04T04:55:53.885Z 
+12:55:38.823 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:39.756 [atoma-ttl-worker-6] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:40.825 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:41.757 [atoma-ttl-worker-6] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:42.825 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:43.755 [atoma-ttl-worker-6] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:44.825 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:45.756 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:45.863 [atoma-ttl-worker-3] DEBUG atoma.core.DefaultLease - Lease [d6599361-39c2-428c-a407-c0a252c56761] renew completed. Previous expire time: 2026-02-04T04:55:53.857Z Next expire time: 2026-02-04T04:56:01.857Z 
+12:55:45.879 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [3cb8179e-8304-4dfd-a355-574a735af252] renew completed. Previous expire time: 2026-02-04T04:55:53.871Z Next expire time: 2026-02-04T04:56:01.871Z 
+12:55:45.893 [atoma-ttl-worker-5] DEBUG atoma.core.DefaultLease - Lease [58692ead-e114-4fcf-8bea-9f426aa853f0] renew completed. Previous expire time: 2026-02-04T04:55:53.885Z Next expire time: 2026-02-04T04:56:01.885Z 
+12:55:46.823 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:47.755 [atoma-ttl-worker-7] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:48.823 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:49.755 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:50.823 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:51.755 [atoma-ttl-worker-4] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:52.823 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:53.755 [atoma-ttl-worker-4] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:53.863 [atoma-ttl-worker-2] DEBUG atoma.core.DefaultLease - Lease [d6599361-39c2-428c-a407-c0a252c56761] renew completed. Previous expire time: 2026-02-04T04:56:01.857Z Next expire time: 2026-02-04T04:56:09.857Z 
+12:55:53.879 [atoma-ttl-worker-5] DEBUG atoma.core.DefaultLease - Lease [3cb8179e-8304-4dfd-a355-574a735af252] renew completed. Previous expire time: 2026-02-04T04:56:01.871Z Next expire time: 2026-02-04T04:56:09.871Z 
+12:55:53.893 [atoma-ttl-worker-7] DEBUG atoma.core.DefaultLease - Lease [58692ead-e114-4fcf-8bea-9f426aa853f0] renew completed. Previous expire time: 2026-02-04T04:56:01.885Z Next expire time: 2026-02-04T04:56:09.885Z 
+12:55:54.823 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:55.757 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:56.823 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:57.756 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:58.823 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:59.755 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:56:00.824 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:56:01.755 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:56:01.864 [atoma-ttl-worker-7] DEBUG atoma.core.DefaultLease - Lease [d6599361-39c2-428c-a407-c0a252c56761] renew completed. Previous expire time: 2026-02-04T04:56:09.857Z Next expire time: 2026-02-04T04:56:17.857Z 
+12:56:01.879 [atoma-ttl-worker-3] DEBUG atoma.core.DefaultLease - Lease [3cb8179e-8304-4dfd-a355-574a735af252] renew completed. Previous expire time: 2026-02-04T04:56:09.871Z Next expire time: 2026-02-04T04:56:17.871Z 
+12:56:01.893 [atoma-ttl-worker-6] DEBUG atoma.core.DefaultLease - Lease [58692ead-e114-4fcf-8bea-9f426aa853f0] renew completed. Previous expire time: 2026-02-04T04:56:09.885Z Next expire time: 2026-02-04T04:56:17.885Z 
+12:56:02.824 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:56:03.756 [atoma-ttl-worker-5] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:56:04.825 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:56:05.757 [atoma-ttl-worker-5] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:56:06.823 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:56:07.755 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:56:09.866 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [d6599361-39c2-428c-a407-c0a252c56761] renew completed. Previous expire time: 2026-02-04T04:56:17.857Z Next expire time: 2026-02-04T04:56:25.857Z 
+12:56:09.883 [atoma-ttl-worker-6] DEBUG atoma.core.DefaultLease - Lease [3cb8179e-8304-4dfd-a355-574a735af252] renew completed. Previous expire time: 2026-02-04T04:56:17.871Z Next expire time: 2026-02-04T04:56:25.871Z 
+12:56:09.898 [atoma-ttl-worker-2] DEBUG atoma.core.DefaultLease - Lease [58692ead-e114-4fcf-8bea-9f426aa853f0] renew completed. Previous expire time: 2026-02-04T04:56:17.885Z Next expire time: 2026-02-04T04:56:25.885Z 
+12:56:17.866 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [d6599361-39c2-428c-a407-c0a252c56761] renew completed. Previous expire time: 2026-02-04T04:56:25.857Z Next expire time: 2026-02-04T04:56:33.857Z 
+12:56:17.881 [atoma-ttl-worker-2] DEBUG atoma.core.DefaultLease - Lease [3cb8179e-8304-4dfd-a355-574a735af252] renew completed. Previous expire time: 2026-02-04T04:56:25.871Z Next expire time: 2026-02-04T04:56:33.871Z 
+12:56:17.894 [atoma-ttl-worker-3] DEBUG atoma.core.DefaultLease - Lease [58692ead-e114-4fcf-8bea-9f426aa853f0] renew completed. Previous expire time: 2026-02-04T04:56:25.885Z Next expire time: 2026-02-04T04:56:33.885Z 
+12:56:25.866 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [d6599361-39c2-428c-a407-c0a252c56761] renew completed. Previous expire time: 2026-02-04T04:56:33.857Z Next expire time: 2026-02-04T04:56:41.857Z 
+12:56:25.881 [atoma-ttl-worker-3] DEBUG atoma.core.DefaultLease - Lease [3cb8179e-8304-4dfd-a355-574a735af252] renew completed. Previous expire time: 2026-02-04T04:56:33.871Z Next expire time: 2026-02-04T04:56:41.871Z 
+12:56:25.894 [atoma-ttl-worker-5] DEBUG atoma.core.DefaultLease - Lease [58692ead-e114-4fcf-8bea-9f426aa853f0] renew completed. Previous expire time: 2026-02-04T04:56:33.885Z Next expire time: 2026-02-04T04:56:41.885Z 
+12:56:33.868 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [d6599361-39c2-428c-a407-c0a252c56761] renew completed. Previous expire time: 2026-02-04T04:56:41.857Z Next expire time: 2026-02-04T04:56:49.857Z 
+12:56:33.898 [atoma-ttl-worker-5] DEBUG atoma.core.DefaultLease - Lease [3cb8179e-8304-4dfd-a355-574a735af252] renew completed. Previous expire time: 2026-02-04T04:56:41.871Z Next expire time: 2026-02-04T04:56:49.871Z 
+12:56:33.900 [atoma-ttl-worker-4] DEBUG atoma.core.DefaultLease - Lease [58692ead-e114-4fcf-8bea-9f426aa853f0] renew completed. Previous expire time: 2026-02-04T04:56:41.885Z Next expire time: 2026-02-04T04:56:49.885Z 
+12:56:41.866 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [d6599361-39c2-428c-a407-c0a252c56761] renew completed. Previous expire time: 2026-02-04T04:56:49.857Z Next expire time: 2026-02-04T04:56:57.857Z 
+12:56:41.882 [atoma-ttl-worker-4] DEBUG atoma.core.DefaultLease - Lease [3cb8179e-8304-4dfd-a355-574a735af252] renew completed. Previous expire time: 2026-02-04T04:56:49.871Z Next expire time: 2026-02-04T04:56:57.871Z 
+12:56:41.894 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [58692ead-e114-4fcf-8bea-9f426aa853f0] renew completed. Previous expire time: 2026-02-04T04:56:49.885Z Next expire time: 2026-02-04T04:56:57.885Z 
+12:56:49.867 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [d6599361-39c2-428c-a407-c0a252c56761] renew completed. Previous expire time: 2026-02-04T04:56:57.857Z Next expire time: 2026-02-04T04:57:05.857Z 
+12:56:49.882 [atoma-ttl-worker-5] DEBUG atoma.core.DefaultLease - Lease [3cb8179e-8304-4dfd-a355-574a735af252] renew completed. Previous expire time: 2026-02-04T04:56:57.871Z Next expire time: 2026-02-04T04:57:05.871Z 
+12:56:49.894 [atoma-ttl-worker-3] DEBUG atoma.core.DefaultLease - Lease [58692ead-e114-4fcf-8bea-9f426aa853f0] renew completed. Previous expire time: 2026-02-04T04:56:57.885Z Next expire time: 2026-02-04T04:57:05.885Z 
+12:56:57.866 [atoma-ttl-worker-3] DEBUG atoma.core.DefaultLease - Lease [d6599361-39c2-428c-a407-c0a252c56761] renew completed. Previous expire time: 2026-02-04T04:57:05.857Z Next expire time: 2026-02-04T04:57:13.857Z 
+12:56:57.881 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [3cb8179e-8304-4dfd-a355-574a735af252] renew completed. Previous expire time: 2026-02-04T04:57:05.871Z Next expire time: 2026-02-04T04:57:13.871Z 
+12:56:57.894 [atoma-ttl-worker-6] DEBUG atoma.core.DefaultLease - Lease [58692ead-e114-4fcf-8bea-9f426aa853f0] renew completed. Previous expire time: 2026-02-04T04:57:05.885Z Next expire time: 2026-02-04T04:57:13.885Z 
+12:57:05.866 [atoma-ttl-worker-4] DEBUG atoma.core.DefaultLease - Lease [d6599361-39c2-428c-a407-c0a252c56761] renew completed. Previous expire time: 2026-02-04T04:57:13.857Z Next expire time: 2026-02-04T04:57:21.857Z 
+12:57:05.881 [atoma-ttl-worker-6] DEBUG atoma.core.DefaultLease - Lease [3cb8179e-8304-4dfd-a355-574a735af252] renew completed. Previous expire time: 2026-02-04T04:57:13.871Z Next expire time: 2026-02-04T04:57:21.871Z 
+12:57:05.894 [atoma-ttl-worker-7] DEBUG atoma.core.DefaultLease - Lease [58692ead-e114-4fcf-8bea-9f426aa853f0] renew completed. Previous expire time: 2026-02-04T04:57:13.885Z Next expire time: 2026-02-04T04:57:21.885Z 
+12:57:08.829 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 1 read-write locks, modified count: 1
+12:57:08.834 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Deleted 1 empty read-write lock documents
+12:57:13.868 [atoma-ttl-worker-0] DEBUG atoma.core.DefaultLease - Lease [d6599361-39c2-428c-a407-c0a252c56761] renew completed. Previous expire time: 2026-02-04T04:57:21.857Z Next expire time: 2026-02-04T04:57:29.857Z 
+12:57:13.881 [atoma-ttl-worker-7] DEBUG atoma.core.DefaultLease - Lease [3cb8179e-8304-4dfd-a355-574a735af252] renew completed. Previous expire time: 2026-02-04T04:57:21.871Z Next expire time: 2026-02-04T04:57:29.871Z 
+12:57:13.894 [atoma-ttl-worker-5] DEBUG atoma.core.DefaultLease - Lease [58692ead-e114-4fcf-8bea-9f426aa853f0] renew completed. Previous expire time: 2026-02-04T04:57:21.885Z Next expire time: 2026-02-04T04:57:29.885Z 
+12:57:21.865 [atoma-ttl-worker-6] DEBUG atoma.core.DefaultLease - Lease [d6599361-39c2-428c-a407-c0a252c56761] renew completed. Previous expire time: 2026-02-04T04:57:29.857Z Next expire time: 2026-02-04T04:57:37.857Z 
+12:57:21.883 [atoma-ttl-worker-5] DEBUG atoma.core.DefaultLease - Lease [3cb8179e-8304-4dfd-a355-574a735af252] renew completed. Previous expire time: 2026-02-04T04:57:29.871Z Next expire time: 2026-02-04T04:57:37.871Z 
+12:57:21.894 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [58692ead-e114-4fcf-8bea-9f426aa853f0] renew completed. Previous expire time: 2026-02-04T04:57:29.885Z Next expire time: 2026-02-04T04:57:37.885Z 
+12:57:23.580 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [42c6b9fa-ae99-47cb-8648-0ee162c78205] renew completed. Previous expire time: 2026-02-04T04:57:26.569Z Next expire time: null 
+12:57:23.602 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [11619807-1e10-43e9-b14d-5670b0815687] renew completed. Previous expire time: 2026-02-04T04:57:26.593Z Next expire time: 2026-02-04T04:57:29.593Z 
+12:57:23.603 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 4 Semaphore Data: Document{{_id=TEST-SEM-REL-008, initial_permits=8, available_permits=3, leases=Document{{11619807-1e10-43e9-b14d-5670b0815687=5}}, version=4, _update_flag=true}}  
+12:57:23.607 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 4 Semaphore Data: Document{{_id=TEST-SEM-REL-008, initial_permits=8, available_permits=8, leases=Document{{11619807-1e10-43e9-b14d-5670b0815687=0}}, version=4, _update_flag=true}}  
+12:57:23.616 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 1 semaphores, modified count: 1
+12:57:23.630 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [672327c3-fc1e-4463-859f-67ad0e7e60c8] renew completed. Previous expire time: 2026-02-04T04:57:26.623Z Next expire time: 2026-02-04T04:57:29.623Z 
+12:57:23.633 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 4 Semaphore Data: Document{{_id=TEST-SEM-REL-006, initial_permits=3, available_permits=0, leases=Document{{672327c3-fc1e-4463-859f-67ad0e7e60c8=3}}, version=4, _update_flag=true}}  
+12:57:23.655 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 1 semaphores, modified count: 1
+12:57:23.671 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [b2084893-e996-4bd4-b6fc-62bb4d1bd2c6] renew completed. Previous expire time: 2026-02-04T04:57:26.664Z Next expire time: 2026-02-04T04:57:29.664Z 
+12:57:23.672 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 4 Semaphore Data: Document{{_id=TEST-SEM-REL-001, initial_permits=5, available_permits=3, leases=Document{{b2084893-e996-4bd4-b6fc-62bb4d1bd2c6=2}}, version=4, _update_flag=true}}  
+12:57:23.676 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 4 Semaphore Data: Document{{_id=TEST-SEM-REL-001, initial_permits=5, available_permits=4, leases=Document{{b2084893-e996-4bd4-b6fc-62bb4d1bd2c6=1}}, version=4, _update_flag=true}}  
+12:57:23.680 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 4 Semaphore Data: Document{{_id=TEST-SEM-REL-001, initial_permits=5, available_permits=5, leases=Document{{b2084893-e996-4bd4-b6fc-62bb4d1bd2c6=0}}, version=4, _update_flag=true}}  
+12:57:23.690 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 1 semaphores, modified count: 1
+12:57:23.704 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [c7763195-d5bc-4a44-a4da-6d5fff1736dc] renew completed. Previous expire time: 2026-02-04T04:57:28.697Z Next expire time: 2026-02-04T04:57:33.697Z 
+12:57:23.705 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 7 Semaphore Data: Document{{_id=TEST-SEM-REL-003, initial_permits=2, available_permits=0, leases=Document{{c7763195-d5bc-4a44-a4da-6d5fff1736dc=2}}, version=7, _update_flag=true}}  
+12:57:23.709 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 7 Semaphore Data: Document{{_id=TEST-SEM-REL-003, initial_permits=2, available_permits=0, leases=Document{{c7763195-d5bc-4a44-a4da-6d5fff1736dc=2}}, version=7, _update_flag=false}}  
+12:57:23.810 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 7 Semaphore Data: Document{{_id=TEST-SEM-REL-003, initial_permits=2, available_permits=1, leases=Document{{c7763195-d5bc-4a44-a4da-6d5fff1736dc=1}}, version=7, _update_flag=false}}  
+12:57:23.814 [atoma-event-demultiplexer] DEBUG atoma.core.DefaultSemaphore - Semaphore received an event. Event-type: UPDATED. Latest version: 8 Semaphore Data: Document{{_id=TEST-SEM-REL-003, initial_permits=2, available_permits=0, leases=Document{{c7763195-d5bc-4a44-a4da-6d5fff1736dc=2}}, version=8, _update_flag=true}}  
+12:57:23.823 [Test worker] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 1 semaphores, modified count: 1
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

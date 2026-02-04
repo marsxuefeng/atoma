@@ -1,11 +1,14 @@
 package atoma.test;
 
 import atoma.api.coordination.CoordinationStore;
-import atoma.client.AtomaClient;
+import atoma.core.AtomaClient;
 import atoma.storage.mongo.MongoCoordinationStore;
+import atoma.storage.mongo.command.AtomaCollectionNamespace;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import org.bson.Document;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
@@ -49,6 +52,11 @@ public abstract class BaseTest {
     coordinationStore = new MongoCoordinationStore(mongoClient, "atoma_test");
     atomaClient = new AtomaClient(coordinationStore);
 
+    MongoCollection<Document> collection =
+        mongoClient
+            .getDatabase("atoma_test")
+            .getCollection(AtomaCollectionNamespace.COUNTDOWN_LATCH_NAMESPACE);
+    collection.deleteMany(new Document());
   }
 
   public MongoCoordinationStore newMongoCoordinationStore() {

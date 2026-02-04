@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="atoma.test.rwlock.MultiClientReadLockAcquisitionTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-02-04T04:55:08.811Z" hostname="manjaro" time="2.181">
+  <properties/>
+  <testcase name="TEST-ACQ-003: 1. 多个读锁可以共存" classname="atoma.test.rwlock.MultiClientReadLockAcquisitionTest" time="0.072"/>
+  <testcase name="TEST-ACQ-003: 验证读锁的可重入性" classname="atoma.test.rwlock.MultiClientReadLockAcquisitionTest" time="2.108"/>
+  <system-out><![CDATA[12:55:08.848 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [658f5414-dcfb-4706-a45c-60dd64206d38] renew completed. Previous expire time: 2026-02-04T04:55:16.832Z Next expire time: 2026-02-04T04:55:24.832Z 
+12:55:08.852 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [f69d0c6b-3162-4d59-8b0f-96aa9e1ee81b] renew completed. Previous expire time: 2026-02-04T04:55:16.823Z Next expire time: 2026-02-04T04:55:24.823Z 
+12:55:08.852 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [793d0d62-4983-45eb-9c66-a4a08e47b1ad] renew completed. Previous expire time: 2026-02-04T04:55:16.822Z Next expire time: 2026-02-04T04:55:24.822Z 
+12:55:08.853 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.855 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.855 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.856 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [935b8e19-5c16-443c-ad4e-1b4b39c7daf2] renew completed. Previous expire time: 2026-02-04T04:55:16.839Z Next expire time: 2026-02-04T04:55:24.839Z 
+12:55:08.856 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [e40bcf18-b5be-4d48-aee0-c155aed20fb9] renew completed. Previous expire time: 2026-02-04T04:55:16.840Z Next expire time: 2026-02-04T04:55:24.840Z 
+12:55:08.877 [Thread-25] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.877 [Thread-23] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.877 [Thread-24] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.881 [Thread-24] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Deleted 1 empty read-write lock documents
+12:55:08.881 [Thread-22] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.881 [Thread-26] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.889 [Thread-34] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.889 [Thread-33] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.889 [Thread-35] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.889 [Thread-31] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.889 [Thread-32] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.889 [Thread-30] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.889 [Thread-27] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.889 [Thread-36] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.889 [Thread-29] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.889 [Thread-28] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.904 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [af997635-477e-477c-b87a-5b506f2d4684] renew completed. Previous expire time: 2026-02-04T04:55:16.891Z Next expire time: 2026-02-04T04:55:24.891Z 
+12:55:08.904 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.904 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.904 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [c02f5df1-78e9-4771-a3a6-8d9ae012f7d1] renew completed. Previous expire time: 2026-02-04T04:55:16.892Z Next expire time: 2026-02-04T04:55:24.892Z 
+12:55:08.904 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.904 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.904 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.904 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [701cdbf0-0042-42df-a260-7edf68267647] renew completed. Previous expire time: 2026-02-04T04:55:16.891Z Next expire time: 2026-02-04T04:55:24.891Z 
+12:55:08.905 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.904 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.904 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.905 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.904 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [ff26e950-8a61-4f27-a6c7-978f29a5eb70] renew completed. Previous expire time: 2026-02-04T04:55:16.891Z Next expire time: 2026-02-04T04:55:24.891Z 
+12:55:08.905 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:08.904 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [ea46045c-3249-401b-b351-0babfc64e27b] renew completed. Previous expire time: 2026-02-04T04:55:16.891Z Next expire time: 2026-02-04T04:55:24.891Z 
+12:55:08.907 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [4731fc4d-ee5d-4eb7-ad10-a9a3b55068e2] renew completed. Previous expire time: 2026-02-04T04:55:16.892Z Next expire time: 2026-02-04T04:55:24.892Z 
+12:55:08.907 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [a99c3ba5-6ba8-43be-8782-027403827612] renew completed. Previous expire time: 2026-02-04T04:55:16.893Z Next expire time: 2026-02-04T04:55:24.893Z 
+12:55:08.907 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [f7d388bd-5b09-4642-96ce-9e10db6c4923] renew completed. Previous expire time: 2026-02-04T04:55:16.893Z Next expire time: 2026-02-04T04:55:24.893Z 
+12:55:08.911 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [2077afbd-7d39-4392-9976-c34d4735d491] renew completed. Previous expire time: 2026-02-04T04:55:16.893Z Next expire time: 2026-02-04T04:55:24.893Z 
+12:55:08.914 [atoma-ttl-worker-1] DEBUG atoma.core.DefaultLease - Lease [41efeb67-9741-467e-8a48-68688c59a02c] renew completed. Previous expire time: 2026-02-04T04:55:16.893Z Next expire time: 2026-02-04T04:55:24.893Z 
+12:55:09.447 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:09.936 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:10.899 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:10.899 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:10.899 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:10.899 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:10.899 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:10.899 [atoma-ttl-worker-0] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:10.899 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:10.899 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:10.899 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:10.899 [atoma-ttl-worker-1] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:10.945 [Thread-27] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:10.948 [Thread-35] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:10.958 [Thread-36] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:10.958 [Thread-28] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:10.963 [Thread-29] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:10.966 [Thread-31] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:10.973 [Thread-32] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:10.973 [Thread-33] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:10.974 [Thread-34] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:10.986 [Thread-30] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Cleaned dead leases from 0 read-write locks, modified count: 0
+12:55:10.990 [Thread-30] INFO  a.s.m.c.CleanDeadResourceCommandHandler - Deleted 1 empty read-write lock documents
+Completed 1000 read lock operations in 2107 ms (474.61 ops/sec)
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -11,21 +11,22 @@ import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.DeleteOneModel;
+import com.mongodb.client.model.UpdateOneModel;
 import com.mongodb.client.result.DeleteResult;
-import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
+import static atoma.storage.mongo.command.AtomaCollectionNamespace.BARRIER_NAMESPACE;
 import static atoma.storage.mongo.command.AtomaCollectionNamespace.LEASE_NAMESPACE;
 import static atoma.storage.mongo.command.AtomaCollectionNamespace.MUTEX_LOCK_NAMESPACE;
 import static atoma.storage.mongo.command.AtomaCollectionNamespace.RW_LOCK_NAMESPACE;
+import static atoma.storage.mongo.command.AtomaCollectionNamespace.SEMAPHORE_NAMESPACE;
 import static com.mongodb.client.model.Accumulators.addToSet;
 import static com.mongodb.client.model.Accumulators.first;
 import static com.mongodb.client.model.Accumulators.push;
@@ -46,7 +47,9 @@ import static com.mongodb.client.model.Projections.include;
 import static com.mongodb.client.model.Updates.combine;
 import static com.mongodb.client.model.Updates.inc;
 import static com.mongodb.client.model.Updates.pull;
+import static com.mongodb.client.model.Updates.set;
 import static com.mongodb.client.model.Updates.unset;
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
@@ -79,6 +82,7 @@ public class CleanDeadResourceCommandHandler
           cleanMutexLocks(context, command);
           cleanReadWriteLocks(context, command);
           cleanSemaphores(context, command);
+          cleanBarriers(context, command);
           return null;
         };
 
@@ -101,10 +105,10 @@ public class CleanDeadResourceCommandHandler
    */
   private void cleanMutexLocks(
       MongoCommandHandlerContext context, CleanDeadResourceCommand.Clean command) {
-    final MongoCollection<Document> lockCollection = getCollection(context, MUTEX_LOCK_NAMESPACE);
+    final MongoCollection<Document> collection = getCollection(context, MUTEX_LOCK_NAMESPACE);
 
     final List<Bson> pipeline =
-        Arrays.asList(
+        asList(
             lookup(LEASE_NAMESPACE, "lease", "_id", "lease_doc"),
             match(
                 new Document(
@@ -112,7 +116,7 @@ public class CleanDeadResourceCommandHandler
             project(fields(include("_id", "lease"))));
 
     List<DeleteOneModel<Document>> deleteOneModelList =
-        lockCollection.aggregate(pipeline).into(new ArrayList<>()).stream()
+        collection.aggregate(pipeline).into(new ArrayList<>()).stream()
             .map(
                 doc ->
                     new DeleteOneModel<Document>(
@@ -120,7 +124,7 @@ public class CleanDeadResourceCommandHandler
             .toList();
 
     if (!deleteOneModelList.isEmpty()) {
-      BulkWriteResult bulkWriteResult = lockCollection.bulkWrite(deleteOneModelList);
+      BulkWriteResult bulkWriteResult = collection.bulkWrite(deleteOneModelList);
       log.info(
           "Detected the presence of inactive mutex locks. delete count: {}",
           bulkWriteResult.getDeletedCount());
@@ -141,14 +145,14 @@ public class CleanDeadResourceCommandHandler
     final MongoCollection<Document> collection = getCollection(context, RW_LOCK_NAMESPACE);
 
     final List<Bson> pipeline =
-        Arrays.asList(
+        asList(
             project(
                 fields(
                     computed(
                         "leases",
                         new Document(
                             "$concatArrays",
-                            Arrays.asList(
+                            asList(
                                 new Document(
                                     "$cond",
                                     List.of(
@@ -161,8 +165,7 @@ public class CleanDeadResourceCommandHandler
                                         emptyList())),
                                 new Document(
                                     "$ifNull",
-                                    Arrays.asList(
-                                        singletonList("$write_lock.lease"), emptyList()))))),
+                                    asList(singletonList("$write_lock.lease"), emptyList()))))),
                     computed("doc", "$$ROOT"))),
             unwind("$leases"),
             lookup(LEASE_NAMESPACE, "leases", "_id", "lease_doc"),
@@ -173,20 +176,37 @@ public class CleanDeadResourceCommandHandler
 
     final List<Document> locksToClean = collection.aggregate(pipeline).into(new ArrayList<>());
 
-    for (Document lockInfo : locksToClean) {
-      final Document doc = (Document) lockInfo.get("doc");
-      final List<String> deadLeases = (List<String>) lockInfo.get("dead_leases");
+    if (!locksToClean.isEmpty()) {
+      List<com.mongodb.client.model.UpdateOneModel<Document>> bulkUpdates = new ArrayList<>();
 
-      final List<Bson> updates = new ArrayList<>();
-      updates.add(pull("read_locks", in("lease", deadLeases)));
+      for (Document lockInfo : locksToClean) {
+        final Document doc = (Document) lockInfo.get("doc");
+        final List<String> deadLeases = (List<String>) lockInfo.get("dead_leases");
 
-      final Document writeLock = (Document) doc.get("write_lock");
-      if (writeLock != null && deadLeases.contains(writeLock.getString("lease"))) {
-        updates.add(unset("write_lock"));
+        final List<Bson> updates = new ArrayList<>();
+        updates.add(pull("read_locks", in("lease", deadLeases)));
+
+        final Document writeLock = (Document) doc.get("write_lock");
+        if (writeLock != null && deadLeases.contains(writeLock.getString("lease"))) {
+          updates.add(unset("write_lock"));
+        }
+
+        bulkUpdates.add(
+            new com.mongodb.client.model.UpdateOneModel<Document>(
+                eq("_id", doc.get("_id")), combine(updates)));
       }
-      UpdateResult updateResult = collection.updateOne(eq("_id", doc.get("_id")), combine(updates));
+
+      if (!bulkUpdates.isEmpty()) {
+        // 执行批量更新
+        BulkWriteResult bulkWriteResult = collection.bulkWrite(bulkUpdates);
+        log.info(
+            "Cleaned dead leases from {} read-write locks, modified count: {}",
+            bulkWriteResult.getModifiedCount(),
+            bulkWriteResult.getModifiedCount());
+      }
     }
 
+    // 删除空的读写锁文档
     DeleteResult deleteResult =
         collection.deleteMany(
             and(
@@ -195,6 +215,10 @@ public class CleanDeadResourceCommandHandler
                     eq("read_locks", null),
                     exists("read_locks", false),
                     eq("read_locks", new ArrayList<>()))));
+
+    if (deleteResult.getDeletedCount() > 0) {
+      log.info("Deleted {} empty read-write lock documents", deleteResult.getDeletedCount());
+    }
   }
 
   /**
@@ -208,11 +232,10 @@ public class CleanDeadResourceCommandHandler
    */
   private void cleanSemaphores(
       MongoCommandHandlerContext context, CleanDeadResourceCommand.Clean command) {
-    final MongoCollection<Document> semaphoreCollection =
-        getCollection(context, AtomaCollectionNamespace.SEMAPHORE_NAMESPACE);
+    final MongoCollection<Document> collection = getCollection(context, SEMAPHORE_NAMESPACE);
 
     final List<Bson> pipeline =
-        Arrays.asList(
+        asList(
             project(
                 fields(
                     include("_id", "available_permits"),
@@ -225,19 +248,86 @@ public class CleanDeadResourceCommandHandler
                 sum("permits_to_return", "$leases_as_array.v"),
                 push("dead_leases_keys", "$leases_as_array.k")));
 
-    final List<Document> semaphoresToClean =
-        semaphoreCollection.aggregate(pipeline).into(new ArrayList<>());
+    final List<Document> semaphoresToClean = collection.aggregate(pipeline).into(new ArrayList<>());
 
-    for (Document semaphoreInfo : semaphoresToClean) {
-      final int permitsToReturn = ((Number) semaphoreInfo.get("permits_to_return")).intValue();
-      final List<String> deadLeasesKeys = (List<String>) semaphoreInfo.get("dead_leases_keys");
+    if (!semaphoresToClean.isEmpty()) {
+      // 使用Bulk API批量更新
+      List<com.mongodb.client.model.UpdateOneModel<Document>> bulkUpdates = new ArrayList<>();
 
-      final List<Bson> updates = new ArrayList<>();
-      updates.add(inc("available_permits", permitsToReturn));
-      for (String deadLease : deadLeasesKeys) {
-        updates.add(unset("leases." + deadLease));
+      for (Document semaphoreInfo : semaphoresToClean) {
+        final int permitsToReturn = ((Number) semaphoreInfo.get("permits_to_return")).intValue();
+        final List<String> deadLeasesKeys = (List<String>) semaphoreInfo.get("dead_leases_keys");
+
+        final List<Bson> updates = new ArrayList<>();
+        updates.add(inc("available_permits", permitsToReturn));
+        for (String deadLease : deadLeasesKeys) {
+          updates.add(unset("leases." + deadLease));
+        }
+
+        bulkUpdates.add(
+            new com.mongodb.client.model.UpdateOneModel<Document>(
+                eq("_id", semaphoreInfo.get("_id")), combine(updates)));
       }
-      semaphoreCollection.updateOne(eq("_id", semaphoreInfo.get("_id")), combine(updates));
+
+      if (!bulkUpdates.isEmpty()) {
+        // 执行批量更新
+        BulkWriteResult bulkWriteResult = collection.bulkWrite(bulkUpdates);
+        log.info(
+            "Cleaned dead leases from {} semaphores, modified count: {}",
+            bulkWriteResult.getModifiedCount(),
+            bulkWriteResult.getModifiedCount());
+      }
+    }
+  }
+
+  /**
+   * Finds and cleans all barriers that have waited with non-existent leases.
+   *
+   * <p>It removes stale entries from the {@code participants} array where the associated lease no
+   * longer exists.
+   *
+   * @param context the command handler context
+   * @param command the clean command
+   */
+  private void cleanBarriers(
+      MongoCommandHandlerContext context, CleanDeadResourceCommand.Clean command) {
+    final MongoCollection<Document> collection = getCollection(context, BARRIER_NAMESPACE);
+
+    final List<Bson> pipeline =
+        asList(
+            unwind("$participants"),
+            lookup(LEASE_NAMESPACE, "participants.lease", "_id", "lease_doc"),
+            match(
+                new Document(
+                    "$expr", new Document("$eq", List.of(new Document("$size", "$lease_doc"), 0)))),
+            group("$_id", addToSet("dead_participant_leases", "$participants.lease")));
+
+    final List<Document> barriersToClean = collection.aggregate(pipeline).into(new ArrayList<>());
+
+    if (!barriersToClean.isEmpty()) {
+      List<UpdateOneModel<Document>> bulkUpdates = new ArrayList<>(barriersToClean.size());
+
+      for (Document barrierInfo : barriersToClean) {
+        final List<String> deadParticipantLeases =
+            (List<String>) barrierInfo.get("dead_participant_leases");
+
+        if (deadParticipantLeases != null && !deadParticipantLeases.isEmpty()) {
+          bulkUpdates.add(
+              new UpdateOneModel<>(
+                  eq("_id", barrierInfo.get("_id")),
+                  combine(
+                      pull("participants", in("lease", deadParticipantLeases)),
+                      set("is_broken", true))));
+        }
+      }
+
+      if (!bulkUpdates.isEmpty()) {
+        BulkWriteResult bulkWriteResult = collection.bulkWrite(bulkUpdates);
+        log.info(
+            "Cleaned dead participants from {} barriers, modified count: {}",
+            bulkWriteResult.getModifiedCount(),
+            bulkWriteResult.getModifiedCount());
+      }
     }
   }
 }

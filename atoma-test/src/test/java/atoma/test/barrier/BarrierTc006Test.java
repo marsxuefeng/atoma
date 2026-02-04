@@ -1,7 +1,8 @@
 package atoma.test.barrier;
 
+import atoma.api.Lease;
 import atoma.api.synchronizer.CyclicBarrier;
-import atoma.client.AtomaClient;
+import atoma.core.AtomaClient;
 import atoma.storage.mongo.MongoCoordinationStore;
 import atoma.test.BaseTest;
 import org.junit.jupiter.api.Assertions;
@@ -27,23 +28,25 @@ public class BarrierTc006Test extends BaseTest {
     MongoCoordinationStore store1 = newMongoCoordinationStore();
     ScheduledExecutorService executor1 = newScheduledExecutorService();
     AtomaClient client1 = new AtomaClient(executor1, store1);
+    Lease lease1 = client1.grantLease();
 
     // Client 2 setup
     MongoCoordinationStore store2 = newMongoCoordinationStore();
     ScheduledExecutorService executor2 = newScheduledExecutorService();
     AtomaClient client2 = new AtomaClient(executor2, store2);
+    Lease lease2 = client1.grantLease();
 
     CyclicBarrier barrier1 = null;
     try {
       // Client 1 initializes the barrier successfully
-      barrier1 = client1.getCyclicBarrier(barrierId, parties1);
+      barrier1 = lease1.getCyclicBarrier(barrierId, parties1);
       Assertions.assertNotNull(barrier1);
       Assertions.assertEquals(parties1, barrier1.getParties());
 
       // Client 2 attempts to initialize the same barrier with different parties
       Assertions.assertThrows(
           IllegalArgumentException.class,
-          () -> client2.getCyclicBarrier(barrierId, parties2),
+          () -> lease2.getCyclicBarrier(barrierId, parties2),
           "Should throw IllegalArgumentException when parties mismatch");
 
     } finally {

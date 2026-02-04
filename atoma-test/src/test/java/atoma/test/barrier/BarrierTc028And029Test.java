@@ -1,7 +1,8 @@
 package atoma.test.barrier;
 
+import atoma.api.Lease;
 import atoma.api.synchronizer.CyclicBarrier;
-import atoma.client.AtomaClient;
+import atoma.core.AtomaClient;
 import atoma.storage.mongo.MongoCoordinationStore;
 import atoma.test.BaseTest;
 import org.junit.jupiter.api.Assertions;
@@ -13,9 +14,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-/**
- * Test case for BARRIER-TC-028 & TC-029: Barrier recovery and rejoin after failure.
- */
+/** Test case for BARRIER-TC-028 & TC-029: Barrier recovery and rejoin after failure. */
 public class BarrierTc028And029Test extends BaseTest {
 
   @DisplayName("BARRIER-TC-028 & 029: 节点失败后的恢复与重新加入")
@@ -24,10 +23,10 @@ public class BarrierTc028And029Test extends BaseTest {
     MongoCoordinationStore mongoCoordinationStore = newMongoCoordinationStore();
     ScheduledExecutorService scheduledExecutorService = newScheduledExecutorService();
     AtomaClient client = new AtomaClient(scheduledExecutorService, mongoCoordinationStore);
-
+    Lease lease = client.grantLease();
     final String barrierId = "BARRIER-TC-028";
     final int parties = 2;
-    final CyclicBarrier barrier = client.getCyclicBarrier(barrierId, parties);
+    final CyclicBarrier barrier = lease.getCyclicBarrier(barrierId, parties);
 
     try {
       // 1. Simulate failure by having one party time out
